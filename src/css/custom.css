@@ -1,0 +1,475 @@
+/**
+ * STX 全局样式与冰川青（#8ecad6）主题定义
+ * STX global styles and Glacier Cyan (#8ecad6) theme definitions
+ */
+
+@import './animations.css';
+@import './login-brand.css';
+
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   1. 基础色阶定义 (Glacier Cyan Palette)
+   Base color palette definitions
+   ========================================================================== */
+:root {
+  /* 冰川青系统色阶 */
+  /* Glacier Cyan color scale */
+  --stx-glacier-50: #f2f9fb;
+  --stx-glacier-100: #e1f3f7;
+  --stx-glacier-200: #c5e8ef;
+  --stx-glacier-300: #8ecad6; /* 基准冰川青 / Base Glacier Cyan */
+  --stx-glacier-400: #65b5c4;
+  --stx-glacier-500: #3b9fb2;
+  --stx-glacier-600: #298294; /* 亮色模式主要交互色 / Primary interactive color for light mode */
+  --stx-glacier-700: #1f6b7a; /* 亮色正文链接高可读性颜色 / Readable link color on white */
+  --stx-glacier-800: #18525e;
+  --stx-glacier-900: #0e2f37;
+
+  /* Docusaurus 核心主题变量（亮色模式） */
+  /* Docusaurus core theme variables (Light Mode) */
+  --ifm-color-primary: #298294;
+  --ifm-color-primary-dark: #247585;
+  --ifm-color-primary-darker: #206775;
+  --ifm-color-primary-darkest: #174b56;
+  --ifm-color-primary-light: #339db3;
+  --ifm-color-primary-lighter: #3ba8bd;
+  --ifm-color-primary-lightest: #8ecad6;
+
+  --ifm-code-font-size: 92%;
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  
+  /* 阴影与点缀光晕 */
+  /* Glow and shadow tokens */
+  --stx-glow: rgba(142, 202, 214, 0.25);
+  --stx-card-border: #e2e8f0;
+  --stx-sidebar-active-bg: rgba(142, 202, 214, 0.12);
+}
+
+/* ==========================================================================
+   2. 暗黑模式（中性黑白，不融冰川青）
+   Dark mode (neutral mono; no glacier cyan blend)
+   ========================================================================== */
+[data-theme='dark'] {
+  /* Docusaurus 核心主题变量（暗黑：中性高对比，避免极青蓝荧光融合） */
+  /* Dark theme: neutral high-contrast; avoid glacier-cyan neon blend */
+  --ifm-color-primary: #e2e8f0;
+  --ifm-color-primary-dark: #cbd5e1;
+  --ifm-color-primary-darker: #94a3b8;
+  --ifm-color-primary-darkest: #64748b;
+  --ifm-color-primary-light: #f1f5f9;
+  --ifm-color-primary-lighter: #f8fafc;
+  --ifm-color-primary-lightest: #ffffff;
+
+  --ifm-background-color: #0a0a0a;
+  --ifm-background-surface-color: #111111;
+  --ifm-navbar-background-color: rgba(10, 10, 10, 0.88);
+
+  --stx-glow: rgba(255, 255, 255, 0.12);
+  --stx-card-border: #1f1f1f;
+  --stx-sidebar-active-bg: rgba(255, 255, 255, 0.06);
+}
+
+/* ==========================================================================
+   3. 导航与侧边栏样式定制（Doris 风格）
+   Navbar and Sidebar custom styles (Doris style)
+   ========================================================================== */
+.navbar {
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+.navbar__title {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* 侧边栏当前激活项添加冰川青高亮指示条 */
+/* Sidebar active item indicator bar with Glacier Cyan */
+.theme-doc-sidebar-item-link-level-1.menu__link--active,
+.theme-doc-sidebar-item-link-level-2.menu__link--active {
+  color: var(--ifm-color-primary) !important;
+  background-color: var(--stx-sidebar-active-bg);
+  border-left: 3px solid var(--stx-glacier-300);
+  border-radius: 0 4px 4px 0;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   4. 按钮与操作组件（冰川青质感）
+   Buttons and interactive components with Glacier Cyan
+   ========================================================================== */
+.button--glacier,
+a.button--glacier {
+  background: linear-gradient(135deg, #8ecad6 0%, #3b9fb2 100%) !important;
+  color: #071118 !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 10px 22px !important;
+  box-shadow: 0 4px 14px rgba(142, 202, 214, 0.35) !important;
+  transition: all 0.25s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+}
+
+.button--glacier:hover,
+a.button--glacier:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(142, 202, 214, 0.55) !important;
+  color: #071118 !important;
+  text-decoration: none !important;
+}
+
+.button--outline-glacier,
+a.button--outline-glacier {
+  border: 1px solid var(--stx-glacier-300) !important;
+  color: var(--ifm-color-primary) !important;
+  background: transparent !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 10px 22px !important;
+  transition: all 0.25s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+}
+
+.button--outline-glacier:hover,
+a.button--outline-glacier:hover {
+  background: var(--stx-sidebar-active-bg) !important;
+  border-color: var(--stx-glacier-400) !important;
+  color: var(--ifm-color-primary) !important;
+  text-decoration: none !important;
+  transform: translateY(-2px);
+}
+
+[data-theme='dark'] .button--glacier,
+[data-theme='dark'] a.button--glacier {
+  background: #ffffff !important;
+  color: #111111 !important;
+  box-shadow: none !important;
+}
+
+[data-theme='dark'] .button--outline-glacier,
+[data-theme='dark'] a.button--outline-glacier {
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+  background: transparent !important;
+}
+
+/* ==========================================================================
+   5. 表格与步骤提示（Doris 规范）
+   Tables and step guide styling (Doris guidelines)
+   ========================================================================== */
+article table {
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  border-collapse: collapse;
+}
+
+article table th {
+  background-color: var(--ifm-background-surface-color);
+  border-bottom: 2px solid var(--stx-glacier-300);
+  font-weight: 600;
+  padding: 10px 14px;
+}
+
+article table td {
+  padding: 10px 14px;
+}
+
+/* 操作步骤序号徽章 */
+/* Step number badge */
+.stx-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--stx-glacier-300);
+  color: #0b131e;
+  font-weight: 700;
+  font-size: 13px;
+  margin-right: 8px;
+}
+
+/* ==========================================================================
+   6. Hero 响应式双栏排版与展台组件 (Hero Grid & Showcase Layout)
+   ========================================================================== */
+
+/* Hero 双栏网格容器 */
+/* Hero two-column responsive grid container */
+.stx-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: 3rem;
+  align-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* 登录品牌面板 + 链路图：对齐登录页 auth-card 比例 */
+/* Login brand panel + topology: match login auth-card proportions */
+.stx-hero-grid--brand {
+  grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+  gap: 1.5rem;
+  align-items: stretch;
+  max-width: min(1680px, 100%);
+}
+
+.stx-hero-grid--brand .stx-hero-col-left {
+  align-items: stretch;
+  display: flex;
+}
+
+.stx-hero-grid--brand .stx-hero-col-left > * {
+  flex: 1;
+  width: 100%;
+}
+
+.stx-hero-grid--brand .stx-hero-col-right {
+  justify-content: stretch;
+  align-items: stretch;
+  display: flex;
+}
+
+.stx-hero-grid--brand .stx-hero-col-right > * {
+  flex: 1;
+  width: 100%;
+}
+
+/* Hero 左侧文案列 */
+/* Hero left content column */
+.stx-hero-col-left {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero 右侧视觉展台列 */
+/* Hero right showcase column */
+.stx-hero-col-right {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.stx-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background-color: var(--stx-sidebar-active-bg);
+  border: 1px solid var(--stx-glacier-300);
+  color: var(--ifm-color-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  width: fit-content;
+}
+
+/* 标题与吉祥物横向排布行 */
+/* Title and mascot row layout */
+.stx-hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.2rem;
+}
+
+/* 主标题文字排版 */
+/* Main headline typography */
+.stx-hero-title {
+  font-size: 2.85rem;
+  font-weight: 800;
+  line-height: 1.16;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* 副标题说明文案 */
+/* Subtitle description typography */
+.stx-hero-desc {
+  font-size: 1.12rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.68;
+  margin-bottom: 1.85rem;
+}
+
+/* 行动号召按钮组 */
+/* Call-to-action button group */
+.stx-hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+/* 21st.dev 极客一键安装命令条 */
+/* 21st.dev geek one-click install command bar */
+.stx-install-command-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--stx-card-border);
+  border-radius: 8px;
+  padding: 8px 12px 8px 14px;
+  max-width: 480px;
+  margin-bottom: 1.85rem;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.83rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  transition: all 0.22s ease;
+}
+
+.stx-install-command-bar:hover {
+  border-color: var(--stx-glacier-300);
+  box-shadow: 0 4px 18px var(--stx-glow);
+}
+
+.stx-cmd-prefix {
+  color: var(--stx-glacier-400);
+  font-weight: 700;
+  user-select: none;
+}
+
+.stx-cmd-code {
+  color: var(--ifm-color-emphasis-800);
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.83rem;
+}
+
+.stx-cmd-copy-btn {
+  background: var(--stx-sidebar-active-bg);
+  border: 1px solid var(--stx-glacier-300);
+  color: var(--ifm-color-primary);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.stx-cmd-copy-btn:hover {
+  background: var(--ifm-color-primary);
+  color: #ffffff;
+}
+
+[data-theme='dark'] .stx-cmd-copy-btn:hover {
+  color: #0b131e;
+}
+
+
+/* 核心特性数据指标条 */
+/* Core feature metrics highlight bar */
+.stx-hero-metrics {
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+  border-top: 1px solid var(--stx-card-border);
+  padding-top: 1.25rem;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.82rem;
+}
+
+.stx-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stx-metric-val {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+}
+
+.stx-metric-label {
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.stx-metric-divider {
+  width: 1px;
+  height: 28px;
+  background-color: var(--stx-card-border);
+}
+
+
+/* 移动端与平板响应式适配 */
+/* Mobile and tablet responsive adaptation */
+@media (max-width: 996px) {
+  .stx-hero-grid,
+  .stx-hero-grid--brand {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .stx-hero-col-left {
+    text-align: center;
+    align-items: center;
+  }
+
+  .stx-hero-grid--brand .stx-hero-col-left {
+    text-align: left;
+    align-items: stretch;
+  }
+
+  .stx-hero-col-right {
+    align-items: stretch;
+  }
+
+  .stx-hero-title-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .stx-hero-title {
+    font-size: 2.2rem;
+  }
+
+  .stx-hero-actions {
+    justify-content: center;
+  }
+
+  .stx-hero-metrics {
+    justify-content: center;
+  }
+
+}
+
+@media (max-width: 640px) {
+  .stx-hero-title {
+    font-size: 1.85rem;
+  }
+
+  .stx-hero-metrics {
+    gap: 1rem;
+  }
+
+  .stx-metric-val {
+    font-size: 1.05rem;
+  }
+}
+

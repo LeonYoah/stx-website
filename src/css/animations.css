@@ -1,0 +1,159 @@
+/**
+ * STX 首页专属动效与关键帧动画定义
+ * STX homepage animation keyframes and visual effect utilities
+ */
+
+/* ==========================================================================
+   1. 基础关键帧 (Base Keyframes)
+   ========================================================================== */
+
+/* 浮动与呼吸微动效 */
+/* Floating and breathing animation */
+@keyframes stx-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+/* 呼吸光晕脉冲 */
+/* Breathing glow pulse */
+@keyframes stx-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(142, 202, 214, 0.25);
+    opacity: 0.85;
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(142, 202, 214, 0.6);
+    opacity: 1;
+  }
+}
+
+/* 终端光标闪烁 */
+/* Terminal cursor blinking */
+@keyframes stx-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* 渐变流光平移动效 */
+/* Gradient shimmer flow */
+@keyframes stx-gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 跑马灯无缝滚动 */
+/* Marquee horizontal infinite scroll */
+@keyframes stx-marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 脉冲信号波纹 */
+/* Radar ripple beacon */
+@keyframes stx-ripple {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(142, 202, 214, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(142, 202, 214, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(142, 202, 214, 0);
+  }
+}
+
+/* ==========================================================================
+   2. 动画工具类 (Utility Classes)
+   ========================================================================== */
+
+.stx-animate-float {
+  animation: stx-float 5s ease-in-out infinite;
+}
+
+.stx-animate-pulse {
+  animation: stx-pulse-glow 3s ease-in-out infinite;
+}
+
+.stx-animate-ripple {
+  animation: stx-ripple 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.stx-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background-color: var(--stx-glacier-300);
+  vertical-align: middle;
+  margin-left: 4px;
+  animation: stx-cursor-blink 1s infinite;
+}
+
+/* 科技感点状网格背景 */
+/* High-tech radial dot-matrix grid background */
+.stx-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(142, 202, 214, 0.12) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, black, black 75%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 霓虹渐变文本 */
+/* Neon gradient text */
+.stx-gradient-text {
+  background: linear-gradient(135deg, #ffffff 10%, #8ecad6 60%, #3b9fb2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+[data-theme='light'] .stx-gradient-text {
+  background: linear-gradient(135deg, #0b131e 10%, #1f6b7a 60%, #298294 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 交互式卡片悬浮效果 */
+/* Interactive card hover elevation */
+.stx-interactive-card {
+  position: relative;
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--stx-card-border);
+  border-radius: 12px;
+  padding: 1.75rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.stx-interactive-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--stx-glacier-300);
+  box-shadow: 0 12px 32px var(--stx-glow);
+}
+
+/* 卡片顶部流光边框装饰 */
+/* Card top accent shimmer bar */
+.stx-card-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #8ecad6, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stx-interactive-card:hover .stx-card-accent-bar {
+  opacity: 1;
+}

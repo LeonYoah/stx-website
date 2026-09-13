@@ -1,0 +1,16 @@
+{
+  // 继承 Docusaurus 官方推荐 TypeScript 配置
+  // Extends Docusaurus recommended TypeScript configuration
+  "extends": "@tsconfig/docusaurus/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    // 允许使用现代模块解析策略
+    // Allow modern module resolution strategy
+    "moduleResolution": "node",
+    // 配置 shadcn 规范的 @/* 路径别名
+    // Configure shadcn standard @/* path alias
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
