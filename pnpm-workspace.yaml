@@ -1,2 +1,7 @@
+# 单包站点工作区；保留 allowBuilds 以通过 CI 安装
+# Single-package workspace; keep allowBuilds for CI installs
+packages:
+  - '.'
+
 allowBuilds:
   core-js: true
