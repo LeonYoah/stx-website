@@ -37,15 +37,15 @@ const config: Config = {
   tagline: 'Apache SeaTunnel 可视化集群与运维管控平台',
   favicon: 'img/stx-favicon.ico',
 
-  // 生产域名与基础路径配置
-  // Production URL and base route configuration
-  url: 'https://seatunnelx.com',
-  baseUrl: '/',
+  // 生产域名与基础路径配置（GitHub Pages 项目站）
+  // Production URL and base route (GitHub Pages project site)
+  url: 'https://leonyoah.github.io',
+  baseUrl: '/stx-website/',
 
   // GitHub 组织与仓库元信息
   // GitHub organization and repository metadata
   organizationName: 'LeonYoah',
-  projectName: 'STX',
+  projectName: 'stx-website',
 
   // 避免死链阻止构建（设置容错警告）
   // Avoid broken links breaking the build (set to warn)

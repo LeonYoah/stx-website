@@ -5,15 +5,22 @@
 
 .stx-hero {
   --stx-nav-h: var(--ifm-navbar-height, 60px);
+  /* 同时跟宽高流体缩放，避免只跟 vw 在矮屏挤爆 / Scale with width+height */
+  --stx-hero-title: clamp(28px, min(3.6vw, 5.2vh), 52px);
+  --stx-hero-sub: clamp(14px, min(1.2vw, 1.9vh), 18px);
+  --stx-hero-gap: clamp(10px, 1.6vh, 24px);
+  --stx-hero-pad-y: clamp(16px, 2.8vh, 44px);
+  --stx-hero-pad-x: clamp(18px, 2.6vw, 40px);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  /* 首屏占满视口（扣除顶栏） / Fill first viewport minus navbar */
+  /* 至少铺满一屏；内容更高时可长出，避免矮屏硬裁切 / Fill viewport, grow if needed */
   min-height: calc(100dvh - var(--stx-nav-h));
-  height: calc(100dvh - var(--stx-nav-h));
-  padding: 0.5rem 0.75rem 0.75rem;
+  height: auto;
+  padding: clamp(0.35rem, 0.8vh, 0.65rem) clamp(0.5rem, 1.2vw, 0.85rem)
+    clamp(0.45rem, 1vh, 0.75rem);
 }
 
 .stx-hero-glow {
@@ -89,13 +96,14 @@
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  flex: 1;
+  flex: 1 1 auto;
   width: min(1480px, 100%);
   margin: 0 auto;
-  min-height: 0;
-  height: 100%;
+  /* 桌面默认撑满可用高度；矮屏允许按内容增高 / Fill height; grow on short screens */
+  min-height: calc(100dvh - var(--stx-nav-h) - 1.2rem);
+  height: auto;
   overflow: hidden;
-  border-radius: 28px;
+  border-radius: clamp(18px, 2vw, 28px);
   border: 1px solid var(--stx-stage-line);
   background:
     radial-gradient(
@@ -141,7 +149,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  align-self: stretch;
 }
 
 .stx-stage-copy {
@@ -151,7 +159,7 @@
 
 .stx-stage-viz {
   background: transparent;
-  min-height: 0;
+  min-height: min(56vh, 520px);
 }
 
 .stx-stage-viz > * {
@@ -166,7 +174,8 @@
   position: relative;
   flex: 1;
   width: 100%;
-  overflow: hidden;
+  min-height: 0;
+  overflow: visible;
   color: var(--stx-stage-fg);
 }
 
@@ -216,8 +225,8 @@
   min-height: 0;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(18px, 2.4vh, 28px);
-  padding: clamp(28px, 3.5vh, 48px) clamp(28px, 3vw, 44px);
+  gap: var(--stx-hero-gap);
+  padding: var(--stx-hero-pad-y) var(--stx-hero-pad-x);
   transform: translate3d(
     calc(var(--mouse-x-norm) * 3px),
     calc(var(--mouse-y-norm) * 2px),
@@ -229,15 +238,15 @@
 .stx-brand-main {
   position: relative;
   z-index: 1;
-  max-width: 640px;
+  max-width: min(640px, 100%);
   display: flex;
   flex-direction: column;
-  gap: clamp(14px, 1.8vh, 22px);
+  gap: clamp(8px, 1.4vh, 18px);
 }
 
 .stx-brand-eyebrow {
   margin: 0;
-  font-size: clamp(13px, 1.15vw, 15px);
+  font-size: clamp(11px, min(1.05vw, 1.5vh), 14px);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -250,37 +259,38 @@
 
 .stx-brand-title {
   margin: 0;
-  font-size: clamp(36px, 4.2vw, 56px);
-  line-height: 1.08;
+  font-size: var(--stx-hero-title);
+  line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.04em;
   color: var(--stx-stage-fg);
+  text-wrap: balance;
 }
 
 .stx-brand-subtitle {
   margin: 0;
   max-width: 560px;
-  font-size: clamp(16px, 1.35vw, 19px);
-  line-height: 1.65;
+  font-size: var(--stx-hero-sub);
+  line-height: 1.55;
   color: var(--stx-stage-soft);
 }
 
 .stx-pill-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: clamp(6px, 0.8vh, 10px);
   margin-top: 0;
 }
 
 .stx-pill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   border-radius: 999px;
   border: 1px solid var(--stx-stage-line);
   background: color-mix(in srgb, var(--stx-stage-accent) 8%, transparent);
-  padding: 10px 14px;
-  font-size: clamp(13px, 1.1vw, 15px);
+  padding: clamp(6px, 0.9vh, 10px) clamp(10px, 1.1vw, 14px);
+  font-size: clamp(12px, min(1vw, 1.5vh), 14px);
   font-weight: 700;
   color: var(--stx-stage-fg);
   backdrop-filter: blur(8px);
@@ -305,14 +315,14 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) 12px;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-top: 0;
-  min-height: 36px;
+  min-height: clamp(28px, 3.6vh, 36px);
   max-width: 560px;
 }
 
 .stx-type-label {
-  font-size: clamp(14px, 1.15vw, 16px);
+  font-size: clamp(12px, min(1.05vw, 1.55vh), 15px);
   font-weight: 700;
   color: var(--stx-stage-muted);
   white-space: nowrap;
@@ -320,14 +330,14 @@
 
 .stx-type-text {
   min-width: 0;
-  font-size: clamp(18px, 1.5vw, 22px);
+  font-size: clamp(15px, min(1.35vw, 2.2vh), 20px);
   font-weight: 800;
   color: var(--stx-stage-fg);
 }
 
 .stx-type-caret {
   width: 2px;
-  height: 22px;
+  height: clamp(16px, 2.2vh, 22px);
   background: var(--stx-stage-accent);
   animation: stx-blink-caret 1s step-end infinite;
 }
@@ -335,7 +345,7 @@
 .stx-brand-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: clamp(8px, 1vh, 12px);
   margin-top: 0;
 }
 
@@ -343,24 +353,25 @@
 .stx-brand-actions .button--outline-glacier,
 .stx-brand-actions a.button--glacier,
 .stx-brand-actions a.button--outline-glacier {
-  font-size: 15px !important;
-  padding: 12px 22px !important;
+  font-size: clamp(13px, 1.5vh, 15px) !important;
+  padding: clamp(8px, 1.2vh, 12px) clamp(14px, 1.6vw, 22px) !important;
 }
 
 .stx-brand-install {
   margin-top: 0;
   margin-bottom: 0;
-  max-width: 100%;
+  max-width: min(480px, 100%);
+  width: 100%;
 }
 
 .stx-brand-footer {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 18px;
+  gap: clamp(6px, 0.8vh, 10px) clamp(12px, 1.4vw, 18px);
   margin-top: 0;
   padding-top: 0;
   color: var(--stx-stage-muted);
-  font-size: clamp(13px, 1.05vw, 15px);
+  font-size: clamp(11px, min(1vw, 1.45vh), 14px);
   font-weight: 600;
   letter-spacing: 0.01em;
 }
@@ -446,17 +457,77 @@
   }
 }
 
+/* 中等桌面宽度：双栏仍在，略收字号与内边距 / Mid desktop: keep 2-col, tighten type */
+@media (max-width: 1280px) and (min-width: 997px) {
+  .stx-hero {
+    --stx-hero-title: clamp(26px, min(3.2vw, 4.8vh), 42px);
+    --stx-hero-sub: clamp(13px, min(1.15vw, 1.75vh), 16px);
+  }
+
+  .stx-stage {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+}
+
+/* 矮屏笔记本：压缩垂直节奏，优先完整可见 / Short laptops: denser vertical rhythm */
+@media (max-height: 860px) and (min-width: 997px) {
+  .stx-hero {
+    --stx-hero-title: clamp(24px, 4.2vh, 38px);
+    --stx-hero-sub: clamp(13px, 1.7vh, 16px);
+    --stx-hero-gap: clamp(8px, 1.2vh, 14px);
+    --stx-hero-pad-y: clamp(12px, 2vh, 24px);
+    overflow: visible;
+  }
+
+  .stx-stage {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .stx-stage-viz {
+    min-height: min(52vh, 420px);
+  }
+
+  .stx-brand-footer {
+    display: none;
+  }
+}
+
+@media (max-height: 720px) and (min-width: 997px) {
+  .stx-hero {
+    --stx-hero-title: clamp(22px, 3.8vh, 32px);
+    --stx-hero-gap: 8px;
+    --stx-hero-pad-y: 12px;
+  }
+
+  .stx-pill-row {
+    display: none;
+  }
+
+  .stx-type-row {
+    display: none;
+  }
+
+  .stx-stage-viz {
+    min-height: min(48vh, 360px);
+  }
+}
+
 @media (max-width: 996px) {
   .stx-hero {
-    height: auto;
-    min-height: calc(100dvh - var(--stx-nav-h));
-    padding: 0.5rem 0.75rem 0.75rem;
+    --stx-hero-title: clamp(26px, 7vw, 36px);
+    --stx-hero-sub: clamp(14px, 3.6vw, 17px);
+    --stx-hero-gap: 14px;
+    --stx-hero-pad-y: 22px;
+    --stx-hero-pad-x: 18px;
+    min-height: 0;
+    overflow: visible;
   }
 
   .stx-stage {
     grid-template-columns: minmax(0, 1fr);
-    height: auto;
-    min-height: calc(100dvh - var(--stx-nav-h) - 1.25rem);
+    min-height: 0;
+    overflow: visible;
   }
 
   .stx-stage-copy {
@@ -465,16 +536,35 @@
   }
 
   .stx-stage-viz {
-    min-height: min(48vh, 420px);
+    min-height: min(42vh, 380px);
   }
 
   .stx-brand-content {
-    padding: 24px 20px;
     justify-content: flex-start;
   }
 
-  .stx-brand-title {
-    font-size: 32px;
+  .stx-brand-footer {
+    display: flex;
+  }
+}
+
+@media (max-width: 640px) {
+  .stx-hero {
+    --stx-hero-title: clamp(24px, 7.2vw, 30px);
+    padding-inline: 0.4rem;
+  }
+
+  .stx-brand-actions .button--glacier,
+  .stx-brand-actions .button--outline-glacier,
+  .stx-brand-actions a.button--glacier,
+  .stx-brand-actions a.button--outline-glacier {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .stx-stage-viz {
+    min-height: min(38vh, 320px);
   }
 }
 
