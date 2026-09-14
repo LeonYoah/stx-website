@@ -5,6 +5,7 @@
 
 @import './animations.css';
 @import './login-brand.css';
+@import './agent-chat.css';
 
 @tailwind components;
 @tailwind utilities;

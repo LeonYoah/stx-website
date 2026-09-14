@@ -7,8 +7,8 @@ import { HeroBrandPanel } from './HeroBrandPanel';
 gsap.registerPlugin(useGSAP);
 
 /**
- * 首页首屏：放宽的一体舞台 — 左文案能力，右链路拓扑，共享壳与氛围。
- * Homepage hero: widened unified stage — copy left, topology right, one shell.
+ * 首页首屏：无边框一体舞台 — 左文案能力，右链路拓扑，与页面融为一体。
+ * Homepage hero: borderless stage — copy left, topology right, melts into page.
  */
 export function HeroSection(): React.JSX.Element {
   const containerRef = useRef<HTMLElement | null>(null);

@@ -3,6 +3,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import { HeroSection } from '../components/home/HeroSection';
+import { AgentChatDemo } from '../components/home/AgentChatDemo';
 import { NewsTicker } from '../components/home/NewsTicker';
 import { StatsBanner } from '../components/home/StatsBanner';
 import { BentoFeatures } from '../components/home/BentoFeatures';
@@ -56,6 +57,7 @@ export default function Home(): React.JSX.Element {
       {/* 首页上半页：Hero 主视觉区与公告跑马灯 */}
       {/* Homepage Upper Half: Hero main visual showcase and announcement ticker */}
       <HeroSection />
+      <AgentChatDemo />
       <NewsTicker />
 
       {/* 首页下半页暂行搁置 */}
