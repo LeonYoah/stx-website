@@ -16,9 +16,9 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  /* 至少铺满一屏；内容更高时可长出，避免矮屏硬裁切 / Fill viewport, grow if needed */
+  /* 桌面锁一屏高度；小屏在 media 里改为 auto / Lock one viewport on desktop */
   min-height: calc(100dvh - var(--stx-nav-h));
-  height: auto;
+  height: calc(100dvh - var(--stx-nav-h));
   /* 贴边铺满，去掉卡片外框留白 / Edge-to-edge, no card inset */
   padding: 0;
 }
@@ -97,11 +97,11 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   flex: 1 1 auto;
-  width: min(1480px, 100%);
+  width: 100%;
   margin: 0 auto;
-  /* 桌面默认撑满可用高度；矮屏允许按内容增高 / Fill height; grow on short screens */
-  min-height: calc(100dvh - var(--stx-nav-h) - 1.2rem);
-  height: auto;
+  /* 桌面默认撑满可用高度；内容超出由子区滚动 / Fill viewport; children scroll */
+  min-height: calc(100dvh - var(--stx-nav-h));
+  height: calc(100dvh - var(--stx-nav-h));
   overflow: hidden;
   /* 无边框一体舞台：与页面背景融合，不做成卡片壳 / Borderless stage melts into page */
   border-radius: 0;
@@ -176,6 +176,39 @@
 .stx-stage-viz {
   background: transparent;
   min-height: min(56vh, 520px);
+}
+
+/* MiMo 构图：文案略窄、演示略宽，全宽铺满 / Full-bleed two columns */
+.stx-stage--mimo {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  align-items: stretch;
+  width: 100%;
+  max-width: none;
+  padding-inline: clamp(16px, 2.4vw, 40px);
+  padding-block: clamp(10px, 1.6vh, 22px);
+}
+
+/* 右侧演示区：拉伸铺满整列，固定不随内容长高 / Fill column; fixed shell height */
+.stx-stage-viz--demo {
+  align-self: stretch;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  padding: clamp(10px, 1.6vh, 20px) clamp(6px, 1vw, 14px)
+    clamp(12px, 2vh, 24px);
+  justify-content: stretch;
+  overflow: hidden;
+}
+
+.stx-stage-viz--demo > .stx-agent-demo {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .stx-stage-viz > * {
@@ -254,7 +287,7 @@
 .stx-brand-main {
   position: relative;
   z-index: 1;
-  max-width: min(640px, 100%);
+  max-width: min(720px, 100%);
   display: flex;
   flex-direction: column;
   gap: clamp(8px, 1.4vh, 18px);
@@ -483,25 +516,24 @@
   .stx-stage {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   }
+
+  .stx-stage--mimo {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  }
 }
 
-/* 矮屏笔记本：压缩垂直节奏，优先完整可见 / Short laptops: denser vertical rhythm */
+/* 矮屏笔记本：压缩垂直节奏，仍锁死一屏高度 / Short laptops: denser, keep one viewport */
 @media (max-height: 860px) and (min-width: 997px) {
   .stx-hero {
     --stx-hero-title: clamp(24px, 4.2vh, 38px);
     --stx-hero-sub: clamp(13px, 1.7vh, 16px);
     --stx-hero-gap: clamp(8px, 1.2vh, 14px);
     --stx-hero-pad-y: clamp(12px, 2vh, 24px);
-    overflow: visible;
+    overflow: hidden;
   }
 
   .stx-stage {
-    min-height: 0;
-    overflow: visible;
-  }
-
-  .stx-stage-viz {
-    min-height: min(52vh, 420px);
+    overflow: hidden;
   }
 
   .stx-brand-footer {
@@ -537,12 +569,14 @@
     --stx-hero-pad-y: 22px;
     --stx-hero-pad-x: 18px;
     min-height: 0;
+    height: auto;
     overflow: visible;
   }
 
   .stx-stage {
     grid-template-columns: minmax(0, 1fr);
     min-height: 0;
+    height: auto;
     overflow: visible;
   }
 
@@ -556,7 +590,22 @@
   }
 
   .stx-stage-viz {
-    min-height: min(42vh, 380px);
+    min-height: 0;
+  }
+
+  .stx-stage--mimo {
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: clamp(10px, 3vw, 18px);
+  }
+
+  /* 小屏：对话外壳高度锁死，只内部滚动 / Lock chat shell; scroll inside */
+  .stx-stage-viz--demo {
+    flex: none;
+    height: min(70vh, 640px);
+    min-height: min(70vh, 640px);
+    max-height: min(70vh, 640px);
+    padding-inline: 0;
+    overflow: hidden;
   }
 
   .stx-brand-content {

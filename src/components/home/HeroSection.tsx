@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import IntegrationCard from '../ui/integration-card';
 import { HeroBrandPanel } from './HeroBrandPanel';
+import { AgentChatDemo } from './AgentChatDemo';
 
 gsap.registerPlugin(useGSAP);
 
 /**
- * 首页首屏：无边框一体舞台 — 左文案能力，右链路拓扑，与页面融为一体。
- * Homepage hero: borderless stage — copy left, topology right, melts into page.
+ * 左文案能力，右嵌 Agent 对话工作台，无边框融页。
+ * brand copy left, embedded agent workspace right.
  */
 export function HeroSection(): React.JSX.Element {
   const containerRef = useRef<HTMLElement | null>(null);
@@ -61,14 +61,20 @@ export function HeroSection(): React.JSX.Element {
         return;
       }
 
-      // 只做轻位移，不用 opacity，避免 Strict Mode / HMR 后文案卡在透明
-      // Translate only — never animate opacity (can stick invisible after remount)
-      gsap.from('.stx-stage', {
-        y: 12,
-        duration: 0.45,
-        ease: 'power2.out',
+      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+      tl.from('.stx-stage-copy', {
+        x: -18,
+        duration: 0.55,
         clearProps: 'transform',
-      });
+      }).from(
+        '.stx-stage-viz',
+        {
+          y: 22,
+          duration: 0.6,
+          clearProps: 'transform',
+        },
+        '-=0.35',
+      );
     },
     { scope: containerRef },
   );
@@ -78,12 +84,12 @@ export function HeroSection(): React.JSX.Element {
       <div className="stx-hero-glow" aria-hidden="true" />
       <div className="stx-hero-grid-fade" aria-hidden="true" />
 
-      <div ref={stageRef} className="stx-stage">
+      <div ref={stageRef} className="stx-stage stx-stage--mimo">
         <div className="stx-stage-copy">
           <HeroBrandPanel />
         </div>
-        <div className="stx-stage-viz">
-          <IntegrationCard embedded />
+        <div className="stx-stage-viz stx-stage-viz--demo">
+          <AgentChatDemo embedded />
         </div>
       </div>
     </header>

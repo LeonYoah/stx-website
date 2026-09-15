@@ -76,13 +76,13 @@
   color: var(--mimo-soft);
 }
 
-/* —— 工作台外壳：柔影无硬边框 / Soft floating shell —— */
+/* —— 工作台外壳：默认高度；嵌入时由父级撑满 / Shell height; embedded fills parent —— */
 .stx-mimo {
   --sidebar-w: 240px;
-  max-width: 1080px;
+  max-width: none;
   margin: 0 auto;
-  height: min(72vh, 640px);
-  min-height: 480px;
+  height: min(78vh, 720px);
+  min-height: 520px;
   display: grid;
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   overflow: hidden;
@@ -90,6 +90,20 @@
   background: var(--mimo-paper);
   box-shadow: var(--mimo-shadow);
   color: var(--mimo-ink);
+  position: relative;
+  transition: grid-template-columns 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stx-mimo.is-sidebar-collapsed {
+  --sidebar-w: 0px;
+}
+
+.stx-mimo.is-sidebar-collapsed .stx-mimo__sidebar {
+  opacity: 0;
+  pointer-events: none;
+  border-inline-end-width: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .stx-mimo__sidebar {
@@ -129,6 +143,16 @@
   color: var(--mimo-ink);
 }
 
+.stx-mimo__icon-btn.is-pressed {
+  background: var(--mimo-wash);
+  color: var(--mimo-ink);
+  transform: scale(0.9);
+}
+
+.stx-mimo__header-panel {
+  flex-shrink: 0;
+}
+
 .stx-mimo__nav {
   display: flex;
   flex-direction: column;
@@ -140,12 +164,23 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
   min-height: 38px;
   padding: 0 10px;
+  border: 0;
   border-radius: 10px;
+  background: transparent;
+  font: inherit;
   font-size: 0.88rem;
   font-weight: 550;
   color: var(--mimo-ink);
+  text-align: start;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.stx-mimo__nav-item:hover {
+  background: var(--mimo-wash);
 }
 
 .stx-mimo__nav-item svg {
@@ -206,8 +241,16 @@
   color: var(--mimo-soft);
   border-radius: 10px;
   padding: 8px 10px;
+  font: inherit;
   font-size: 0.84rem;
-  cursor: default;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.stx-mimo__project:hover,
+.stx-mimo__recent:hover {
+  background: var(--mimo-wash);
+  color: var(--mimo-ink);
 }
 
 .stx-mimo__project svg {
@@ -225,9 +268,21 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
   padding: 10px 8px 4px;
+  border: 0;
   border-top: 1px solid var(--mimo-line);
   margin-top: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.stx-mimo__user:hover {
+  background: color-mix(in srgb, var(--mimo-wash) 70%, transparent);
 }
 
 .stx-mimo__avatar {
@@ -307,8 +362,10 @@
 .stx-mimo__viewport {
   flex: 1;
   min-height: 0;
-  overflow: auto;
-  padding: 8px 22px 4px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px clamp(16px, 2vw, 28px) 4px;
 }
 
 .stx-mimo__welcome {
@@ -352,7 +409,8 @@
 }
 
 .stx-mimo__conversation {
-  max-width: 720px;
+  max-width: none;
+  width: 100%;
   margin: 0 auto;
   padding-bottom: 12px;
 }
@@ -504,26 +562,65 @@
   border-top: 1px solid var(--mimo-line);
   padding: 12px 14px 14px;
   font-size: 0.8rem;
-  color: var(--mimo-muted);
+  color: var(--mimo-soft);
+  background: color-mix(in srgb, var(--mimo-wash) 80%, transparent);
 }
 
 .stx-mimo__phase-detail p {
   margin: 0 0 10px;
   line-height: 1.7;
+  color: var(--mimo-soft);
 }
 
 .stx-mimo__queries {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #0b1220;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+[data-theme='dark'] .stx-mimo__phase-detail {
+  color: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='dark'] .stx-mimo__phase-detail p {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+[data-theme='dark'] .stx-mimo__queries {
+  background: #05080e;
+  color: #e8eef4;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .stx-mimo__queries span {
-  border-radius: 6px;
-  padding: 4px 8px;
-  background: var(--mimo-wash);
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
   font-size: 0.72rem;
-  color: var(--mimo-soft);
+  line-height: 1.55;
+  color: inherit;
+}
+
+.stx-mimo__reveal {
+  animation: stx-mimo-reveal 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes stx-mimo-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .stx-mimo__typing {
@@ -598,10 +695,36 @@
   display: flex;
   align-items: stretch;
   width: 100%;
+  border: 0;
+  padding: 0;
   border-radius: 10px;
   overflow: hidden;
   background: var(--mimo-paper);
   box-shadow: inset 0 0 0 1px var(--mimo-line);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+
+.stx-mimo__artifact:hover,
+.stx-mimo__artifact.is-open {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mimo-accent) 45%, var(--mimo-line));
+}
+
+.stx-mimo__artifact-body {
+  margin: 10px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #0b1220;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 160px;
 }
 
 .stx-mimo__artifact-cover {
@@ -653,14 +776,14 @@
 }
 
 .stx-mimo__composer-wrap {
-  width: min(100% - 36px, 680px);
+  width: min(100% - 28px, 920px);
   margin: 8px auto 0;
   padding-bottom: 14px;
   flex-shrink: 0;
 }
 
 .stx-mimo.is-active .stx-mimo__composer-wrap {
-  width: min(100% - 28px, 680px);
+  width: min(100% - 24px, 920px);
   margin-top: 4px;
   padding-bottom: 12px;
 }
@@ -718,9 +841,19 @@
   justify-content: center;
   width: 28px;
   height: 28px;
+  border: 0;
   border-radius: 8px;
   color: var(--mimo-muted);
   background: transparent;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.stx-mimo__chip:hover {
+  background: var(--mimo-wash);
+  color: var(--mimo-ink);
 }
 
 .stx-mimo__chip--label {
@@ -731,24 +864,42 @@
 }
 
 .stx-mimo__model {
+  border: 0;
+  background: transparent;
+  font: inherit;
   font-size: 0.7rem;
   color: var(--mimo-muted);
   white-space: nowrap;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.stx-mimo__model:hover {
+  background: var(--mimo-wash);
+  color: var(--mimo-ink);
 }
 
 .stx-mimo__send {
   width: 30px;
   height: 30px;
+  border: 0;
   border-radius: 50%;
   display: grid;
   place-items: center;
   background: #b7c4c8;
   color: #fff;
-  transition: background 0.2s ease;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, transform 0.12s ease;
 }
 
 .stx-mimo__send.is-on {
   background: #13252c;
+}
+
+.stx-mimo__send.is-pressed {
+  transform: scale(0.9);
 }
 
 [data-theme='dark'] .stx-mimo__send.is-on {
@@ -771,19 +922,27 @@
   font-size: 0.62rem;
 }
 
-.stx-mimo__reveal {
-  animation: stx-mimo-reveal 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+.stx-mimo__toast {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 20;
+  max-width: min(90%, 360px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(15, 28, 34, 0.92);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 550;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+  animation: stx-mimo-reveal 0.28s ease both;
 }
 
-@keyframes stx-mimo-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+[data-theme='dark'] .stx-mimo__toast {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a0c0d;
 }
 
 @keyframes stx-mimo-dot {
@@ -808,7 +967,9 @@
   .stx-mimo {
     --sidebar-w: 0px;
     grid-template-columns: minmax(0, 1fr);
-    height: min(78vh, 680px);
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
   }
 
   .stx-mimo__sidebar {
@@ -830,5 +991,103 @@
   .stx-mimo__typing i,
   .stx-mimo__status i {
     animation: none !important;
+  }
+}
+
+/* —— 嵌入首屏：铺满右侧，去掉外层标题留白 / Embedded in hero —— */
+.stx-agent-demo--embedded {
+  padding: 0;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+
+.stx-agent-demo--embedded .stx-mimo {
+  max-width: none;
+  width: 100%;
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 56px rgba(15, 40, 48, 0.12),
+    0 0 0 1px color-mix(in srgb, var(--mimo-line) 80%, transparent);
+}
+
+[data-theme='dark'] .stx-agent-demo--embedded .stx-mimo {
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* 拓扑叙事区 / Topology narrative section */
+.stx-topo-section {
+  position: relative;
+  padding: clamp(3rem, 7vh, 5.5rem) clamp(1rem, 3.5vw, 2rem)
+    clamp(3.5rem, 8vh, 6rem);
+  color: var(--ifm-font-color-base);
+  background:
+    radial-gradient(ellipse 65% 40% at 40% 0%, rgba(142, 202, 214, 0.12), transparent 55%),
+    transparent;
+}
+
+[data-theme='dark'] .stx-topo-section {
+  background:
+    radial-gradient(ellipse 55% 35% at 45% 0%, rgba(255, 255, 255, 0.04), transparent 50%),
+    transparent;
+}
+
+.stx-topo-section__intro {
+  max-width: 680px;
+  margin: 0 auto 1.75rem;
+  text-align: center;
+}
+
+.stx-topo-section__eyebrow {
+  margin: 0 0 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.stx-topo-section__title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.45rem, 2.8vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.stx-topo-section__sub {
+  margin: 0 auto;
+  max-width: 540px;
+  font-size: clamp(0.92rem, 1.3vw, 1.02rem);
+  line-height: 1.65;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.stx-topo-section__viz {
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: min(52vh, 480px);
+  height: min(56vh, 520px);
+}
+
+.stx-topo-section__viz > * {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+@media (max-width: 996px) {
+  .stx-topo-section__viz {
+    height: min(48vh, 420px);
   }
 }
