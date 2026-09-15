@@ -52,7 +52,7 @@ export default function Home(): React.JSX.Element {
 
   return (
     <Layout
-      title={`${siteConfig.title} - Apache SeaTunnel 可视化集群与运维管控平台`}
+      title={`${siteConfig.title} - Apache SeaTunnel 可视化集群与运维管理平台`}
       description="让 SeaTunnel 运维不再黑箱。把配置、升级、诊断、恢复、调试放到一个统一入口，面向 Apache SeaTunnel 的一站式运维与任务管理；并原生提供 AI Agent 智能运维入口（CLI + Skill）。">
       {/* 首页上半页：Hero 主视觉区与公告跑马灯 */}
       {/* Homepage Upper Half: Hero main visual showcase and announcement ticker */}
@@ -68,4 +68,3 @@ export default function Home(): React.JSX.Element {
     </Layout>
   );
 }
-

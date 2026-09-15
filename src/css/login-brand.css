@@ -293,6 +293,49 @@
   gap: clamp(8px, 1.4vh, 18px);
 }
 
+/* 完整品牌 Logo 容器与自适应样式 / Full brand logo container and adaptive styles */
+.stx-brand-logo-wrap {
+  display: flex;
+  align-items: center;
+  margin-bottom: clamp(6px, 1.2vh, 16px);
+}
+
+.stx-brand-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.stx-brand-logo-link:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.stx-brand-logo {
+  height: clamp(64px, 8vh, 96px);
+  width: auto;
+  max-width: 360px;
+  object-fit: contain;
+  user-select: none;
+}
+
+.stx-brand-logo--dark {
+  display: none;
+}
+
+.stx-brand-logo--light {
+  display: block;
+}
+
+[data-theme='dark'] .stx-brand-logo--dark {
+  display: block;
+}
+
+[data-theme='dark'] .stx-brand-logo--light {
+  display: none;
+}
+
 .stx-brand-eyebrow {
   margin: 0;
   font-size: clamp(11px, min(1.05vw, 1.5vh), 14px);
@@ -308,20 +351,31 @@
 
 .stx-brand-title {
   margin: 0;
-  font-size: var(--stx-hero-title);
-  line-height: 1.1;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: var(--stx-stage-fg);
-  text-wrap: balance;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.8vh, 10px);
 }
 
-.stx-brand-subtitle {
-  margin: 0;
-  max-width: 560px;
-  font-size: var(--stx-hero-sub);
-  line-height: 1.55;
-  color: var(--stx-stage-soft);
+/* 主标题第一行：双核技术前缀 / Headline first line: dual-core technical prefix */
+.stx-brand-title-prefix {
+  font-size: clamp(18px, min(2.1vw, 3.2vh), 30px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ifm-color-primary);
+  line-height: 1.25;
+}
+
+[data-theme='dark'] .stx-stage .stx-brand-title-prefix {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* 主标题第二行：核心价值落地 / Headline second line: core value delivery */
+.stx-brand-title-main {
+  font-size: var(--stx-hero-title);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: var(--stx-stage-fg);
 }
 
 .stx-pill-row {

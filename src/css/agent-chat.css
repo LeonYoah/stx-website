@@ -1,6 +1,6 @@
 /**
- * Agent 对话演示：MiMo 工作台骨架 + STX 冰川主题（无硬边卡片壳）。
- * Agent chat demo: MiMo workspace skeleton + STX glacier theme (no hard card chrome).
+ * stx Skill 对话演示：MiMo 工作台骨架 + 冰川主题；提问时显示 stx 提及胶囊。
+ * Workspace shell + glacier theme; stx mention chip only on user asks.
  */
 
 .stx-agent-demo {
@@ -16,6 +16,10 @@
   --mimo-phase-bg: #fbfcfd;
   --mimo-user-bg: #eef5f7;
   --mimo-shadow: 0 18px 50px rgba(15, 40, 48, 0.1), 0 2px 8px rgba(15, 40, 48, 0.04);
+  --stx-mention-bg: #eceeef;
+  --stx-mention-fg: #1a1a1a;
+  --stx-mention-icon-bg: #3a3a3a;
+  --stx-mention-icon-fg: #ffffff;
 
   position: relative;
   padding: clamp(3.2rem, 7vh, 5.5rem) clamp(1rem, 3.5vw, 2rem)
@@ -30,15 +34,19 @@
   --mimo-ink: #f4f7f8;
   --mimo-muted: rgba(255, 255, 255, 0.48);
   --mimo-soft: rgba(255, 255, 255, 0.72);
-  --mimo-paper: #0a0c0d;
-  --mimo-sidebar: #111516;
-  --mimo-line: rgba(255, 255, 255, 0.08);
-  --mimo-wash: rgba(255, 255, 255, 0.04);
+  --mimo-paper: #0c0e10;
+  --mimo-sidebar: #121517;
+  --mimo-line: rgba(255, 255, 255, 0.09);
+  --mimo-wash: rgba(255, 255, 255, 0.045);
   --mimo-accent: #8ecad6;
   --mimo-accent-soft: rgba(142, 202, 214, 0.14);
-  --mimo-phase-bg: rgba(255, 255, 255, 0.03);
+  --mimo-phase-bg: rgba(255, 255, 255, 0.035);
   --mimo-user-bg: rgba(255, 255, 255, 0.07);
   --mimo-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+  --stx-mention-bg: rgba(255, 255, 255, 0.14);
+  --stx-mention-fg: #f3f4f5;
+  --stx-mention-icon-bg: rgba(255, 255, 255, 0.92);
+  --stx-mention-icon-fg: #1a1a1a;
   background:
     radial-gradient(ellipse 60% 40% at 65% 5%, rgba(255, 255, 255, 0.05), transparent 55%),
     transparent;
@@ -86,12 +94,13 @@
   display: grid;
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 20px;
   background: var(--mimo-paper);
   box-shadow: var(--mimo-shadow);
   color: var(--mimo-ink);
   position: relative;
   transition: grid-template-columns 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  isolation: isolate;
 }
 
 .stx-mimo.is-sidebar-collapsed {
@@ -380,17 +389,19 @@
 }
 
 .stx-mimo__welcome-mark {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: auto;
+  min-width: 120px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
   display: grid;
   place-items: center;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  background: linear-gradient(145deg, var(--stx-glacier-300), var(--stx-glacier-600));
-  color: #0b1a20;
+  background: color-mix(in srgb, var(--mimo-wash) 90%, var(--stx-glacier-100, #e1f3f7));
   margin-bottom: 4px;
+}
+
+.stx-mimo__welcome-mark .stx-brand-mark__img {
+  height: 28px;
 }
 
 .stx-mimo__welcome h3 {
@@ -416,15 +427,16 @@
 }
 
 .stx-mimo__user-msg {
-  background: var(--mimo-user-bg);
-  border-radius: 14px;
-  padding: 14px 16px;
   line-height: 1.75;
   max-width: 94%;
   margin-inline-start: auto;
   margin-bottom: 22px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--mimo-user-bg);
   font-size: 0.92rem;
   white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .stx-mimo__assistant-head {
@@ -461,11 +473,90 @@
   color: var(--mimo-muted);
 }
 
+.stx-mimo__assistant {
+  margin-bottom: 18px;
+}
+
 .stx-mimo__assistant-text {
-  margin: 0 0 16px;
+  margin: 0;
   font-size: 0.92rem;
   line-height: 1.85;
-  color: var(--mimo-soft);
+  color: var(--mimo-ink);
+}
+
+/* stx 提及胶囊：完整青鸾 Logo（图形 + STX，提问时） */
+.stx-mention {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 2px 8px;
+  border-radius: 7px;
+  background: #eceeef;
+  vertical-align: -0.4em;
+  user-select: none;
+  flex-shrink: 0;
+  visibility: visible;
+  opacity: 1;
+}
+
+[data-theme='dark'] .stx-mention {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.stx-mention__logo {
+  display: block;
+  height: 16px;
+  width: auto;
+  max-width: 72px;
+  object-fit: contain;
+}
+
+.stx-mention__logo--dark {
+  display: none;
+}
+
+[data-theme='dark'] .stx-mention__logo--light {
+  display: none;
+}
+
+[data-theme='dark'] .stx-mention__logo--dark {
+  display: block;
+}
+
+.stx-mention--inline {
+  margin-right: 6px;
+}
+
+.stx-mention--composer {
+  margin-right: 6px;
+}
+
+.stx-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.stx-brand-mark__img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.stx-brand-mark__img--dark {
+  display: none;
+}
+
+[data-theme='dark'] .stx-brand-mark__img--light {
+  display: none;
+}
+
+[data-theme='dark'] .stx-brand-mark__img--dark {
+  display: block;
 }
 
 .stx-mimo__phases {
@@ -728,17 +819,25 @@
 }
 
 .stx-mimo__artifact-cover {
-  width: 72px;
+  width: 96px;
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: #fff;
+  padding: 0 8px;
   background:
-    radial-gradient(circle at 30% 20%, rgba(142, 202, 214, 0.55), transparent 55%),
+    radial-gradient(circle at 30% 20%, rgba(142, 202, 214, 0.35), transparent 55%),
     #0f1c22;
+}
+
+/* 深色封面固定用 dark 版完整 Logo，保证 STX 字样可读 */
+.stx-mimo__artifact-cover .stx-brand-mark__img--light {
+  display: none;
+}
+
+.stx-mimo__artifact-cover .stx-brand-mark__img--dark {
+  display: block;
+  height: 22px;
+  filter: brightness(1.15);
 }
 
 .stx-mimo__artifact-copy {
@@ -798,25 +897,26 @@
     inset 0 0 0 1px var(--mimo-line);
 }
 
-.stx-mimo__composer textarea {
-  width: 100%;
-  resize: none;
-  border: 0;
-  background: transparent;
-  padding: 6px 8px;
-  font: inherit;
-  font-size: 0.92rem;
-  line-height: 1.55;
+/* 内联编辑：胶囊与正文同一行文字流，对应箭头所指文案开头 */
+.stx-mimo__composer-editor {
   min-height: 56px;
   max-height: 120px;
+  overflow: auto;
+  padding: 6px 8px;
+  font-size: 0.92rem;
+  line-height: 1.7;
   color: var(--mimo-ink);
-  outline: none;
-  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-.stx-mimo__composer textarea::placeholder {
+.stx-mimo__composer-text {
+  font: inherit;
+  color: inherit;
+}
+
+.stx-mimo__composer-placeholder {
   color: var(--mimo-muted);
-  opacity: 1;
 }
 
 .stx-mimo__composer-bar {
@@ -863,23 +963,6 @@
   background: var(--mimo-wash);
 }
 
-.stx-mimo__model {
-  border: 0;
-  background: transparent;
-  font: inherit;
-  font-size: 0.7rem;
-  color: var(--mimo-muted);
-  white-space: nowrap;
-  cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 6px;
-}
-
-.stx-mimo__model:hover {
-  background: var(--mimo-wash);
-  color: var(--mimo-ink);
-}
-
 .stx-mimo__send {
   width: 30px;
   height: 30px;
@@ -910,16 +993,6 @@
 .stx-mimo__send svg {
   width: 14px;
   height: 14px;
-}
-
-.stx-mimo__footnote {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 8px;
-  padding-inline: 6px;
-  color: var(--mimo-muted);
-  font-size: 0.62rem;
 }
 
 .stx-mimo__toast {

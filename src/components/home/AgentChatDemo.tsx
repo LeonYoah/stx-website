@@ -5,10 +5,13 @@ import React, {
   useState,
   type ReactNode,
 } from 'react';
+import logoLight from '@site/static/img/stx-logo.png';
+import logoDark from '@site/static/img/stx-logo-dark.png';
 
 /**
- * STX Agent 多场景演示：诊断 / MySQL-CDC→Hive 工作台提交 / 2.3.8→2.3.13 升级。
- * Multi-scenario STX agent demo aligned to Workbench + upgrade flows.
+ * STX 多场景演示：诊断 / MySQL-CDC→Hive 提交 / 2.3.8→2.3.13 升级验证。
+ * stx 是 CLI 命令 + Skill，不是独立 AI Agent。
+ * Multi-scenario demo; stx is a CLI command + Skill, not a standalone AI agent.
  */
 
 type PhaseIcon = 'cli' | 'jobs' | 'logs' | 'code' | 'sync' | 'upgrade';
@@ -51,12 +54,12 @@ const SCENARIOS: Scenario[] = [
     label: '线上集群健康巡检',
     chatTitle: 'SeaTunnel 集群诊断',
     projectName: 'zeta-prod 运维',
-    welcomeTitle: '让 SeaTunnel 运维不再黑箱',
+    welcomeTitle: '可视化管理 + 原生 AI Agent（CLI + Skill）：让 SeaTunnel 运维清晰透明',
     welcomeSub: '用自然语言驱动 stx：集群、任务、日志与源码一气呵成。',
     prompt:
       '帮我看看线上 SeaTunnel 现在有哪些集群在跑，任务是否健康；若有失败任务，拉错误日志并对照源码给出根因。',
     reply:
-      '我会通过 STX Skill 编排控制面能力：先列集群与运行中任务，再定位失败作业日志，最后对照 SeaTunnel 源码给出可执行修复建议。',
+      '先列集群与运行中任务，再定位失败作业日志，最后对照 SeaTunnel 源码给出可执行修复建议。',
     midUsers: [],
     phases: [
       {
@@ -128,7 +131,7 @@ const SCENARIOS: Scenario[] = [
       },
     ],
     artifactTitle: 'job-1842 诊断纪要',
-    artifactMeta: 'SeaTunnel · STX Agent',
+    artifactMeta: 'SeaTunnel · stx skill',
     artifactBody: `# job-1842 诊断纪要
 
 根因：JDBC Sink 主键冲突（Duplicate key）
@@ -414,7 +417,7 @@ result: verification complete · pending approval`,
 ];
 
 /** 放慢节奏；阶段更多的场景仍保持可跟读 / Slow timeline for readability */
-const TYPE_START = 500;
+const TYPE_START = 200;
 const TYPE_DURATION = 2800;
 const START_AT = 4800;
 const PHASE_GAP = 3200;
@@ -422,6 +425,63 @@ const MID_USER_GAP = 1600;
 const FINISH_GAP = 2800;
 
 type Mode = 'welcome' | 'running' | 'complete';
+
+/**
+ * stx Skill 提及胶囊：完整青鸾 Logo（图形 + STX 字样，仅提问时）。
+ * Skill mention chip: full Qingluan logo (mark + STX wordmark, asks only).
+ */
+function StxMentionChip({
+  className = '',
+}: {
+  className?: string;
+}): React.JSX.Element {
+  return (
+    <span className={`stx-mention ${className}`.trim()} title="青鸾 · STX">
+      <img
+        className="stx-mention__logo stx-mention__logo--light"
+        src={logoLight}
+        alt="STX"
+        height={18}
+        draggable={false}
+      />
+      <img
+        className="stx-mention__logo stx-mention__logo--dark"
+        src={logoDark}
+        alt="STX"
+        height={18}
+        draggable={false}
+      />
+    </span>
+  );
+}
+
+/** 对话区内完整青鸾 Logo（图形 + STX） / Full Qingluan logo inside chat shell */
+function StxBrandMark({
+  className = '',
+  height = 28,
+}: {
+  className?: string;
+  height?: number;
+}): React.JSX.Element {
+  return (
+    <span className={`stx-brand-mark ${className}`.trim()}>
+      <img
+        className="stx-brand-mark__img stx-brand-mark__img--light"
+        src={logoLight}
+        alt="STX"
+        height={height}
+        draggable={false}
+      />
+      <img
+        className="stx-brand-mark__img stx-brand-mark__img--dark"
+        src={logoDark}
+        alt="STX"
+        height={height}
+        draggable={false}
+      />
+    </span>
+  );
+}
 
 function Icon({
   name,
@@ -550,7 +610,7 @@ function buildTimeline(scenario: Scenario): {
 }
 
 /**
- * 首页 Agent 对话演示工作台（多场景）
+ * 首页 stx Skill 对话演示工作台（多场景）
  */
 export function AgentChatDemo({
   embedded = false,
@@ -567,7 +627,7 @@ export function AgentChatDemo({
   /** 按时间顺序的会话流（含阶段占位） / Chronological feed including phase slots */
   const [feed, setFeed] = useState<
     Array<
-      | { kind: 'user'; text: string }
+      | { kind: 'user'; text: string; mention?: boolean }
       | { kind: 'assistant'; text: string }
       | { kind: 'phase'; index: number }
     >
@@ -694,7 +754,7 @@ export function AgentChatDemo({
         setExpanded(new Set());
         setArtifactOpen(false);
         setFeed([
-          { kind: 'user', text: current.prompt },
+          { kind: 'user', text: current.prompt, mention: true },
           { kind: 'assistant', text: current.reply },
         ]);
       } else if (ev.kind === 'phase') {
@@ -774,7 +834,7 @@ export function AgentChatDemo({
       cancelled = true;
       if (frameId !== null) window.cancelAnimationFrame(frameId);
     };
-  }, [runId, resetPlay, scenarioId]);
+  }, [runId, scenarioId]);
 
   useEffect(() => {
     const el = scrollerRef.current;
@@ -788,7 +848,7 @@ export function AgentChatDemo({
     if (s.mode === 'welcome') {
       s.elapsed = START_AT;
       s.playing = true;
-      showToast('已发送，开始调用 STX…');
+      showToast('已发送，开始调用 stx…');
       return;
     }
     if (s.mode === 'running') {
@@ -800,7 +860,7 @@ export function AgentChatDemo({
 
   const composerPlaceholder =
     mode === 'running'
-      ? 'STX Agent 正在调用 stx…'
+      ? '正在通过 stx 执行…'
       : '描述你想排查或提交的运维任务…';
 
   const shellClass = [
@@ -814,10 +874,10 @@ export function AgentChatDemo({
   return (
     <section
       className={`stx-agent-demo${embedded ? ' stx-agent-demo--embedded' : ''}`}
-      aria-label={embedded ? 'STX Agent 对话演示' : undefined}
+      aria-label={embedded ? 'stx Skill 对话演示' : undefined}
     >
       <div className={shellClass}>
-        <aside className="stx-mimo__sidebar" aria-label="Agent 导航">
+        <aside className="stx-mimo__sidebar" aria-label="stx 工作台导航">
           <div className="stx-mimo__toolbar">
             <button
               type="button"
@@ -934,7 +994,7 @@ export function AgentChatDemo({
               SX
             </span>
             <div>
-              <strong>STX 运维</strong>
+              <strong>stx 运维</strong>
               <small>个人空间</small>
             </div>
           </button>
@@ -961,7 +1021,7 @@ export function AgentChatDemo({
               {mode === 'running' ? (
                 <span className="stx-mimo__status">
                   <i />
-                  调用中
+                  执行中
                 </span>
               ) : null}
               {mode === 'running' ? (
@@ -994,7 +1054,7 @@ export function AgentChatDemo({
             {mode === 'welcome' ? (
               <div className="stx-mimo__welcome">
                 <div className="stx-mimo__welcome-mark" aria-hidden>
-                  STX
+                  <StxBrandMark height={28} />
                 </div>
                 <h3>{scenario.welcomeTitle}</h3>
                 <p>{scenario.welcomeSub}</p>
@@ -1005,24 +1065,18 @@ export function AgentChatDemo({
                   if (item.kind === 'user') {
                     return (
                       <div key={`u-${i}`} className="stx-mimo__user-msg stx-mimo__reveal">
+                        {item.mention ? (
+                          <StxMentionChip className="stx-mention--inline" />
+                        ) : null}
                         {item.text}
                       </div>
                     );
                   }
                   if (item.kind === 'assistant') {
                     return (
-                      <React.Fragment key={`a-${i}`}>
-                        <div className="stx-mimo__assistant-head stx-mimo__reveal">
-                          <span className="stx-mimo__agent-mark" aria-hidden>
-                            STX
-                          </span>
-                          <strong>STX Agent</strong>
-                          <small>CLI + Skill</small>
-                        </div>
-                        <p className="stx-mimo__assistant-text stx-mimo__reveal">
-                          {item.text}
-                        </p>
-                      </React.Fragment>
+                      <div key={`a-${i}`} className="stx-mimo__assistant stx-mimo__reveal">
+                        <p className="stx-mimo__assistant-text">{item.text}</p>
+                      </div>
                     );
                   }
 
@@ -1099,7 +1153,7 @@ export function AgentChatDemo({
                       }}
                     >
                       <span className="stx-mimo__artifact-cover" aria-hidden>
-                        STX
+                        <StxBrandMark className="stx-mimo__artifact-logo" height={22} />
                       </span>
                       <span className="stx-mimo__artifact-copy">
                         <strong>{scenario.artifactTitle}</strong>
@@ -1121,13 +1175,30 @@ export function AgentChatDemo({
 
           <div className="stx-mimo__composer-wrap">
             <div className="stx-mimo__composer">
-              <textarea
-                readOnly
-                rows={3}
-                value={promptText}
-                placeholder={composerPlaceholder}
+              {/* 提问态始终展示 stx 胶囊（不依赖打字进度，避免第一屏 logo 缺失） */}
+              <div
+                className="stx-mimo__composer-editor"
                 aria-label="演示输入框"
-              />
+                role="textbox"
+                aria-readonly="true"
+              >
+                {mode === 'welcome' ? (
+                  <>
+                    <StxMentionChip className="stx-mention--composer" />
+                    {promptText ? (
+                      <span className="stx-mimo__composer-text">{promptText}</span>
+                    ) : (
+                      <span className="stx-mimo__composer-placeholder">
+                        {composerPlaceholder}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span className="stx-mimo__composer-placeholder">
+                    {composerPlaceholder}
+                  </span>
+                )}
+              </div>
               <div className="stx-mimo__composer-bar">
                 <div className="stx-mimo__composer-left">
                   <button
@@ -1150,13 +1221,6 @@ export function AgentChatDemo({
                 <div className="stx-mimo__composer-right">
                   <button
                     type="button"
-                    className="stx-mimo__model"
-                    onClick={() => showToast('CLI + Skill')}
-                  >
-                    CLI + Skill
-                  </button>
-                  <button
-                    type="button"
                     className={`stx-mimo__send${
                       promptText || mode !== 'welcome' ? ' is-on' : ''
                     }${pressedId === 'send' ? ' is-pressed' : ''}`}
@@ -1167,10 +1231,6 @@ export function AgentChatDemo({
                   </button>
                 </div>
               </div>
-            </div>
-            <div className="stx-mimo__footnote">
-              <span>STX Agent · Workbench</span>
-              <span>三场景演示 · 点「最近」切换 · stx CLI</span>
             </div>
           </div>
         </div>

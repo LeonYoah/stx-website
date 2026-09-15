@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import Link from '@docusaurus/Link';
+import logoLight from '@site/static/img/stx-logo.png';
+import logoDark from '@site/static/img/stx-logo-dark.png';
 
 /**
  * 指针跟随光晕（保留登录页交互手感，服务于一体舞台）。
@@ -217,20 +219,41 @@ function DebugIcon() {
   );
 }
 
+function RestartIcon() {
+  return (
+    <Icon label="restart">
+      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+      <path d="M16 21h5v-5" />
+    </Icon>
+  );
+}
+
+function AlertIcon() {
+  return (
+    <Icon label="alert">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    </Icon>
+  );
+}
+
 const COPY = {
   eyebrow: 'Apache SeaTunnel 一站式运维',
-  headline: '让 SeaTunnel 运维不再黑箱',
-  subtitle:
-    '配置、升级、诊断、恢复、调试同一入口；一键安装与插件治理，Checkpoint 可视化，原生 AI Agent（CLI + Skill）。',
-  chipsLabel: '产品能力',
+  titlePrefix: '可视化管理 + 原生 AI Agent（CLI + Skill）',
+  titleMain: '让 SeaTunnel 运维清晰透明',
+  chipsLabel: '核心运维能力',
   capabilityPrefix: '此刻可见 ·',
   chips: [
     { key: 'install', label: '一键安装', Icon: PackageIcon },
-    { key: 'upgrade', label: '一键升级', Icon: UpgradeIcon },
-    { key: 'market', label: '插件市场', Icon: MarketIcon },
-    { key: 'agent', label: 'AI Agent', Icon: AgentIcon },
+    { key: 'upgrade', label: '平滑升级', Icon: UpgradeIcon },
+    { key: 'restart', label: '一键重启', Icon: RestartIcon },
     { key: 'checkpoint', label: 'Checkpoint 可视化', Icon: CheckpointIcon },
     { key: 'debug', label: '作业在线调试', Icon: DebugIcon },
+    { key: 'alert', label: '监控告警', Icon: AlertIcon },
+    { key: 'market', label: '插件管理', Icon: MarketIcon },
+    { key: 'agent', label: '原生 AI Agent（CLI + Skill）', Icon: AgentIcon },
   ],
   capabilities: [
     '集群感知与节点健康',
@@ -272,9 +295,27 @@ export function HeroBrandPanel(): React.JSX.Element {
 
       <div className="stx-brand-content">
         <div className="stx-brand-main">
+          {/* 完整品牌 Logo（左侧上方视觉锚点，填补空白并对齐右侧工作台） / Full brand logo (visual anchor above title, balancing top space) */}
+          <div className="stx-brand-logo-wrap">
+            <Link to="/" className="stx-brand-logo-link" aria-label="STX 首页 / STX Home">
+              <img
+                src={logoLight}
+                alt="STX"
+                className="stx-brand-logo stx-brand-logo--light"
+              />
+              <img
+                src={logoDark}
+                alt="STX"
+                className="stx-brand-logo stx-brand-logo--dark"
+              />
+            </Link>
+          </div>
+
           <p className="stx-brand-eyebrow">{COPY.eyebrow}</p>
-          <h1 className="stx-brand-title">{COPY.headline}</h1>
-          <p className="stx-brand-subtitle">{COPY.subtitle}</p>
+          <h1 className="stx-brand-title">
+            <span className="stx-brand-title-prefix">{COPY.titlePrefix}</span>
+            <span className="stx-brand-title-main">{COPY.titleMain}</span>
+          </h1>
 
           <div className="stx-pill-row" aria-label={COPY.chipsLabel}>
             {COPY.chips.map(({ key, label, Icon: ChipIcon }) => (
