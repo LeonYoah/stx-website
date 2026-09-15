@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState, useId } from "react";
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import { motion } from "motion/react";
+import seatunnelLogo from '@site/static/img/seatunnel-logo.png';
+import flinkLogo from '@site/static/img/flink-squirrel.png';
+import stxMarkLogo from '@site/static/img/stx-mark.png';
 import { cn } from "../../lib/utils";
 import { Card, CardContent } from "./card";
 
@@ -25,13 +29,15 @@ interface ArchNode {
  * Apache SeaTunnel 官方海浪波涌与水珠气泡图标（Zeta 核心流批一体引擎）
  * Apache SeaTunnel official ocean wave & bubble splash logo (Zeta native engine)
  */
-const ZetaLogo = ({ className }: { className?: string }) => (
-  <img
-    src="/img/seatunnel-logo.png"
-    alt="Apache SeaTunnel Zeta Logo"
-    className={cn("object-contain", className)}
-  />
-);
+const ZetaLogo = ({ className }: { className?: string }) => {
+  return (
+    <img
+      src={seatunnelLogo}
+      alt="Apache SeaTunnel Zeta Logo"
+      className={cn("object-contain", className)}
+    />
+  );
+};
 
 /**
  * Apache Spark 官方星芒火花矢量图标
@@ -53,13 +59,15 @@ const SparkLogo = ({ className }: { className?: string }) => (
  * Apache Flink 官方正版彩尾松鼠图标（抱橡果与流式尾焰）
  * Apache Flink official squirrel mascot holding acorn with rainbow flame tail logo
  */
-const FlinkLogo = ({ className }: { className?: string }) => (
-  <img
-    src="/img/flink-squirrel.png"
-    alt="Apache Flink Squirrel Mascot Logo"
-    className={cn("object-contain", className)}
-  />
-);
+const FlinkLogo = ({ className }: { className?: string }) => {
+  return (
+    <img
+      src={flinkLogo}
+      alt="Apache Flink Squirrel Mascot Logo"
+      className={cn("object-contain", className)}
+    />
+  );
+};
 
 /**
  * 虚拟机 / 物理机部署基础设施图标
@@ -364,7 +372,7 @@ export function Integration() {
       >
         <div className="relative flex items-center justify-center">
           <img
-            src="/img/stx-mark.png"
+            src={stxMarkLogo}
             alt="STX Qingluan Brand Mark"
             width={48}
             height={48}
@@ -505,6 +513,7 @@ export const IntegrationCard = ({
 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const architectureUrl = useBaseUrl('/docs/architecture/overview');
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -614,7 +623,7 @@ export const IntegrationCard = ({
           </span>
         </div>
         <a
-          href="/docs/architecture/overview"
+          href={architectureUrl}
           className="inline-flex items-center gap-1 font-semibold text-foreground hover:underline ml-auto dark:text-white"
         >
           架构设计 ➔
