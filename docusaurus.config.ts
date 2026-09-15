@@ -34,7 +34,7 @@ const config: Config = {
   // 站点主标题与简短描述
   // Main title and short tagline of the site
   title: 'STX',
-  tagline: 'Apache SeaTunnel 可视化集群与运维管理平台',
+  tagline: 'Apache SeaTunnel 一站式运维平台',
   favicon: 'img/stx-favicon.ico',
 
   // 生产域名与基础路径配置（GitHub Pages 项目站）

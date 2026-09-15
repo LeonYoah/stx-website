@@ -3,6 +3,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import { HeroSection } from '../components/home/HeroSection';
+import { AgentChatDemo } from '../components/home/AgentChatDemo';
 import { TopologySection } from '../components/home/TopologySection';
 import { NewsTicker } from '../components/home/NewsTicker';
 import { StatsBanner } from '../components/home/StatsBanner';
@@ -52,11 +53,12 @@ export default function Home(): React.JSX.Element {
 
   return (
     <Layout
-      title={`${siteConfig.title} - Apache SeaTunnel 可视化集群与运维管理平台`}
-      description="让 SeaTunnel 运维不再黑箱。把配置、升级、诊断、恢复、调试放到一个统一入口，面向 Apache SeaTunnel 的一站式运维与任务管理；并原生提供 AI Agent 智能运维入口（CLI + Skill）。">
-      {/* 首页上半页：Hero 主视觉区与公告跑马灯 */}
-      {/* Homepage Upper Half: Hero main visual showcase and announcement ticker */}
+      title={`${siteConfig.title} - Apache SeaTunnel 一站式运维平台`}
+      description="让 SeaTunnel 运维清晰可见。面向 Apache SeaTunnel 的一站式运维与任务管理；并原生提供 AI Agent 智能运维入口（CLI + Skill）。">
+      {/* 首页上半页：品牌首屏 → Agent 独立窗口 → 拓扑 → 公告 */}
+      {/* Upper half: brand hero → standalone agent → topology → ticker */}
       <HeroSection />
+      <AgentChatDemo />
       <TopologySection />
       <NewsTicker />
 

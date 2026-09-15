@@ -22,12 +22,14 @@
   --stx-mention-icon-fg: #ffffff;
 
   position: relative;
+  scroll-margin-top: calc(var(--ifm-navbar-height, 60px) + 8px);
   padding: clamp(3.2rem, 7vh, 5.5rem) clamp(1rem, 3.5vw, 2rem)
     clamp(3.5rem, 8vh, 6rem);
   color: var(--mimo-ink);
+  /* 第二屏：偏冷青灰底，与首屏中性底拉开（对齐 MiMo 分区换色） */
   background:
-    radial-gradient(ellipse 70% 45% at 60% 0%, rgba(142, 202, 214, 0.16), transparent 58%),
-    transparent;
+    radial-gradient(ellipse 55% 40% at 70% 0%, rgba(142, 202, 214, 0.22), transparent 55%),
+    linear-gradient(180deg, #e8f1f3 0%, #f3f7f8 48%, #eef4f5 100%);
 }
 
 [data-theme='dark'] .stx-agent-demo {
@@ -48,8 +50,8 @@
   --stx-mention-icon-bg: rgba(255, 255, 255, 0.92);
   --stx-mention-icon-fg: #1a1a1a;
   background:
-    radial-gradient(ellipse 60% 40% at 65% 5%, rgba(255, 255, 255, 0.05), transparent 55%),
-    transparent;
+    radial-gradient(ellipse 50% 35% at 60% 0%, rgba(142, 202, 214, 0.08), transparent 50%),
+    linear-gradient(180deg, #07090b 0%, #0c0f12 55%, #0a0c0e 100%);
 }
 
 .stx-agent-demo__intro {
@@ -82,6 +84,11 @@
   font-size: clamp(0.92rem, 1.3vw, 1.02rem);
   line-height: 1.65;
   color: var(--mimo-soft);
+}
+
+/* —— 独立窗口：限制工作台宽度，与拓扑区同级节奏 / Standalone window width —— */
+.stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
+  max-width: 1100px;
 }
 
 /* —— 工作台外壳：默认高度；嵌入时由父级撑满 / Shell height; embedded fills parent —— */
@@ -276,9 +283,10 @@
 .stx-mimo__user {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 0;
   width: 100%;
-  padding: 10px 8px 4px;
+  padding: 12px 10px 8px;
   border: 0;
   border-top: 1px solid var(--mimo-line);
   margin-top: 4px;
@@ -294,28 +302,17 @@
   background: color-mix(in srgb, var(--mimo-wash) 70%, transparent);
 }
 
-.stx-mimo__avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 0.68rem;
-  font-weight: 800;
-  background: var(--mimo-accent-soft);
-  color: var(--mimo-accent);
+.stx-mimo__user-logo {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
 }
 
-.stx-mimo__user strong {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 650;
-}
-
-.stx-mimo__user small {
-  display: block;
-  font-size: 0.7rem;
-  color: var(--mimo-muted);
+.stx-mimo__user-logo .stx-brand-mark__img {
+  height: 28px;
+  width: auto;
+  max-width: min(160px, 100%);
+  object-fit: contain;
 }
 
 .stx-mimo__main {
@@ -373,7 +370,8 @@
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  overscroll-behavior: contain;
+  /* 边界处允许滚动链到页面 / Allow scroll chaining at edges */
+  overscroll-behavior-y: auto;
   padding: 8px clamp(16px, 2vw, 28px) 4px;
 }
 
@@ -1097,53 +1095,23 @@
     0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* 拓扑叙事区 / Topology narrative section */
+/* 拓扑可视化窗口（无文案）— 第三屏：偏浅纸面白底，与 Agent 青灰底对比 / Topology: paper white vs agent cool wash */
 .stx-topo-section {
   position: relative;
-  padding: clamp(3rem, 7vh, 5.5rem) clamp(1rem, 3.5vw, 2rem)
-    clamp(3.5rem, 8vh, 6rem);
+  padding: clamp(2rem, 5vh, 3.5rem) clamp(1rem, 3.5vw, 2rem)
+    clamp(3rem, 7vh, 5rem);
   color: var(--ifm-font-color-base);
   background:
-    radial-gradient(ellipse 65% 40% at 40% 0%, rgba(142, 202, 214, 0.12), transparent 55%),
-    transparent;
+    radial-gradient(ellipse 50% 35% at 30% 100%, rgba(15, 23, 42, 0.04), transparent 55%),
+    linear-gradient(180deg, #fbfcfd 0%, #ffffff 40%, #f7f8fa 100%);
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 [data-theme='dark'] .stx-topo-section {
   background:
-    radial-gradient(ellipse 55% 35% at 45% 0%, rgba(255, 255, 255, 0.04), transparent 50%),
-    transparent;
-}
-
-.stx-topo-section__intro {
-  max-width: 680px;
-  margin: 0 auto 1.75rem;
-  text-align: center;
-}
-
-.stx-topo-section__eyebrow {
-  margin: 0 0 0.7rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ifm-color-emphasis-600);
-}
-
-.stx-topo-section__title {
-  margin: 0 0 0.75rem;
-  font-size: clamp(1.45rem, 2.8vw, 2.1rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-  text-wrap: balance;
-}
-
-.stx-topo-section__sub {
-  margin: 0 auto;
-  max-width: 540px;
-  font-size: clamp(0.92rem, 1.3vw, 1.02rem);
-  line-height: 1.65;
-  color: var(--ifm-color-emphasis-700);
+    radial-gradient(ellipse 45% 30% at 35% 100%, rgba(255, 255, 255, 0.04), transparent 50%),
+    linear-gradient(180deg, #101317 0%, #14181c 55%, #0f1215 100%);
+  border-top-color: rgba(255, 255, 255, 0.06);
 }
 
 .stx-topo-section__viz {
@@ -1162,5 +1130,79 @@
 @media (max-width: 996px) {
   .stx-topo-section__viz {
     height: min(48vh, 420px);
+  }
+}
+
+/* 第四屏：深色公告带，对齐 MiMo footer 换色节奏 / News strip: dark band like MiMo footer contrast */
+.stx-news-ticker {
+  background: #101417;
+  color: rgba(255, 255, 255, 0.88);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 11px 1.5rem;
+}
+
+[data-theme='dark'] .stx-news-ticker {
+  background: #050607;
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.stx-news-ticker__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.84rem;
+}
+
+.stx-news-ticker__main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.stx-news-ticker__tag {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #8ecad6;
+  color: #0b1220;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.stx-news-ticker__text {
+  color: rgba(255, 255, 255, 0.86);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.stx-news-ticker__action {
+  flex-shrink: 0;
+  color: #8ecad6;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.stx-news-ticker__action:hover {
+  color: #b7e3eb;
+  text-decoration: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

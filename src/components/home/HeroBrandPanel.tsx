@@ -1,11 +1,21 @@
-import React, { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react';
 import Link from '@docusaurus/Link';
+import gsap from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import logoLight from '@site/static/img/stx-logo.png';
 import logoDark from '@site/static/img/stx-logo-dark.png';
 
+gsap.registerPlugin(ScrollToPlugin);
+
 /**
- * 指针跟随光晕（保留登录页交互手感，服务于一体舞台）。
- * Pointer-follow glow kept from login, tuned for the unified stage.
+ * 指针跟随光晕（对齐登录页 LoginBrandPanel）。
+ * Pointer-follow interaction aligned with the login brand panel.
  */
 function useInteractivePanel(panelRef: RefObject<HTMLElement | null>) {
   useEffect(() => {
@@ -62,6 +72,10 @@ function useInteractivePanel(panelRef: RefObject<HTMLElement | null>) {
   }, [panelRef]);
 }
 
+/**
+ * 能力关键词打字机（对齐登录页）。
+ * Capability typewriter aligned with login.
+ */
 function useTypewriter(
   words: string[],
   options: {
@@ -137,8 +151,8 @@ function Icon({
     <svg
       className="stx-pill-icon"
       viewBox="0 0 24 24"
-      width="15"
-      height="15"
+      width="16"
+      height="16"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -219,58 +233,71 @@ function DebugIcon() {
   );
 }
 
-function RestartIcon() {
+/**
+ * 背景幻灯片隧道装饰（登录页同款）。
+ * Decorative slide-tunnel backdrop from the login page.
+ */
+function SlideTunnel() {
   return (
-    <Icon label="restart">
-      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-      <path d="M3 3v5h5" />
-      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-      <path d="M16 21h5v-5" />
-    </Icon>
-  );
-}
+    <div className="stx-bw-slide-tunnel" aria-hidden="true">
+      <div className="stx-bw-slide stx-bw-slide-1">
+        <div className="stx-bw-element" />
+        <div className="stx-bw-element-dim" />
+        <div className="stx-bw-element-border" />
+      </div>
 
-function AlertIcon() {
-  return (
-    <Icon label="alert">
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </Icon>
+      <div className="stx-bw-slide stx-bw-slide-2">
+        <div className="stx-bw-element" />
+        <div className="stx-bw-chart">
+          <div className="stx-bw-bar" />
+          <div className="stx-bw-bar" />
+          <div className="stx-bw-bar" />
+          <div className="stx-bw-bar" />
+        </div>
+      </div>
+
+      <div className="stx-bw-slide stx-bw-slide-3">
+        <div className="stx-bw-grid-box">
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
+      </div>
+    </div>
   );
 }
 
 const COPY = {
-  eyebrow: 'Apache SeaTunnel 一站式运维',
-  titlePrefix: '可视化管理 + 原生 AI Agent（CLI + Skill）',
-  titleMain: '让 SeaTunnel 运维清晰透明',
-  chipsLabel: '核心运维能力',
-  capabilityPrefix: '此刻可见 ·',
+  title: '让 SeaTunnel 运维清晰可见',
+  sub: '面向 Apache SeaTunnel 的一站式运维平台；并原生提供 AI Agent 智能运维入口（CLI + Skill）。',
+  chipsLabel: '产品能力',
+  capabilityPrefix: '能力：',
   chips: [
     { key: 'install', label: '一键安装', Icon: PackageIcon },
-    { key: 'upgrade', label: '平滑升级', Icon: UpgradeIcon },
-    { key: 'restart', label: '一键重启', Icon: RestartIcon },
+    { key: 'upgrade', label: '一键升级', Icon: UpgradeIcon },
+    { key: 'market', label: '插件市场', Icon: MarketIcon },
+    { key: 'agent', label: 'AI Agent · CLI + Skill', Icon: AgentIcon },
     { key: 'checkpoint', label: 'Checkpoint 可视化', Icon: CheckpointIcon },
     { key: 'debug', label: '作业在线调试', Icon: DebugIcon },
-    { key: 'alert', label: '监控告警', Icon: AlertIcon },
-    { key: 'market', label: '插件管理', Icon: MarketIcon },
-    { key: 'agent', label: '原生 AI Agent（CLI + Skill）', Icon: AgentIcon },
   ],
   capabilities: [
-    '集群感知与节点健康',
-    '配置 Diff 与版本回滚',
+    'AI Agent 智能运维入口',
+    '集群感知',
+    '运行可观测',
     '任务一键恢复',
     'Connector 一键下载',
     'Checkpoint 可视化',
     'HOCON DAG 解析',
-    'AI Agent 智能运维入口',
   ],
-  footer: ['自动化部署', '任务提交', '巡检告警', '插件市场', 'AI Agent CLI'],
   installCmd: 'curl -fsSL https://stx.seatunnelx.com/install.sh | bash',
 } as const;
 
 /**
- * 文档站 Hero 左栏：登录页能力文案的文档站演绎（无重复品牌标）。
- * Docs hero left: login capability copy, adapted — no redundant brand mark.
+ * 文档站 Hero：对齐 stx 登录页品牌动效 + 能力标签，文案尽量短。
+ * Docs hero: login brand motion + chips, copy kept short.
  */
 export function HeroBrandPanel(): React.JSX.Element {
   const panelRef = useRef<HTMLElement>(null);
@@ -286,16 +313,59 @@ export function HeroBrandPanel(): React.JSX.Element {
     window.setTimeout(() => setCopied(false), 2000);
   };
 
+  const scrollToAgentDemo = () => {
+    const target = document.getElementById('stx-agent-section');
+    if (!target) return;
+
+    const reduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduced) {
+      target.scrollIntoView({ behavior: 'auto', block: 'start' });
+      return;
+    }
+
+    const shell = target.querySelector('.stx-mimo');
+    gsap.to(window, {
+      duration: 1.1,
+      ease: 'power3.inOut',
+      scrollTo: { y: target, offsetY: 8, autoKill: true },
+      onStart: () => {
+        if (!shell) return;
+        gsap.fromTo(
+          shell,
+          { y: 36, opacity: 0.45, scale: 0.985 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.75,
+            delay: 0.28,
+            ease: 'power2.out',
+            clearProps: 'transform',
+          },
+        );
+      },
+    });
+  };
+
   return (
     <aside ref={panelRef} className="stx-brand-panel">
       <div className="stx-bw-spotlight" />
-      <div className="stx-stage-scan" aria-hidden="true">
-        <div className="stx-stage-scan-line" />
+
+      <div className="stx-bw-visual-bg" aria-hidden="true">
+        <div className="stx-bw-grid" />
+        <div className="stx-bw-scanner" />
+        <SlideTunnel />
+      </div>
+
+      <div className="stx-hero-scan-zone" aria-hidden="true">
+        <div className="stx-hero-scan-line" />
       </div>
 
       <div className="stx-brand-content">
         <div className="stx-brand-main">
-          {/* 完整品牌 Logo（左侧上方视觉锚点，填补空白并对齐右侧工作台） / Full brand logo (visual anchor above title, balancing top space) */}
           <div className="stx-brand-logo-wrap">
             <Link to="/" className="stx-brand-logo-link" aria-label="STX 首页 / STX Home">
               <img
@@ -311,19 +381,31 @@ export function HeroBrandPanel(): React.JSX.Element {
             </Link>
           </div>
 
-          <p className="stx-brand-eyebrow">{COPY.eyebrow}</p>
           <h1 className="stx-brand-title">
-            <span className="stx-brand-title-prefix">{COPY.titlePrefix}</span>
-            <span className="stx-brand-title-main">{COPY.titleMain}</span>
+            <span className="stx-brand-title-main">{COPY.title}</span>
           </h1>
 
+          <p className="stx-brand-sub">{COPY.sub}</p>
+
           <div className="stx-pill-row" aria-label={COPY.chipsLabel}>
-            {COPY.chips.map(({ key, label, Icon: ChipIcon }) => (
-              <span key={key} className="stx-pill">
-                <ChipIcon />
-                {label}
-              </span>
-            ))}
+            {COPY.chips.map(({ key, label, Icon: ChipIcon }) =>
+              key === 'agent' ? (
+                <button
+                  key={key}
+                  type="button"
+                  className="stx-pill stx-pill--agent"
+                  onClick={scrollToAgentDemo}
+                >
+                  <ChipIcon />
+                  {label}
+                </button>
+              ) : (
+                <span key={key} className="stx-pill">
+                  <ChipIcon />
+                  {label}
+                </span>
+              ),
+            )}
           </div>
 
           <div className="stx-type-row" aria-live="polite">
@@ -356,12 +438,6 @@ export function HeroBrandPanel(): React.JSX.Element {
               {copied ? '已复制' : '复制'}
             </button>
           </div>
-        </div>
-
-        <div className="stx-brand-footer">
-          {COPY.footer.map((item) => (
-            <span key={item}>{item}</span>
-          ))}
         </div>
       </div>
     </aside>

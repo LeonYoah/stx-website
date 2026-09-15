@@ -842,6 +842,33 @@ export function AgentChatDemo({
     el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [mode, phaseCount, showFinish, showTyping, feed]);
 
+  /**
+   * 对话区内滚到顶/底后，把滚轮交给页面，避免困在内部滚动条。
+   * Forward wheel to the page at scroll edges so users aren't trapped.
+   */
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    const onWheel = (event: WheelEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const maxScroll = scrollHeight - clientHeight;
+      const canScroll = maxScroll > 1;
+      const scrollingUp = event.deltaY < 0;
+      const scrollingDown = event.deltaY > 0;
+      const atTop = scrollTop <= 1;
+      const atBottom = scrollTop >= maxScroll - 1;
+
+      if (!canScroll || (atTop && scrollingUp) || (atBottom && scrollingDown)) {
+        event.preventDefault();
+        window.scrollBy(0, event.deltaY);
+      }
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
   const handleSend = () => {
     flashPress('send');
     const s = stateRef.current;
@@ -873,8 +900,9 @@ export function AgentChatDemo({
 
   return (
     <section
+      id="stx-agent-section"
       className={`stx-agent-demo${embedded ? ' stx-agent-demo--embedded' : ''}`}
-      aria-label={embedded ? 'stx Skill 对话演示' : undefined}
+      aria-label="stx Skill 对话演示"
     >
       <div className={shellClass}>
         <aside className="stx-mimo__sidebar" aria-label="stx 工作台导航">
@@ -988,15 +1016,10 @@ export function AgentChatDemo({
           <button
             type="button"
             className="stx-mimo__user"
-            onClick={() => showToast('个人空间（演示）')}
+            aria-label="STX"
+            onClick={() => showToast('STX（演示）')}
           >
-            <span className="stx-mimo__avatar" aria-hidden>
-              SX
-            </span>
-            <div>
-              <strong>stx 运维</strong>
-              <small>个人空间</small>
-            </div>
+            <StxBrandMark className="stx-mimo__user-logo" height={28} />
           </button>
         </aside>
 

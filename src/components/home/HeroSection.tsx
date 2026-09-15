@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { HeroBrandPanel } from './HeroBrandPanel';
-import { AgentChatDemo } from './AgentChatDemo';
 
 gsap.registerPlugin(useGSAP);
 
 /**
- * 左文案能力，右嵌 Agent 对话工作台，无边框融页。
- * brand copy left, embedded agent workspace right.
+ * 首屏仅品牌文案，Agent 对话下移为独立窗口，避免双栏拥挤。
+ * Brand-only hero; agent chat lives in its own section below.
  */
 export function HeroSection(): React.JSX.Element {
   const containerRef = useRef<HTMLElement | null>(null);
@@ -61,20 +60,12 @@ export function HeroSection(): React.JSX.Element {
         return;
       }
 
-      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-      tl.from('.stx-stage-copy', {
+      gsap.from('.stx-stage-copy', {
         x: -18,
         duration: 0.55,
+        ease: 'power2.out',
         clearProps: 'transform',
-      }).from(
-        '.stx-stage-viz',
-        {
-          y: 22,
-          duration: 0.6,
-          clearProps: 'transform',
-        },
-        '-=0.35',
-      );
+      });
     },
     { scope: containerRef },
   );
@@ -84,12 +75,9 @@ export function HeroSection(): React.JSX.Element {
       <div className="stx-hero-glow" aria-hidden="true" />
       <div className="stx-hero-grid-fade" aria-hidden="true" />
 
-      <div ref={stageRef} className="stx-stage stx-stage--mimo">
+      <div ref={stageRef} className="stx-stage stx-stage--brand">
         <div className="stx-stage-copy">
           <HeroBrandPanel />
-        </div>
-        <div className="stx-stage-viz stx-stage-viz--demo">
-          <AgentChatDemo embedded />
         </div>
       </div>
     </header>
