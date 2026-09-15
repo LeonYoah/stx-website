@@ -187,7 +187,12 @@ const SCENARIOS: Scenario[] = [
         detail: `已用 \`stx sync draft\` 生成草稿，请确认是否符合要求：
 
 \`\`\`hocon
-env { job.mode = "STREAMING" checkpoint.interval = 10000 }
+env {
+  parallelism = 1
+  job.mode = "STREAMING"
+  checkpoint.interval = 10000
+}
+
 source {
   MySQL-CDC {
     plugin_output = "orders_cdc"
@@ -199,6 +204,7 @@ source {
     startup.mode = "initial"
   }
 }
+
 sink {
   Hive {
     plugin_input = ["orders_cdc"]
@@ -280,17 +286,32 @@ sink {
       },
     ],
     artifactTitle: 'mysql_cdc_to_hive.v3.conf',
-    artifactMeta: 'stx sync',
-    artifactBody: `# mysql_cdc_to_hive v3
+    artifactMeta: 'stx sync · published v3',
+    artifactBody: `env {
+  parallelism = 1
+  job.mode = "STREAMING"
+  checkpoint.interval = 10000
+}
 
-password = "{{password}}"
-base-url = "jdbc:mysql://mysql.prod:3306/"
-source = MySQL-CDC (shop.orders)
-sink = Hive (ods.orders_cdc)
+source {
+  MySQL-CDC {
+    plugin_output = "orders_cdc"
+    username = "{{MYSQL_USER}}"
+    password = "{{password}}"
+    base-url = "jdbc:mysql://mysql.prod:3306/"
+    database-names = ["shop"]
+    table-names = ["shop.orders"]
+    startup.mode = "initial"
+  }
+}
 
-flow: stx sync draft → test → dag → preview → submit
-engine_job_id = 883921
-status = RUNNING`,
+sink {
+  Hive {
+    plugin_input = ["orders_cdc"]
+    table_name = "ods.orders_cdc"
+    metastore_uri = "thrift://hive-metastore:9083"
+  }
+}`,
   },
   {
     id: 'upgrade',

@@ -813,7 +813,8 @@
   line-height: 1.55;
   white-space: pre-wrap;
   overflow: auto;
-  max-height: 160px;
+  /* 展开后需能看完完整 HOCON，避免被短卡片高度裁切 */
+  max-height: min(56vh, 560px);
 }
 
 .stx-mimo__artifact-cover {
