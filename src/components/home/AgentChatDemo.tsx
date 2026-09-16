@@ -349,7 +349,7 @@ export function AgentChatDemo({
         const entry = entries[0];
         if (!entry) return;
         const visible =
-          entry.isIntersecting && entry.intersectionRatio >= 0.32;
+          entry.isIntersecting && entry.intersectionRatio >= 0.55;
         inViewRef.current = visible;
         if (!visible) return;
         if (stateRef.current.playing) return;
@@ -358,7 +358,7 @@ export function AgentChatDemo({
         stateRef.current.playing = true;
         setRunId((n) => n + 1);
       },
-      {threshold: [0, 0.2, 0.32, 0.45, 0.6], rootMargin: '0px 0px -8% 0px'},
+      {threshold: [0, 0.35, 0.55, 0.7], rootMargin: '0px 0px -12% 0px'},
     );
 
     observer.observe(el);

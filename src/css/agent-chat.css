@@ -20,13 +20,13 @@
   --stx-mention-fg: #1a1a1a;
   --stx-mention-icon-bg: #3a3a3a;
   --stx-mention-icon-fg: #ffffff;
+  --stx-band-pad-y: clamp(1.4rem, 3vh, 2.4rem);
 
   position: relative;
   scroll-margin-top: calc(var(--ifm-navbar-height, 60px) + 8px);
-  /* 窗口型：收紧段 padding，避免 78vh+大留白拼成假全屏 */
-  padding: clamp(2.2rem, 4.5vh, 3.6rem) clamp(1rem, 3.5vw, 2rem)
-    clamp(2.4rem, 5vh, 4rem);
+  padding: var(--stx-band-pad-y) clamp(1rem, 3.5vw, 2.5rem);
   color: var(--mimo-ink);
+  box-sizing: border-box;
   /* 第二屏：偏冷青灰底，与首屏中性底拉开（对齐 MiMo 分区换色） */
   background:
     radial-gradient(ellipse 55% 40% at 70% 0%, rgba(142, 202, 214, 0.22), transparent 55%),
@@ -87,17 +87,21 @@
   color: var(--mimo-soft);
 }
 
-/* —— 独立窗口：限制工作台宽度，与拓扑区同级节奏 / Standalone window width —— */
+/* —— 独立窗口：与拓扑同宽；大屏加宽减少左右空带 / Shared width; widen on large screens —— */
 .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-  max-width: 1100px;
+  width: 100%;
+  max-width: min(1240px, 100%);
 }
 
-/* —— 工作台外壳：窗口型高度，明确非满屏舞台 / Window shell, not fake full-bleed —— */
+/* —— 工作台外壳：随视口长高，大屏不再卡在 640 / Grow with viewport on high-res —— */
 .stx-mimo {
   --sidebar-w: 240px;
   max-width: none;
   margin: 0 auto;
-  height: min(70vh, 640px);
+  height: min(
+    calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-band-pad-y, 2.4rem) - 12px),
+    820px
+  );
   min-height: 480px;
   display: grid;
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
@@ -109,6 +113,34 @@
   position: relative;
   transition: grid-template-columns 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   isolation: isolate;
+}
+
+/* 高分辨率：整段占满一屏，壳垂直居中，避免下一屏露边 */
+@media (min-width: 997px) and (min-height: 780px) {
+  .stx-agent-demo:not(.stx-agent-demo--embedded) {
+    min-height: calc(100dvh - var(--ifm-navbar-height, 60px));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
+    height: min(
+      calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-band-pad-y, 2.4rem) - 16px),
+      880px
+    );
+    min-height: 560px;
+  }
+}
+
+@media (min-width: 1280px) and (min-height: 960px) {
+  .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
+    max-width: min(1320px, 100%);
+    height: min(
+      calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-band-pad-y, 2.4rem) - 20px),
+      940px
+    );
+  }
 }
 
 .stx-mimo.is-sidebar-collapsed {
@@ -1176,12 +1208,13 @@
     0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* 拓扑可视化窗口（无文案）— 第三屏：抬高画布，与 Agent 窗口同级分量 / Topology: lift canvas weight to match Agent */
+/* 拓扑可视化窗口 — 大屏同样占满一屏，与 Agent 同级分量 / Topology: fill viewport on large screens */
 .stx-topo-section {
+  --stx-topo-pad-y: clamp(1.4rem, 3vh, 2.4rem);
   position: relative;
-  padding: clamp(2.2rem, 4.5vh, 3.6rem) clamp(1rem, 3.5vw, 2rem)
-    clamp(2.6rem, 5.5vh, 4.2rem);
+  padding: var(--stx-topo-pad-y) clamp(1rem, 3.5vw, 2.5rem);
   color: var(--ifm-font-color-base);
+  box-sizing: border-box;
   background:
     radial-gradient(ellipse 50% 35% at 30% 100%, rgba(15, 23, 42, 0.04), transparent 55%),
     linear-gradient(180deg, #fbfcfd 0%, #ffffff 40%, #f7f8fa 100%);
@@ -1196,16 +1229,47 @@
 }
 
 .stx-topo-section__viz {
-  max-width: 1100px;
+  max-width: min(1240px, 100%);
   margin: 0 auto;
+  width: 100%;
   min-height: min(58vh, 540px);
-  height: min(62vh, 580px);
+  height: min(
+    calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-topo-pad-y, 2.4rem) - 12px),
+    720px
+  );
 }
 
 .stx-topo-section__viz > * {
   width: 100%;
   height: 100%;
   min-height: 0;
+}
+
+@media (min-width: 997px) and (min-height: 780px) {
+  .stx-topo-section {
+    min-height: calc(100dvh - var(--ifm-navbar-height, 60px));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .stx-topo-section__viz {
+    height: min(
+      calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-topo-pad-y, 2.4rem) - 16px),
+      780px
+    );
+    min-height: 560px;
+  }
+}
+
+@media (min-width: 1280px) and (min-height: 960px) {
+  .stx-topo-section__viz {
+    max-width: min(1320px, 100%);
+    height: min(
+      calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-topo-pad-y, 2.4rem) - 20px),
+      860px
+    );
+  }
 }
 
 @media (max-width: 996px) {
