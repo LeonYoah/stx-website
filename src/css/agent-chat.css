@@ -1,5 +1,5 @@
 /**
- * stx Skill 对话演示：MiMo 工作台骨架 + 冰川主题；提问时显示 stx 提及胶囊。
+ * stx Skill 对话演示：工作台骨架 + 冰川主题；提问时显示 stx 提及胶囊。
  * Workspace shell + glacier theme; stx mention chip only on user asks.
  */
 
@@ -20,14 +20,14 @@
   --stx-mention-fg: #1a1a1a;
   --stx-mention-icon-bg: #3a3a3a;
   --stx-mention-icon-fg: #ffffff;
-  --stx-band-pad-y: clamp(1.4rem, 3vh, 2.4rem);
-
   position: relative;
   scroll-margin-top: calc(var(--ifm-navbar-height, 60px) + 8px);
-  padding: var(--stx-band-pad-y) clamp(1rem, 3.5vw, 2.5rem);
+  /* 段高随窗口，上下留白呼吸，不抢满屏 */
+  padding: clamp(2.5rem, 5.5vh, 4.5rem) clamp(1rem, 3.5vw, 2rem)
+    clamp(2.8rem, 6vh, 5rem);
   color: var(--mimo-ink);
   box-sizing: border-box;
-  /* 第二屏：偏冷青灰底，与首屏中性底拉开（对齐 MiMo 分区换色） */
+  /* 第二屏：偏冷青灰底，与首屏中性底拉开 */
   background:
     radial-gradient(ellipse 55% 40% at 70% 0%, rgba(142, 202, 214, 0.22), transparent 55%),
     linear-gradient(180deg, #e8f1f3 0%, #f3f7f8 48%, #eef4f5 100%);
@@ -87,19 +87,18 @@
   color: var(--mimo-soft);
 }
 
-/* —— 独立窗口：与拓扑同宽 / Shared width with topology —— */
+/* —— 窗口型：浮层工作台 + 段内留白，不撑满视口 —— */
 .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
   width: 100%;
-  max-width: min(1280px, 100%);
+  max-width: min(1120px, 100%);
 }
 
-/* —— 工作台外壳：默认高度；大屏由下方 flex 规则撑满 / Default shell; large screens fill via flex —— */
 .stx-mimo {
   --sidebar-w: 240px;
   max-width: none;
   margin: 0 auto;
-  height: min(72vh, 680px);
-  min-height: 480px;
+  height: min(74vh, 720px);
+  min-height: 500px;
   display: grid;
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   overflow: hidden;
@@ -112,34 +111,10 @@
   isolation: isolate;
 }
 
-/*
- * 桌面：整段用满 100dvh（含导航叠层），壳 flex 撑满剩余高度。
- * 这样高分屏不会上下留空洞，也不会露出下一屏。
- * Desktop: section = 100dvh (navbar overlays top); shell flex-fills the rest.
- */
-@media (min-width: 997px) {
-  .stx-agent-demo:not(.stx-agent-demo--embedded) {
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-    padding-top: calc(var(--ifm-navbar-height, 60px) + 12px);
-    padding-bottom: 20px;
-    padding-inline: clamp(1rem, 3vw, 2.5rem);
-  }
-
+@media (min-width: 1280px) {
   .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-    flex: 1 1 auto;
-    width: 100%;
-    height: auto;
-    min-height: 0;
-    max-height: none;
-  }
-}
-
-@media (min-width: 1440px) {
-  .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-    max-width: min(1360px, 100%);
+    max-width: min(1180px, 100%);
+    height: min(72vh, 760px);
   }
 }
 
@@ -1108,9 +1083,8 @@
   }
 
   .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-    height: min(68vh, 600px);
-    min-height: 400px;
-    max-height: none;
+    height: min(66vh, 600px);
+    min-height: 420px;
     border-radius: 16px;
   }
 
@@ -1153,8 +1127,8 @@
 
 @media (max-width: 640px) {
   .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-    height: min(64vh, 520px);
-    min-height: 360px;
+    height: min(62vh, 520px);
+    min-height: 380px;
   }
 
   .stx-mimo__artifact-body {
@@ -1208,11 +1182,11 @@
     0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* 拓扑可视化窗口 — 桌面同样 100dvh + flex 撑满 / Topology: same 100dvh + flex fill */
+/* 拓扑：同 Agent 窗口型节奏，画布封顶不撑满视口 / Topology: same window rhythm as Agent */
 .stx-topo-section {
-  --stx-topo-pad-y: clamp(1.4rem, 3vh, 2.4rem);
   position: relative;
-  padding: var(--stx-topo-pad-y) clamp(1rem, 3.5vw, 2.5rem);
+  padding: clamp(2.5rem, 5.5vh, 4.5rem) clamp(1rem, 3.5vw, 2rem)
+    clamp(2.8rem, 6vh, 5rem);
   color: var(--ifm-font-color-base);
   box-sizing: border-box;
   background:
@@ -1229,11 +1203,12 @@
 }
 
 .stx-topo-section__viz {
-  max-width: min(1280px, 100%);
+  max-width: min(1120px, 100%);
   margin: 0 auto;
   width: 100%;
-  min-height: min(52vh, 480px);
-  height: min(56vh, 560px);
+  /* 与 Agent 窗口同级分量，避免第三屏偏扁 / Match Agent window weight */
+  min-height: min(56vh, 520px);
+  height: min(64vh, 600px);
 }
 
 .stx-topo-section__viz > * {
@@ -1242,39 +1217,22 @@
   min-height: 0;
 }
 
-@media (min-width: 997px) {
-  .stx-topo-section {
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-    padding-top: calc(var(--ifm-navbar-height, 60px) + 12px);
-    padding-bottom: 20px;
-    padding-inline: clamp(1rem, 3vw, 2.5rem);
-  }
-
+@media (min-width: 1280px) {
   .stx-topo-section__viz {
-    flex: 1 1 auto;
-    height: auto;
-    min-height: 0;
-    max-height: none;
-  }
-}
-
-@media (min-width: 1440px) {
-  .stx-topo-section__viz {
-    max-width: min(1360px, 100%);
+    max-width: min(1180px, 100%);
+    min-height: min(58vh, 560px);
+    height: min(62vh, 640px);
   }
 }
 
 @media (max-width: 996px) {
   .stx-topo-section__viz {
-    height: min(52vh, 460px);
-    min-height: min(48vh, 400px);
+    height: min(52vh, 480px);
+    min-height: min(46vh, 400px);
   }
 }
 
-/* 第四屏：深色公告带，对齐 MiMo footer 换色节奏 / News strip: dark band like MiMo footer contrast */
+/* 第四屏：深色公告带，与上方浅色分区换色 / News strip: dark band for section contrast */
 .stx-news-ticker {
   background: #101417;
   color: rgba(255, 255, 255, 0.88);
