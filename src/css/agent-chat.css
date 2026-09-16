@@ -23,8 +23,9 @@
 
   position: relative;
   scroll-margin-top: calc(var(--ifm-navbar-height, 60px) + 8px);
-  padding: clamp(3.2rem, 7vh, 5.5rem) clamp(1rem, 3.5vw, 2rem)
-    clamp(3.5rem, 8vh, 6rem);
+  /* 窗口型：收紧段 padding，避免 78vh+大留白拼成假全屏 */
+  padding: clamp(2.2rem, 4.5vh, 3.6rem) clamp(1rem, 3.5vw, 2rem)
+    clamp(2.4rem, 5vh, 4rem);
   color: var(--mimo-ink);
   /* 第二屏：偏冷青灰底，与首屏中性底拉开（对齐 MiMo 分区换色） */
   background:
@@ -91,13 +92,13 @@
   max-width: 1100px;
 }
 
-/* —— 工作台外壳：默认高度；嵌入时由父级撑满 / Shell height; embedded fills parent —— */
+/* —— 工作台外壳：窗口型高度，明确非满屏舞台 / Window shell, not fake full-bleed —— */
 .stx-mimo {
   --sidebar-w: 240px;
   max-width: none;
   margin: 0 auto;
-  height: min(78vh, 720px);
-  min-height: 520px;
+  height: min(70vh, 640px);
+  min-height: 480px;
   display: grid;
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   overflow: hidden;
@@ -1075,8 +1076,8 @@
   }
 
   .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-    height: min(72vh, 640px);
-    min-height: 420px;
+    height: min(68vh, 600px);
+    min-height: 400px;
     max-height: none;
     border-radius: 16px;
   }
@@ -1120,8 +1121,8 @@
 
 @media (max-width: 640px) {
   .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-    height: min(68vh, 560px);
-    min-height: 380px;
+    height: min(64vh, 520px);
+    min-height: 360px;
   }
 
   .stx-mimo__artifact-body {
@@ -1175,11 +1176,11 @@
     0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* 拓扑可视化窗口（无文案）— 第三屏：偏浅纸面白底，与 Agent 青灰底对比 / Topology: paper white vs agent cool wash */
+/* 拓扑可视化窗口（无文案）— 第三屏：抬高画布，与 Agent 窗口同级分量 / Topology: lift canvas weight to match Agent */
 .stx-topo-section {
   position: relative;
-  padding: clamp(2rem, 5vh, 3.5rem) clamp(1rem, 3.5vw, 2rem)
-    clamp(3rem, 7vh, 5rem);
+  padding: clamp(2.2rem, 4.5vh, 3.6rem) clamp(1rem, 3.5vw, 2rem)
+    clamp(2.6rem, 5.5vh, 4.2rem);
   color: var(--ifm-font-color-base);
   background:
     radial-gradient(ellipse 50% 35% at 30% 100%, rgba(15, 23, 42, 0.04), transparent 55%),
@@ -1197,8 +1198,8 @@
 .stx-topo-section__viz {
   max-width: 1100px;
   margin: 0 auto;
-  min-height: min(52vh, 480px);
-  height: min(56vh, 520px);
+  min-height: min(58vh, 540px);
+  height: min(62vh, 580px);
 }
 
 .stx-topo-section__viz > * {
@@ -1209,7 +1210,8 @@
 
 @media (max-width: 996px) {
   .stx-topo-section__viz {
-    height: min(48vh, 420px);
+    height: min(52vh, 460px);
+    min-height: min(48vh, 400px);
   }
 }
 
