@@ -70,6 +70,33 @@ const config: Config = {
     },
   },
 
+  // 字体走国内 npmmirror CDN（fontsource），避免 Google Fonts
+  // Fonts via China npmmirror CDN (fontsource), not Google Fonts
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preconnect',
+        href: 'https://cdn.npmmirror.com',
+        crossorigin: 'anonymous',
+      },
+    },
+  ],
+  stylesheets: [
+    {
+      href: 'https://cdn.npmmirror.com/packages/@fontsource-variable/inter/5.3.0/files/wght.css',
+      type: 'text/css',
+    },
+    {
+      href: 'https://cdn.npmmirror.com/packages/@fontsource-variable/noto-sans-sc/5.3.0/files/wght.css',
+      type: 'text/css',
+    },
+    {
+      href: 'https://cdn.npmmirror.com/packages/@fontsource-variable/jetbrains-mono/5.3.0/files/wght.css',
+      type: 'text/css',
+    },
+  ],
+
   // 经典主题预设配置（文档、博客、样式）
   // Classic theme preset options (docs, blog, styles)
   presets: [

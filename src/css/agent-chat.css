@@ -662,7 +662,7 @@
   display: block;
   font-size: 0.7rem;
   color: var(--mimo-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--ifm-font-family-monospace);
 }
 
 .stx-mimo__phase-state {
@@ -712,7 +712,7 @@
   border-radius: 8px;
   background: #0b1220;
   color: #e2e8f0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--ifm-font-family-monospace);
 }
 
 [data-theme='dark'] .stx-mimo__phase-detail {
@@ -850,7 +850,7 @@
   border-radius: 10px;
   background: #0b1220;
   color: #e2e8f0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--ifm-font-family-monospace);
   font-size: 0.75rem;
   line-height: 1.55;
   white-space: pre-wrap;
@@ -1336,7 +1336,7 @@
 
 .stx-showcase__index {
   margin: 0 0 0.85rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--ifm-font-family-monospace);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.16em;
