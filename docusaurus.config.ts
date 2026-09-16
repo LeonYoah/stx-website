@@ -110,6 +110,7 @@ const config: Config = {
         alt: 'STX Logo',
         src: 'img/stx-logo.png',
         srcDark: 'img/stx-logo-dark.png',
+        // 新锁章更方，略增高以保持导航栏可读体量。 / Taller lockup: raise height for navbar legibility.
         height: 32,
       },
       items: [

@@ -8,8 +8,6 @@ import React, {
 import Link from '@docusaurus/Link';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import logoLight from '@site/static/img/stx-logo.png';
-import logoDark from '@site/static/img/stx-logo-dark.png';
 import {useHomeLocale, type HomeLocale} from './useHomeLocale';
 
 gsap.registerPlugin(ScrollToPlugin);
@@ -286,7 +284,6 @@ const COPY: Record<
     copy: string;
     copied: string;
     copyTitle: string;
-    homeAria: string;
   }
 > = {
   zh: {
@@ -316,7 +313,6 @@ const COPY: Record<
     copy: '复制',
     copied: '已复制',
     copyTitle: '复制到剪贴板',
-    homeAria: 'STX 首页',
   },
   en: {
     title: 'Make SeaTunnel ops clearly visible',
@@ -345,7 +341,6 @@ const COPY: Record<
     copy: 'Copy',
     copied: 'Copied',
     copyTitle: 'Copy to clipboard',
-    homeAria: 'STX Home',
   },
 };
 
@@ -431,21 +426,6 @@ export function HeroBrandPanel(): React.JSX.Element {
 
       <div className="stx-brand-content">
         <div className="stx-brand-main">
-          <div className="stx-brand-logo-wrap">
-            <Link to="/" className="stx-brand-logo-link" aria-label={copy.homeAria}>
-              <img
-                src={logoLight}
-                alt="STX"
-                className="stx-brand-logo stx-brand-logo--light"
-              />
-              <img
-                src={logoDark}
-                alt="STX"
-                className="stx-brand-logo stx-brand-logo--dark"
-              />
-            </Link>
-          </div>
-
           <h1 className="stx-brand-title">
             <span className="stx-brand-title-main">{copy.title}</span>
           </h1>
