@@ -4,6 +4,7 @@ import Layout from '@theme/Layout';
 import {HeroSection} from '../components/home/HeroSection';
 import {AgentChatDemo} from '../components/home/AgentChatDemo';
 import {TopologySection} from '../components/home/TopologySection';
+import {ProductShowcase} from '../components/home/ProductShowcase';
 import {NewsTicker} from '../components/home/NewsTicker';
 import {useHomeLocale} from '../components/home/useHomeLocale';
 
@@ -29,11 +30,12 @@ export default function Home(): React.JSX.Element {
 
   return (
     <Layout title={meta.title} description={meta.description}>
-      {/* 首页上半页：品牌首屏 → Agent 独立窗口 → 拓扑 → 公告 */}
-      {/* Upper half: brand hero → standalone agent → topology → ticker */}
+      {/* 品牌首屏 → Agent → 拓扑 → 产品展示 → 公告 */}
+      {/* Brand → Agent → topology → product showcase → ticker */}
       <HeroSection />
       <AgentChatDemo />
       <TopologySection />
+      <ProductShowcase />
       <NewsTicker />
     </Layout>
   );
