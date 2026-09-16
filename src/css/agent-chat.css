@@ -87,21 +87,18 @@
   color: var(--mimo-soft);
 }
 
-/* —— 独立窗口：与拓扑同宽；大屏加宽减少左右空带 / Shared width; widen on large screens —— */
+/* —— 独立窗口：与拓扑同宽 / Shared width with topology —— */
 .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
   width: 100%;
-  max-width: min(1240px, 100%);
+  max-width: min(1280px, 100%);
 }
 
-/* —— 工作台外壳：随视口长高，大屏不再卡在 640 / Grow with viewport on high-res —— */
+/* —— 工作台外壳：默认高度；大屏由下方 flex 规则撑满 / Default shell; large screens fill via flex —— */
 .stx-mimo {
   --sidebar-w: 240px;
   max-width: none;
   margin: 0 auto;
-  height: min(
-    calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-band-pad-y, 2.4rem) - 12px),
-    820px
-  );
+  height: min(72vh, 680px);
   min-height: 480px;
   display: grid;
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
@@ -115,31 +112,34 @@
   isolation: isolate;
 }
 
-/* 高分辨率：整段占满一屏，壳垂直居中，避免下一屏露边 */
-@media (min-width: 997px) and (min-height: 780px) {
+/*
+ * 桌面：整段用满 100dvh（含导航叠层），壳 flex 撑满剩余高度。
+ * 这样高分屏不会上下留空洞，也不会露出下一屏。
+ * Desktop: section = 100dvh (navbar overlays top); shell flex-fills the rest.
+ */
+@media (min-width: 997px) {
   .stx-agent-demo:not(.stx-agent-demo--embedded) {
-    min-height: calc(100dvh - var(--ifm-navbar-height, 60px));
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: stretch;
+    padding-top: calc(var(--ifm-navbar-height, 60px) + 12px);
+    padding-bottom: 20px;
+    padding-inline: clamp(1rem, 3vw, 2.5rem);
   }
 
   .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-    height: min(
-      calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-band-pad-y, 2.4rem) - 16px),
-      880px
-    );
-    min-height: 560px;
+    flex: 1 1 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
   }
 }
 
-@media (min-width: 1280px) and (min-height: 960px) {
+@media (min-width: 1440px) {
   .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
-    max-width: min(1320px, 100%);
-    height: min(
-      calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-band-pad-y, 2.4rem) - 20px),
-      940px
-    );
+    max-width: min(1360px, 100%);
   }
 }
 
@@ -1208,7 +1208,7 @@
     0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* 拓扑可视化窗口 — 大屏同样占满一屏，与 Agent 同级分量 / Topology: fill viewport on large screens */
+/* 拓扑可视化窗口 — 桌面同样 100dvh + flex 撑满 / Topology: same 100dvh + flex fill */
 .stx-topo-section {
   --stx-topo-pad-y: clamp(1.4rem, 3vh, 2.4rem);
   position: relative;
@@ -1229,14 +1229,11 @@
 }
 
 .stx-topo-section__viz {
-  max-width: min(1240px, 100%);
+  max-width: min(1280px, 100%);
   margin: 0 auto;
   width: 100%;
-  min-height: min(58vh, 540px);
-  height: min(
-    calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-topo-pad-y, 2.4rem) - 12px),
-    720px
-  );
+  min-height: min(52vh, 480px);
+  height: min(56vh, 560px);
 }
 
 .stx-topo-section__viz > * {
@@ -1245,30 +1242,28 @@
   min-height: 0;
 }
 
-@media (min-width: 997px) and (min-height: 780px) {
+@media (min-width: 997px) {
   .stx-topo-section {
-    min-height: calc(100dvh - var(--ifm-navbar-height, 60px));
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: stretch;
+    padding-top: calc(var(--ifm-navbar-height, 60px) + 12px);
+    padding-bottom: 20px;
+    padding-inline: clamp(1rem, 3vw, 2.5rem);
   }
 
   .stx-topo-section__viz {
-    height: min(
-      calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-topo-pad-y, 2.4rem) - 16px),
-      780px
-    );
-    min-height: 560px;
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+    max-height: none;
   }
 }
 
-@media (min-width: 1280px) and (min-height: 960px) {
+@media (min-width: 1440px) {
   .stx-topo-section__viz {
-    max-width: min(1320px, 100%);
-    height: min(
-      calc(100dvh - var(--ifm-navbar-height, 60px) - 2 * var(--stx-topo-pad-y, 2.4rem) - 20px),
-      860px
-    );
+    max-width: min(1360px, 100%);
   }
 }
 
