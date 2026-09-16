@@ -655,6 +655,13 @@
   white-space: nowrap;
 }
 
+/* 英文标题更长：允许折行并平衡换行，避免横向溢出 */
+html[lang='en'] .stx-brand-title-main {
+  white-space: normal;
+  max-width: 16em;
+  text-wrap: balance;
+}
+
 .stx-brand-sub {
   margin: clamp(28px, 3.6vh, 40px) auto 0;
   max-width: 46em;
@@ -976,7 +983,9 @@ button.stx-pill {
   }
 
   .stx-brand-title-main {
-    white-space: nowrap;
+    white-space: normal;
+    max-width: 14em;
+    text-wrap: balance;
     font-size: clamp(24px, 4.8vw, 34px);
   }
 
@@ -1013,8 +1022,10 @@ button.stx-pill {
   }
 
   .stx-brand-title-main {
-    white-space: nowrap;
-    font-size: clamp(20px, 5.6vw, 26px);
+    white-space: normal;
+    max-width: 12em;
+    text-wrap: balance;
+    font-size: clamp(22px, 6.2vw, 28px);
   }
 
   .stx-brand-actions .button--glacier,
@@ -1026,12 +1037,25 @@ button.stx-pill {
     text-align: center;
   }
 
+  .stx-type-row {
+    margin-top: 64px;
+  }
+
   .stx-bw-slide-tunnel {
     display: none;
   }
 
   .stx-stage-viz {
     min-height: min(38vh, 320px);
+  }
+
+  .stx-brand-install {
+    flex-wrap: wrap;
+  }
+
+  .stx-brand-install .stx-cmd-code {
+    flex: 1 1 100%;
+    order: 3;
   }
 }
 

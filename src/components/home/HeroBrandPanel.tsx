@@ -10,8 +10,10 @@ import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import logoLight from '@site/static/img/stx-logo.png';
 import logoDark from '@site/static/img/stx-logo-dark.png';
+import {useHomeLocale, type HomeLocale} from './useHomeLocale';
 
 gsap.registerPlugin(ScrollToPlugin);
+
 
 /**
  * 指针跟随光晕（对齐登录页 LoginBrandPanel）。
@@ -270,45 +272,108 @@ function SlideTunnel() {
   );
 }
 
-const COPY = {
-  title: '让 SeaTunnel 运维清晰可见',
-  sub: '面向 Apache SeaTunnel 的一站式运维平台；并原生提供 AI Agent 智能运维入口（CLI + Skill）。',
-  chipsLabel: '产品能力',
-  capabilityPrefix: '能力：',
-  chips: [
-    { key: 'install', label: '一键安装', Icon: PackageIcon },
-    { key: 'upgrade', label: '一键升级', Icon: UpgradeIcon },
-    { key: 'market', label: '插件市场', Icon: MarketIcon },
-    { key: 'agent', label: 'AI Agent · CLI + Skill', Icon: AgentIcon },
-    { key: 'checkpoint', label: 'Checkpoint 可视化', Icon: CheckpointIcon },
-    { key: 'debug', label: '作业在线调试', Icon: DebugIcon },
-  ],
-  capabilities: [
-    'AI Agent 智能运维入口',
-    '集群感知',
-    '运行可观测',
-    '任务一键恢复',
-    'Connector 一键下载',
-    'Checkpoint 可视化',
-    'HOCON DAG 解析',
-  ],
-  installCmd: 'curl -fsSL https://stx.seatunnelx.com/install.sh | bash',
-} as const;
+const COPY: Record<
+  HomeLocale,
+  {
+    title: string;
+    sub: string;
+    chipsLabel: string;
+    capabilityPrefix: string;
+    chipLabels: Record<string, string>;
+    capabilities: string[];
+    installCmd: string;
+    deployCta: string;
+    copy: string;
+    copied: string;
+    copyTitle: string;
+    homeAria: string;
+  }
+> = {
+  zh: {
+    title: '让 SeaTunnel 运维清晰可见',
+    sub: '面向 Apache SeaTunnel 的一站式运维平台；并原生提供 AI Agent 智能运维入口（CLI + Skill）。',
+    chipsLabel: '产品能力',
+    capabilityPrefix: '能力：',
+    chipLabels: {
+      install: '一键安装',
+      upgrade: '一键升级',
+      market: '插件市场',
+      agent: 'AI Agent · CLI + Skill',
+      checkpoint: 'Checkpoint 可视化',
+      debug: '作业在线调试',
+    },
+    capabilities: [
+      'AI Agent 智能运维入口',
+      '集群感知',
+      '运行可观测',
+      '任务一键恢复',
+      'Connector 一键下载',
+      'Checkpoint 可视化',
+      'HOCON DAG 解析',
+    ],
+    installCmd: 'curl -fsSL https://stx.seatunnelx.com/install.sh | bash',
+    deployCta: '5 分钟快速部署',
+    copy: '复制',
+    copied: '已复制',
+    copyTitle: '复制到剪贴板',
+    homeAria: 'STX 首页',
+  },
+  en: {
+    title: 'Make SeaTunnel ops clearly visible',
+    sub: 'An all-in-one ops platform for Apache SeaTunnel, with a native AI Agent ops entry (CLI + Skill).',
+    chipsLabel: 'Product capabilities',
+    capabilityPrefix: 'Capability:',
+    chipLabels: {
+      install: 'One-click install',
+      upgrade: 'One-click upgrade',
+      market: 'Plugin marketplace',
+      agent: 'AI Agent · CLI + Skill',
+      checkpoint: 'Checkpoint visualization',
+      debug: 'Online job debugging',
+    },
+    capabilities: [
+      'AI Agent ops entry',
+      'Cluster awareness',
+      'Runtime observability',
+      'One-click job recovery',
+      'One-click connector download',
+      'Checkpoint visualization',
+      'HOCON DAG parsing',
+    ],
+    installCmd: 'curl -fsSL https://stx.seatunnelx.com/install.sh | bash',
+    deployCta: 'Deploy in 5 minutes',
+    copy: 'Copy',
+    copied: 'Copied',
+    copyTitle: 'Copy to clipboard',
+    homeAria: 'STX Home',
+  },
+};
+
+const CHIP_ICONS = [
+  {key: 'install', Icon: PackageIcon},
+  {key: 'upgrade', Icon: UpgradeIcon},
+  {key: 'market', Icon: MarketIcon},
+  {key: 'agent', Icon: AgentIcon},
+  {key: 'checkpoint', Icon: CheckpointIcon},
+  {key: 'debug', Icon: DebugIcon},
+] as const;
 
 /**
  * 文档站 Hero：对齐 stx 登录页品牌动效 + 能力标签，文案尽量短。
  * Docs hero: login brand motion + chips, copy kept short.
  */
 export function HeroBrandPanel(): React.JSX.Element {
+  const locale = useHomeLocale();
+  const copy = COPY[locale];
   const panelRef = useRef<HTMLElement>(null);
   useInteractivePanel(panelRef);
 
-  const capabilityWords = useMemo(() => [...COPY.capabilities], []);
+  const capabilityWords = useMemo(() => [...copy.capabilities], [copy.capabilities]);
   const typed = useTypewriter(capabilityWords);
 
   const [copied, setCopied] = useState(false);
   const handleCopyCommand = () => {
-    void navigator.clipboard.writeText(COPY.installCmd);
+    void navigator.clipboard.writeText(copy.installCmd);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2000);
   };
@@ -367,7 +432,7 @@ export function HeroBrandPanel(): React.JSX.Element {
       <div className="stx-brand-content">
         <div className="stx-brand-main">
           <div className="stx-brand-logo-wrap">
-            <Link to="/" className="stx-brand-logo-link" aria-label="STX 首页 / STX Home">
+            <Link to="/" className="stx-brand-logo-link" aria-label={copy.homeAria}>
               <img
                 src={logoLight}
                 alt="STX"
@@ -382,14 +447,15 @@ export function HeroBrandPanel(): React.JSX.Element {
           </div>
 
           <h1 className="stx-brand-title">
-            <span className="stx-brand-title-main">{COPY.title}</span>
+            <span className="stx-brand-title-main">{copy.title}</span>
           </h1>
 
-          <p className="stx-brand-sub">{COPY.sub}</p>
+          <p className="stx-brand-sub">{copy.sub}</p>
 
-          <div className="stx-pill-row" aria-label={COPY.chipsLabel}>
-            {COPY.chips.map(({ key, label, Icon: ChipIcon }) =>
-              key === 'agent' ? (
+          <div className="stx-pill-row" aria-label={copy.chipsLabel}>
+            {CHIP_ICONS.map(({key, Icon: ChipIcon}) => {
+              const label = copy.chipLabels[key];
+              return key === 'agent' ? (
                 <button
                   key={key}
                   type="button"
@@ -404,19 +470,19 @@ export function HeroBrandPanel(): React.JSX.Element {
                   <ChipIcon />
                   {label}
                 </span>
-              ),
-            )}
+              );
+            })}
           </div>
 
           <div className="stx-type-row" aria-live="polite">
-            <span className="stx-type-label">{COPY.capabilityPrefix}</span>
+            <span className="stx-type-label">{copy.capabilityPrefix}</span>
             <span className="stx-type-text">{typed || '\u00A0'}</span>
             <span className="stx-type-caret" aria-hidden="true" />
           </div>
 
           <div className="stx-brand-actions">
             <Link className="button--glacier" to="/docs/get-started/quick-start">
-              5 分钟快速部署
+              {copy.deployCta}
             </Link>
             <Link
               className="button--outline-glacier"
@@ -428,14 +494,14 @@ export function HeroBrandPanel(): React.JSX.Element {
 
           <div className="stx-install-command-bar stx-brand-install">
             <span className="stx-cmd-prefix">$</span>
-            <code className="stx-cmd-code">{COPY.installCmd}</code>
+            <code className="stx-cmd-code">{copy.installCmd}</code>
             <button
               type="button"
               onClick={handleCopyCommand}
               className="stx-cmd-copy-btn"
-              title="复制到剪贴板"
+              title={copy.copyTitle}
             >
-              {copied ? '已复制' : '复制'}
+              {copied ? copy.copied : copy.copy}
             </button>
           </div>
         </div>

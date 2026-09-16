@@ -1,441 +1,25 @@
 import React, {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
 } from 'react';
 import logoLight from '@site/static/img/stx-logo.png';
 import logoDark from '@site/static/img/stx-logo-dark.png';
+import {
+  getAgentChrome,
+  getAgentScenarios,
+  type Scenario,
+} from './agentDemoCopy';
+import {useHomeLocale} from './useHomeLocale';
 
 /**
  * STX 多场景演示：诊断 / MySQL-CDC→Hive 提交 / 2.3.8→2.3.13 升级验证。
  * stx 是 CLI 命令 + Skill，不是独立 AI Agent。
  * Multi-scenario demo; stx is a CLI command + Skill, not a standalone AI agent.
  */
-
-type PhaseIcon = 'cli' | 'jobs' | 'logs' | 'code' | 'sync' | 'upgrade';
-
-type Phase = {
-  title: string;
-  tool: string;
-  detail: string;
-  queries: string[];
-  icon: PhaseIcon;
-};
-
-type Finding = { number: string; title: string; quote: string };
-
-type Scenario = {
-  id: string;
-  label: string;
-  chatTitle: string;
-  projectName: string;
-  welcomeTitle: string;
-  welcomeSub: string;
-  /** 首条用户输入（打字机） / First typed user prompt */
-  prompt: string;
-  /** 开场助手回复 / Opening assistant reply */
-  reply: string;
-  /** 过程中插入的用户确认等 / Mid-flow user turns (after N phases) */
-  midUsers: { afterPhases: number; text: string }[];
-  phases: Phase[];
-  completedTitle: string;
-  completedSummary: string;
-  findings: Finding[];
-  artifactTitle: string;
-  artifactMeta: string;
-  artifactBody: string;
-};
-
-const SCENARIOS: Scenario[] = [
-  {
-    id: 'diagnose',
-    label: '线上集群健康巡检',
-    chatTitle: 'SeaTunnel 集群诊断',
-    projectName: 'zeta-prod 运维',
-    welcomeTitle: '可视化管理 + 原生 AI Agent（CLI + Skill）：让 SeaTunnel 运维清晰透明',
-    welcomeSub: '用自然语言驱动 stx：集群、任务、日志与源码一气呵成。',
-    prompt:
-      '帮我看看线上 SeaTunnel 现在有哪些集群在跑，任务是否健康；若有失败任务，拉错误日志并对照源码给出根因。',
-    reply:
-      '先列集群与运行中任务，再定位失败作业日志，最后对照 SeaTunnel 源码给出可执行修复建议。',
-    midUsers: [],
-    phases: [
-      {
-        title: '拉取运行中集群',
-        tool: 'stx cluster list',
-        icon: 'cli',
-        queries: [
-          'zeta-prod · Zeta · healthy 3/3',
-          'spark-batch · Spark · healthy 4/4',
-          'flink-cdc · Flink · degraded 2/3',
-        ],
-        detail:
-          '通过 `stx cluster list` 汇总引擎类型、节点心跳与纳管状态。',
-      },
-      {
-        title: '枚举运行 / 失败任务',
-        tool: 'stx job list',
-        icon: 'jobs',
-        queries: [
-          'job-1831 orders_cdc_sync · RUNNING',
-          'job-1842 inventory_enrich · FAILED',
-          'job-1850 user_profile_stream · RUNNING',
-        ],
-        detail:
-          '`stx job list --cluster zeta-prod --state RUNNING,FAILED`，锁定失败作业 job-1842。',
-      },
-      {
-        title: '采集失败任务日志',
-        tool: 'stx job logs',
-        icon: 'logs',
-        queries: [
-          'Checkpoint barrier timeout 30s',
-          'JDBC batch failed: Duplicate key',
-          'JobMaster · SinkException',
-        ],
-        detail: '`stx job logs --id job-1842 --tail 40`，定位到 JDBC Sink 写冲突。',
-      },
-      {
-        title: '对照 SeaTunnel 源码',
-        tool: 'stx skill read',
-        icon: 'code',
-        queries: [
-          'JdbcSinkWriter.java:214',
-          'ignoreDuplicate / upsert 策略',
-          '建议 stx job restart',
-        ],
-        detail:
-          '`stx skill read` 打开 JdbcSinkWriter 冲突分支，确认根因为主键冲突而非集群宕机。',
-      },
-    ],
-    completedTitle: '诊断完成',
-    completedSummary:
-      '根因是 JDBC Sink 主键冲突。可改为 upsert，或清理冲突数据后执行 `stx job restart --id job-1842`。',
-    findings: [
-      {
-        number: '01',
-        title: '集群面健康',
-        quote: 'zeta-prod 节点 3/3 在线，控制面心跳正常。',
-      },
-      {
-        number: '02',
-        title: '任务面异常',
-        quote: 'job-1842 失败，日志指向 Duplicate key。',
-      },
-      {
-        number: '03',
-        title: '源码可解释',
-        quote: '非 upsert 模式下冲突直接抛 SinkException。',
-      },
-    ],
-    artifactTitle: 'job-1842 诊断纪要',
-    artifactMeta: 'SeaTunnel · stx skill',
-    artifactBody: `# job-1842 诊断纪要
-
-根因：JDBC Sink 主键冲突（Duplicate key）
-
-建议：
-1. Sink 改为 upsert / 开启 ignoreDuplicate
-2. 清理冲突数据后重提
-3. stx job restart --id job-1842`,
-  },
-  {
-    id: 'cdc-hive',
-    label: 'MySQL CDC → Hive 提交',
-    chatTitle: '同步任务提交',
-    projectName: 'data-sync studio',
-    welcomeTitle: '用 stx 提交同步任务',
-    welcomeSub: '从连接器文档生成 HOCON，测试连接、抽 DAG、预览后发布运行。',
-    prompt:
-      '帮我提交一下 MySQL CDC 到 Hive 的任务。MySQL url 是 jdbc:mysql://mysql.prod:3306/，密码用系统变量 {{password}}，库表 shop.orders，落到 Hive ods.orders_cdc。',
-    reply:
-      '收到。我会用 stx 走完整链路：对照 connector 文档生成 HOCON（密码引用 {{password}}）→ 请你确认 → 测连 → 抽 DAG → 询问预览 → 发布运行。',
-    midUsers: [
-      {
-        afterPhases: 2,
-        text: '确认，按这份 HOCON 继续。密码保持 {{password}} 系统变量。',
-      },
-      {
-        afterPhases: 4,
-        text: '是，先预览几行数据，没问题再正式发布运行。',
-      },
-    ],
-    phases: [
-      {
-        title: '读取连接器源码与文档',
-        tool: 'stx skill read',
-        icon: 'code',
-        queries: [
-          'docs: MySQL-CDC / Hive',
-          'plugin: connector-cdc-mysql',
-          'plugin: connector-hive',
-        ],
-        detail:
-          '`stx skill read` 对齐 Source=`MySQL-CDC`、Sink=`Hive` 字段；密码走全局变量 {{password}}。',
-      },
-      {
-        title: '生成 HOCON 并请确认',
-        tool: 'stx sync draft',
-        icon: 'sync',
-        queries: [
-          'env.job.mode = STREAMING',
-          'password = "{{password}}"',
-          'source MySQL-CDC → sink Hive',
-        ],
-        detail: `已用 \`stx sync draft\` 生成草稿，请确认是否符合要求：
-
-\`\`\`hocon
-env {
-  parallelism = 1
-  job.mode = "STREAMING"
-  checkpoint.interval = 10000
-}
-
-source {
-  MySQL-CDC {
-    plugin_output = "orders_cdc"
-    username = "{{MYSQL_USER}}"
-    password = "{{password}}"
-    base-url = "jdbc:mysql://mysql.prod:3306/"
-    database-names = ["shop"]
-    table-names = ["shop.orders"]
-    startup.mode = "initial"
-  }
-}
-
-sink {
-  Hive {
-    plugin_input = ["orders_cdc"]
-    table_name = "ods.orders_cdc"
-    metastore_uri = "thrift://hive-metastore:9083"
-  }
-}
-\`\`\`
-
-是否按此配置继续？`,
-      },
-      {
-        title: '测试连接',
-        tool: 'stx sync test',
-        icon: 'cli',
-        queries: [
-          'Source[0]-MySQL-CDC ok',
-          'Sink[0]-Hive ok',
-          'vars: {{password}} resolved',
-        ],
-        detail:
-          '`stx sync test`：MySQL CDC 与 Hive Metastore 均通过；系统变量 {{password}} 已解析。',
-      },
-      {
-        title: '提取 DAG',
-        tool: 'stx sync dag',
-        icon: 'jobs',
-        queries: [
-          'Source[0]-MySQL-CDC',
-          '→ Sink[0]-Hive',
-          'edges=1 · nodes=2',
-        ],
-        detail:
-          '`stx sync dag`：`MySQL-CDC(orders_cdc) → Hive(ods.orders_cdc)`。是否预览源端样例数据？',
-      },
-      {
-        title: '预览数据',
-        tool: 'stx sync preview',
-        icon: 'logs',
-        queries: [
-          'preview job_id=9124',
-          'rows=8 · cols=12',
-          'order_id / user_id / amount …',
-        ],
-        detail:
-          '`stx sync preview` 已返回样例行，字段与 shop.orders 对齐。准备发布并提交。',
-      },
-      {
-        title: '发布并运行',
-        tool: 'stx sync submit',
-        icon: 'sync',
-        queries: [
-          'publish version=v3',
-          'engine_job_id=883921',
-          'status=RUNNING',
-        ],
-        detail:
-          '`stx sync submit` 已发布 v3 并在 Zeta 提交运行；binlog 位点开始推进。',
-      },
-    ],
-    completedTitle: '任务已发布运行',
-    completedSummary:
-      'MySQL CDC → Hive 已完成：配置确认 → stx sync test → dag → preview → submit，作业 RUNNING。',
-    findings: [
-      {
-        number: '01',
-        title: '配置合规',
-        quote: '密码使用 {{password}}，url / 库表 / Hive 表名已按你的要求写入。',
-      },
-      {
-        number: '02',
-        title: '链路打通',
-        quote: 'test / dag / preview 均通过。',
-      },
-      {
-        number: '03',
-        title: '已上线',
-        quote: 'stx sync submit · engine_job_id=883921 · RUNNING',
-      },
-    ],
-    artifactTitle: 'mysql_cdc_to_hive.v3.conf',
-    artifactMeta: 'stx sync · published v3',
-    artifactBody: `env {
-  parallelism = 1
-  job.mode = "STREAMING"
-  checkpoint.interval = 10000
-}
-
-source {
-  MySQL-CDC {
-    plugin_output = "orders_cdc"
-    username = "{{MYSQL_USER}}"
-    password = "{{password}}"
-    base-url = "jdbc:mysql://mysql.prod:3306/"
-    database-names = ["shop"]
-    table-names = ["shop.orders"]
-    startup.mode = "initial"
-  }
-}
-
-sink {
-  Hive {
-    plugin_input = ["orders_cdc"]
-    table_name = "ods.orders_cdc"
-    metastore_uri = "thrift://hive-metastore:9083"
-  }
-}`,
-  },
-  {
-    id: 'upgrade',
-    label: 'SeaTunnel 升级验证',
-    chatTitle: 'Upgrade 验证 · 2.3.13',
-    projectName: 'upgrade-lab',
-    welcomeTitle: '升级前兼容验证',
-    welcomeSub: '搭 2.3.13 小型验证集群，冒烟 + 差异报告，验收后再决定是否升级。',
-    prompt:
-      '我们目前要从 SeaTunnel 2.3.8 升级到 2.3.13。帮我搭建一个 2.3.13 的小型验证集群，验证现有配置在新版本是否兼容、运行是否报错，最后给出差异报告供验收评估。',
-    reply:
-      '可以。流程是：用 stx 拉起 2.3.13 小型验证集群 → 装好连接器 → 把现有典型配置拿去冒烟 → 产出配置差异报告 → 整理验收清单，由你评估是否对生产执行升级（本轮不做正式 Execute）。',
-    midUsers: [
-      {
-        afterPhases: 3,
-        text: '冒烟结果可以，继续出差异报告和验收清单吧。',
-      },
-    ],
-    phases: [
-      {
-        title: '搭建 2.3.13 小型验证集群',
-        tool: 'stx cluster create',
-        icon: 'cli',
-        queries: [
-          'cluster=upgrade-verify-2313',
-          'nodes=1 · engine=Zeta',
-          'package=apache-seatunnel-2.3.13',
-        ],
-        detail:
-          '`stx cluster create` + `stx package install --version 2.3.13`，单节点验证集群就绪，与生产隔离。',
-      },
-      {
-        title: '准备目标版连接器',
-        tool: 'stx plugin install',
-        icon: 'upgrade',
-        queries: [
-          'connector-cdc-mysql@2.3.13',
-          'connector-hive@2.3.13',
-          'connector-jdbc@2.3.13',
-        ],
-        detail:
-          '`stx plugin install` 为目标版本装好生产常用连接器，供后续冒烟使用。',
-      },
-      {
-        title: '配置兼容冒烟',
-        tool: 'stx job smoke',
-        icon: 'jobs',
-        queries: [
-          'batch.template → ok',
-          'mysql-cdc→hive draft → ok',
-          'jdbc upsert sample → ok',
-        ],
-        detail:
-          '`stx job smoke` 用现有三类配置在 2.3.13 验证集群跑通：批模板、CDC→Hive、JDBC upsert，均无报错。',
-      },
-      {
-        title: '生成配置差异报告',
-        tool: 'stx upgrade diff',
-        icon: 'logs',
-        queries: [
-          'seatunnel.yaml · http.port keep',
-          'checkpoint.namespace keep',
-          'deprecated keys: 2 · new keys: 5',
-        ],
-        detail:
-          '`stx upgrade diff --from 2.3.8 --to 2.3.13`：保留本地 http/checkpoint；标出废弃项与新增默认项，形成可审阅差异报告。',
-      },
-      {
-        title: '验收清单（待评估）',
-        tool: 'stx upgrade review',
-        icon: 'upgrade',
-        queries: [
-          'smoke: passed',
-          'diff report: attached',
-          'decision: pending human approve',
-        ],
-        detail:
-          '`stx upgrade review` 汇总冒烟结果与差异报告。请验收后决定是否对生产执行升级；本演示到验收为止，不自动 Execute。',
-      },
-    ],
-    completedTitle: '验证完成 · 待你验收',
-    completedSummary:
-      '2.3.13 小型验证集群已冒烟通过，配置差异报告已产出。请验收后评估是否对生产升级；本轮未执行正式 SWITCH_VERSION。',
-    findings: [
-      {
-        number: '01',
-        title: '验证集群',
-        quote: 'upgrade-verify-2313 · SeaTunnel 2.3.13 · 单节点 Zeta 就绪。',
-      },
-      {
-        number: '02',
-        title: '冒烟通过',
-        quote: '三类现有配置在新版本运行无报错。',
-      },
-      {
-        number: '03',
-        title: '待验收决策',
-        quote: '差异报告已给出；是否升级由你确认后再执行。',
-      },
-    ],
-    artifactTitle: 'upgrade-diff 2.3.8→2.3.13',
-    artifactMeta: 'stx upgrade review',
-    artifactBody: `# upgrade verification
-
-verify_cluster: upgrade-verify-2313 (2.3.13)
-from_prod: 2.3.8
-
-smoke:
-- batch.template → ok
-- mysql-cdc→hive → ok
-- jdbc upsert → ok
-
-diff highlights:
-- keep: http.port, checkpoint.namespace
-- review: 2 deprecated keys, 5 new defaults
-
-next:
-1. human accept diff report
-2. decide go / no-go
-3. only then: stx upgrade execute (not in this demo)
-
-result: verification complete · pending approval`,
-  },
-];
 
 /** 放慢节奏；阶段更多的场景仍保持可跟读 / Slow timeline for readability */
 const TYPE_START = 200;
@@ -457,7 +41,7 @@ function StxMentionChip({
   className?: string;
 }): React.JSX.Element {
   return (
-    <span className={`stx-mention ${className}`.trim()} title="青鸾 · STX">
+    <span className={`stx-mention ${className}`.trim()} title="STX">
       <img
         className="stx-mention__logo stx-mention__logo--light"
         src={logoLight}
@@ -638,8 +222,19 @@ export function AgentChatDemo({
 }: {
   embedded?: boolean;
 }): React.JSX.Element {
-  const [scenarioId, setScenarioId] = useState(SCENARIOS[0].id);
-  const scenario = SCENARIOS.find((s) => s.id === scenarioId) ?? SCENARIOS[0];
+  const locale = useHomeLocale();
+  const scenarios = useMemo(() => getAgentScenarios(locale), [locale]);
+  const chrome = useMemo(() => getAgentChrome(locale), [locale]);
+
+  const [scenarioId, setScenarioId] = useState(scenarios[0].id);
+  const scenario = scenarios.find((s) => s.id === scenarioId) ?? scenarios[0];
+
+  // 切换语言时保持同一场景 id，必要时回退到首个 / Keep scenario id across locale switches
+  useEffect(() => {
+    if (!scenarios.some((s) => s.id === scenarioId)) {
+      setScenarioId(scenarios[0].id);
+    }
+  }, [scenarios, scenarioId]);
 
   const [mode, setMode] = useState<Mode>('welcome');
   const [promptText, setPromptText] = useState('');
@@ -663,9 +258,12 @@ export function AgentChatDemo({
   const [pressedId, setPressedId] = useState<string | null>(null);
   const [artifactOpen, setArtifactOpen] = useState(false);
 
+  const sectionRef = useRef<HTMLElement | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+  /** 是否已滚入视口，未进入前不自动开播 / Gate autoplay until section is in view */
+  const inViewRef = useRef(false);
   const stateRef = useRef({
-    playing: true,
+    playing: false,
     elapsed: 0,
     eventIdx: -1,
     mode: 'welcome' as Mode,
@@ -687,9 +285,11 @@ export function AgentChatDemo({
 
   const resetPlay = useCallback(() => {
     timelineRef.current = buildTimeline(
-      SCENARIOS.find((s) => s.id === scenarioId) ?? SCENARIOS[0],
+      scenarios.find((s) => s.id === scenarioId) ?? scenarios[0],
     );
     stateRef.current = {
+      // 手动重播立即开播；未入屏时的自动演示仍由 IntersectionObserver 解锁
+      // Manual replay starts now; autoplay still waits for IntersectionObserver
       playing: true,
       elapsed: 0,
       eventIdx: -1,
@@ -706,17 +306,17 @@ export function AgentChatDemo({
     setExpanded(new Set());
     setArtifactOpen(false);
     setRunId((n) => n + 1);
-  }, [scenarioId]);
+  }, [scenarioId, scenarios]);
 
   const selectScenario = useCallback((id: string) => {
     setScenarioId(id);
   }, []);
 
   useEffect(() => {
-    // 切换场景后重建时间线并重播 / Rebuild timeline when scenario changes
+    // 切换场景后重建时间线；已入屏则开播，否则等滑入 / Rebuild; play only if already in view
     timelineRef.current = buildTimeline(scenario);
     stateRef.current = {
-      playing: true,
+      playing: inViewRef.current,
       elapsed: 0,
       eventIdx: -1,
       mode: 'welcome',
@@ -734,11 +334,42 @@ export function AgentChatDemo({
     setRunId((n) => n + 1);
   }, [scenario]);
 
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      // 无 IO 时直接开播，避免演示永远卡住 / Fallback: start without observer
+      inViewRef.current = true;
+      stateRef.current.playing = true;
+      setRunId((n) => n + 1);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        const visible =
+          entry.isIntersecting && entry.intersectionRatio >= 0.32;
+        inViewRef.current = visible;
+        if (!visible) return;
+        if (stateRef.current.playing) return;
+        if (stateRef.current.mode === 'complete') return;
+        // 滑到第二屏后再开始打字机与后续演示 / Start demo after scrolling into view
+        stateRef.current.playing = true;
+        setRunId((n) => n + 1);
+      },
+      {threshold: [0, 0.2, 0.32, 0.45, 0.6], rootMargin: '0px 0px -8% 0px'},
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const stopPlayback = useCallback(() => {
     stateRef.current.playing = false;
     setShowTyping(false);
-    if (stateRef.current.mode === 'running') showToast('已暂停演示');
-  }, [showToast]);
+    if (stateRef.current.mode === 'running') showToast(chrome.pauseDemo);
+  }, [chrome.pauseDemo, showToast]);
 
   const togglePhase = useCallback((index: number) => {
     setExpanded((prev) => {
@@ -760,7 +391,7 @@ export function AgentChatDemo({
     let previous = performance.now();
     let cancelled = false;
     const { events, endAt } = timelineRef.current;
-    const current = SCENARIOS.find((s) => s.id === scenarioId) ?? SCENARIOS[0];
+    const current = scenarios.find((s) => s.id === scenarioId) ?? scenarios[0];
 
     const applyEvent = (ev: TimelineEvent) => {
       if (ev.kind === 'start') {
@@ -855,7 +486,7 @@ export function AgentChatDemo({
       cancelled = true;
       if (frameId !== null) window.cancelAnimationFrame(frameId);
     };
-  }, [runId, scenarioId]);
+  }, [runId, scenarioId, scenarios]);
 
   useEffect(() => {
     const el = scrollerRef.current;
@@ -896,7 +527,7 @@ export function AgentChatDemo({
     if (s.mode === 'welcome') {
       s.elapsed = START_AT;
       s.playing = true;
-      showToast('已发送，开始调用 stx…');
+      showToast(chrome.sendStartedToast);
       return;
     }
     if (s.mode === 'running') {
@@ -908,8 +539,8 @@ export function AgentChatDemo({
 
   const composerPlaceholder =
     mode === 'running'
-      ? '正在通过 stx 执行…'
-      : '描述你想排查或提交的运维任务…';
+      ? chrome.placeholderRunning
+      : chrome.placeholderIdle;
 
   const shellClass = [
     'stx-mimo',
@@ -921,18 +552,19 @@ export function AgentChatDemo({
 
   return (
     <section
+      ref={sectionRef}
       id="stx-agent-section"
       className={`stx-agent-demo${embedded ? ' stx-agent-demo--embedded' : ''}`}
-      aria-label="stx Skill 对话演示"
+      aria-label={chrome.ariaDemo}
     >
       <div className={shellClass}>
-        <aside className="stx-mimo__sidebar" aria-label="stx 工作台导航">
+        <aside className="stx-mimo__sidebar" aria-label={chrome.ariaNav}>
           <div className="stx-mimo__toolbar">
             <button
               type="button"
               className={`stx-mimo__icon-btn${pressedId === 'panel' ? ' is-pressed' : ''}`}
-              title={sidebarCollapsed ? '展开侧栏' : '收起侧栏'}
-              aria-label={sidebarCollapsed ? '展开侧栏' : '收起侧栏'}
+              title={sidebarCollapsed ? chrome.expandSidebar : chrome.collapseSidebar}
+              aria-label={sidebarCollapsed ? chrome.expandSidebar : chrome.collapseSidebar}
               onClick={() => {
                 flashPress('panel');
                 setSidebarCollapsed((v) => !v);
@@ -943,11 +575,11 @@ export function AgentChatDemo({
             <button
               type="button"
               className={`stx-mimo__icon-btn${pressedId === 'search' ? ' is-pressed' : ''}`}
-              title="搜索"
-              aria-label="搜索"
+              title="Search"
+              aria-label="Search"
               onClick={() => {
                 flashPress('search');
-                showToast('演示模式：搜索暂不可用');
+                showToast(chrome.searchToast);
               }}
             >
               <Icon name="search" />
@@ -955,11 +587,11 @@ export function AgentChatDemo({
             <button
               type="button"
               className={`stx-mimo__icon-btn${pressedId === 'bell' ? ' is-pressed' : ''}`}
-              title="通知"
-              aria-label="通知"
+              title={chrome.notifyTitle}
+              aria-label={chrome.notifyTitle}
               onClick={() => {
                 flashPress('bell');
-                showToast('暂无新通知');
+                showToast(chrome.notifyToast);
               }}
             >
               <Icon name="bell" />
@@ -972,19 +604,19 @@ export function AgentChatDemo({
               className="stx-mimo__nav-item"
               onClick={() => {
                 resetPlay();
-                showToast('已新建任务');
+                showToast(chrome.newTaskToast);
               }}
             >
               <Icon name="plus" />
-              新建任务
+              {chrome.newTask}
             </button>
             <button
               type="button"
               className="stx-mimo__nav-item"
-              onClick={() => showToast('Skill / 插件市场（演示）')}
+              onClick={() => showToast(chrome.pluginsToast)}
             >
               <Icon name="plugin" />
-              插件 / Skill
+              {chrome.plugins}
             </button>
             <button
               type="button"
@@ -992,14 +624,14 @@ export function AgentChatDemo({
               onClick={() => {
                 if (showFinish) {
                   setArtifactOpen(true);
-                  showToast('已打开产物');
+                  showToast(chrome.openArtifactToast);
                 } else {
-                  showToast('产物将在流程完成后出现');
+                  showToast(chrome.artifactPendingToast);
                 }
               }}
             >
               <Icon name="box" />
-              产物中心
+              {chrome.artifacts}
               {showFinish ? <em className="stx-mimo__badge">1</em> : null}
             </button>
           </nav>
@@ -1007,7 +639,7 @@ export function AgentChatDemo({
           <div className="stx-mimo__side-scroll">
             <div className="stx-mimo__section-label">
               <Icon name="folder" />
-              项目
+              {chrome.projects}
             </div>
             <button
               type="button"
@@ -1018,15 +650,15 @@ export function AgentChatDemo({
               {scenario.projectName}
             </button>
 
-            <div className="stx-mimo__section-label">最近</div>
-            {SCENARIOS.map((item) => (
+            <div className="stx-mimo__section-label">{chrome.recent}</div>
+            {scenarios.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 className={`stx-mimo__recent${scenarioId === item.id ? ' is-selected' : ''}`}
                 onClick={() => {
                   selectScenario(item.id);
-                  showToast(`场景：${item.label}`);
+                  showToast(chrome.scenarioToast(item.label));
                 }}
               >
                 {item.label}
@@ -1038,7 +670,7 @@ export function AgentChatDemo({
             type="button"
             className="stx-mimo__user"
             aria-label="STX"
-            onClick={() => showToast('STX（演示）')}
+            onClick={() => showToast('STX')}
           >
             <StxBrandMark className="stx-mimo__user-logo" height={28} />
           </button>
@@ -1049,8 +681,8 @@ export function AgentChatDemo({
             <button
               type="button"
               className="stx-mimo__icon-btn stx-mimo__header-panel"
-              title={sidebarCollapsed ? '展开侧栏' : '收起侧栏'}
-              aria-label={sidebarCollapsed ? '展开侧栏' : '收起侧栏'}
+              title={sidebarCollapsed ? chrome.expandSidebar : chrome.collapseSidebar}
+              aria-label={sidebarCollapsed ? chrome.expandSidebar : chrome.collapseSidebar}
               onClick={() => setSidebarCollapsed((v) => !v)}
             >
               <Icon name="panel" />
@@ -1065,7 +697,7 @@ export function AgentChatDemo({
               {mode === 'running' ? (
                 <span className="stx-mimo__status">
                   <i />
-                  执行中
+                  {chrome.running}
                 </span>
               ) : null}
               {mode === 'running' ? (
@@ -1073,8 +705,8 @@ export function AgentChatDemo({
                   type="button"
                   className="stx-mimo__icon-btn"
                   onClick={stopPlayback}
-                  title="暂停"
-                  aria-label="暂停演示"
+                  title={chrome.pause}
+                  aria-label={chrome.pauseDemo}
                 >
                   <Icon name="stop" />
                 </button>
@@ -1086,13 +718,29 @@ export function AgentChatDemo({
                   flashPress('replay');
                   resetPlay();
                 }}
-                title="重播演示"
-                aria-label="重播演示"
+                title={chrome.replay}
+                aria-label={chrome.replay}
               >
                 <Icon name="replay" />
               </button>
             </div>
           </header>
+
+          <div className="stx-mimo__scenario-strip" aria-label={chrome.recent}>
+            {scenarios.map((item) => (
+              <button
+                key={`m-${item.id}`}
+                type="button"
+                className={`stx-mimo__scenario-chip${scenarioId === item.id ? ' is-selected' : ''}`}
+                onClick={() => {
+                  selectScenario(item.id);
+                  showToast(chrome.scenarioToast(item.label));
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
 
           <div ref={scrollerRef} className="stx-mimo__viewport">
             {mode === 'welcome' ? (
@@ -1147,7 +795,7 @@ export function AgentChatDemo({
                           <small>{phase.tool}</small>
                         </span>
                         <span className="stx-mimo__phase-state">
-                          {done ? <Icon name="check" /> : '进行中'}
+                          {done ? <Icon name="check" /> : chrome.inProgress}
                         </span>
                         <Icon name="chevron" className="stx-mimo__phase-arrow" />
                       </button>
@@ -1166,7 +814,7 @@ export function AgentChatDemo({
                 })}
 
                 {showTyping ? (
-                  <div className="stx-mimo__typing" aria-label="生成中">
+                  <div className="stx-mimo__typing" aria-label={chrome.generating}>
                     <i />
                     <i />
                     <i />
@@ -1193,7 +841,11 @@ export function AgentChatDemo({
                       className={`stx-mimo__artifact${artifactOpen ? ' is-open' : ''}`}
                       onClick={() => {
                         setArtifactOpen((v) => !v);
-                        showToast(artifactOpen ? '已收起产物' : '已展开产物');
+                        showToast(
+                          artifactOpen
+                            ? chrome.collapseArtifact
+                            : chrome.expandArtifact,
+                        );
                       }}
                     >
                       <span className="stx-mimo__artifact-cover" aria-hidden>
@@ -1204,7 +856,7 @@ export function AgentChatDemo({
                         <small>{scenario.artifactMeta}</small>
                         <em>
                           <Icon name="check" />
-                          已生成
+                          {chrome.generated}
                         </em>
                       </span>
                     </button>
@@ -1222,7 +874,7 @@ export function AgentChatDemo({
               {/* 提问态始终展示 stx 胶囊（不依赖打字进度，避免第一屏 logo 缺失） */}
               <div
                 className="stx-mimo__composer-editor"
-                aria-label="演示输入框"
+                aria-label={chrome.ariaComposer}
                 role="textbox"
                 aria-readonly="true"
               >
@@ -1248,18 +900,18 @@ export function AgentChatDemo({
                   <button
                     type="button"
                     className="stx-mimo__chip"
-                    title="添加附件"
-                    aria-label="添加附件"
-                    onClick={() => showToast('演示模式：附件上传暂不可用')}
+                    title={chrome.addAttachment}
+                    aria-label={chrome.addAttachment}
+                    onClick={() => showToast(chrome.attachmentToast)}
                   >
                     <Icon name="plus" />
                   </button>
                   <button
                     type="button"
                     className="stx-mimo__chip stx-mimo__chip--label"
-                    onClick={() => showToast('权限：默认（演示）')}
+                    onClick={() => showToast(chrome.permissionToast)}
                   >
-                    默认权限
+                    {chrome.defaultPermission}
                   </button>
                 </div>
                 <div className="stx-mimo__composer-right">
@@ -1268,7 +920,7 @@ export function AgentChatDemo({
                     className={`stx-mimo__send${
                       promptText || mode !== 'welcome' ? ' is-on' : ''
                     }${pressedId === 'send' ? ' is-pressed' : ''}`}
-                    aria-label={mode === 'running' ? '暂停' : '发送'}
+                    aria-label={mode === 'running' ? chrome.pause : chrome.send}
                     onClick={handleSend}
                   >
                     <Icon name={mode === 'running' ? 'stop' : 'send'} />

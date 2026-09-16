@@ -7,6 +7,7 @@ import seatunnelLogo from '@site/static/img/seatunnel-logo.png';
 import flinkLogo from '@site/static/img/flink-squirrel.png';
 import stxMarkLogo from '@site/static/img/stx-mark.png';
 import { cn } from "../../lib/utils";
+import { useHomeLocale, type HomeLocale } from "../home/useHomeLocale";
 import { Card, CardContent } from "./card";
 
 /**
@@ -165,16 +166,29 @@ const AIAgentLogo = ({ className }: { className?: string }) => (
  * 拓扑架构节点配置（画布 600 x 450，中心 STX 精准居中在 300, 175）
  * Topology architecture node definitions (Canvas 600 x 450, Center STX strictly at 300, 175)
  */
-const archNodes: ArchNode[] = [
-  // y = 图标顶边锚点（非节点几何中心），保证图标与文案纵向堆叠不互相遮挡
-  // y = icon top anchor (not geometric center) so icon + labels never overlap
-  // 左侧引擎：顶 / 中 / 底 = 58 / 155 / 252；连线接到图标视觉中心 y+16
-  // Left engines: tops 58 / 155 / 252; paths attach at icon visual center y+16
+const NODE_COPY: Record<HomeLocale, Record<string, { name: string; sub: string }>> = {
+  zh: {
+    zeta: { name: "Zeta", sub: "自研流批一体" },
+    spark: { name: "Spark", sub: "批/微批引擎" },
+    flink: { name: "Flink", sub: "流计算引擎" },
+    vm: { name: "虚拟机 / 主机", sub: "探针直连纳管" },
+    docker: { name: "Docker", sub: "容器化集群" },
+    k8s: { name: "Kubernetes", sub: "Operator 编排" },
+  },
+  en: {
+    zeta: { name: "Zeta", sub: "Unified stream & batch" },
+    spark: { name: "Spark", sub: "Batch / micro-batch" },
+    flink: { name: "Flink", sub: "Stream engine" },
+    vm: { name: "VM / Host", sub: "Probe onboarding" },
+    docker: { name: "Docker", sub: "Container clusters" },
+    k8s: { name: "Kubernetes", sub: "Operator orchestration" },
+  },
+};
+
+const ARCH_LAYOUT = [
   {
     id: "zeta",
-    name: "Zeta",
-    sub: "自研流批一体",
-    category: "engine",
+    category: "engine" as const,
     icon: ZetaLogo,
     x: 85,
     y: 58,
@@ -183,9 +197,7 @@ const archNodes: ArchNode[] = [
   },
   {
     id: "spark",
-    name: "Spark",
-    sub: "批/微批引擎",
-    category: "engine",
+    category: "engine" as const,
     icon: SparkLogo,
     x: 85,
     y: 155,
@@ -194,22 +206,16 @@ const archNodes: ArchNode[] = [
   },
   {
     id: "flink",
-    name: "Flink",
-    sub: "流计算引擎",
-    category: "engine",
+    category: "engine" as const,
     icon: FlinkLogo,
     x: 85,
     y: 252,
     path: "M 112 268 H 195 Q 215 268 215 230 V 195 Q 215 175 235 175 H 262",
     delay: 0.3,
   },
-  // 右侧部署形态，与左侧同排对齐
-  // Right deployments, aligned with left row
   {
     id: "vm",
-    name: "虚拟机 / 主机",
-    sub: "探针直连纳管",
-    category: "infra",
+    category: "infra" as const,
     icon: VMLogo,
     x: 515,
     y: 58,
@@ -218,9 +224,7 @@ const archNodes: ArchNode[] = [
   },
   {
     id: "docker",
-    name: "Docker",
-    sub: "容器化集群",
-    category: "infra",
+    category: "infra" as const,
     icon: DockerLogo,
     x: 515,
     y: 155,
@@ -229,9 +233,7 @@ const archNodes: ArchNode[] = [
   },
   {
     id: "k8s",
-    name: "Kubernetes",
-    sub: "Operator 编排",
-    category: "infra",
+    category: "infra" as const,
     icon: K8sLogo,
     x: 515,
     y: 252,
@@ -239,6 +241,15 @@ const archNodes: ArchNode[] = [
     delay: 0.6,
   },
 ];
+
+function getArchNodes(locale: HomeLocale): ArchNode[] {
+  const copy = NODE_COPY[locale];
+  return ARCH_LAYOUT.map((node) => ({
+    ...node,
+    name: copy[node.id].name,
+    sub: copy[node.id].sub,
+  }));
+}
 
 /**
  * 带有高光流向光束的拓扑连线组件（纯 CSS drop-shadow 发光，杜绝零宽 SVG 渐变渲染异常）
@@ -311,15 +322,34 @@ const AnimatedPath = ({
  * - Bottom: AI Agent entrance (injected into STX from bottom up, clean rail never penetrating STX)
  */
 export function Integration() {
+  const locale = useHomeLocale();
+  const archNodes = getArchNodes(locale);
+  const labels =
+    locale === "en"
+      ? {
+          engines: "SeaTunnel engines",
+          deploys: "Deployment shapes",
+          control: "STX control plane",
+          agent: "AI Agent entry",
+          agentSub: "stx CLI probes · Agent Skill protocol",
+        }
+      : {
+          engines: "SeaTunnel 引擎",
+          deploys: "SeaTunnel 部署形态",
+          control: "STX 控制面",
+          agent: "AI Agent 入口",
+          agentSub: "stx CLI 探针指令 · Agent Skill 协议驱动",
+        };
+
   return (
     <div className="relative h-full w-full">
       {/* 顶部左右分类微标签 */}
       {/* Top Left & Right category micro labels */}
       <div className="absolute top-2 left-4 z-30 rounded-full bg-black/[0.04] border border-black/10 px-2.5 py-0.5 text-[10px] font-mono font-semibold text-slate-700 backdrop-blur-sm shadow-sm dark:bg-white/[0.06] dark:border-white/15 dark:text-white/75">
-        SeaTunnel 引擎
+        {labels.engines}
       </div>
-      <div className="absolute top-2 right-4 z-30 rounded-full bg-black/[0.04] border border-black/10 px-2.5 py-0.5 text-[10px] font-mono font-semibold text-slate-700 backdrop-blur-sm shadow-sm dark:bg-white/[0.06] dark:border-white/15 dark:text-white/75">
-        SeaTunnel 部署形态
+      <div className="absolute top-2 right-4 z-30 max-w-[46%] truncate rounded-full bg-black/[0.04] border border-black/10 px-2.5 py-0.5 text-[10px] font-mono font-semibold text-slate-700 backdrop-blur-sm shadow-sm dark:bg-white/[0.06] dark:border-white/15 dark:text-white/75">
+        {labels.deploys}
       </div>
 
       {/* SVG 动画流动拓扑链路 */}
@@ -390,7 +420,7 @@ export function Integration() {
         {/* Center micro label badge */}
         <div className="mt-1.5 rounded-full bg-background/95 border border-black/15 px-2.5 py-0.5 text-[10.5px] font-mono font-bold text-foreground backdrop-blur-sm whitespace-nowrap shadow-sm flex items-center gap-1.5 dark:border-white/25 dark:bg-black/70 dark:text-white">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          STX 控制面
+          {labels.control}
         </div>
       </div>
 
@@ -439,14 +469,14 @@ export function Integration() {
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="text-[12.5px] font-mono font-bold text-purple-700 dark:text-purple-300">
-                AI Agent 入口
+                {labels.agent}
               </span>
               <span className="rounded bg-purple-500/20 border border-purple-500/40 px-2 py-0.5 text-[9.5px] font-mono font-bold text-purple-700 dark:text-purple-300 shadow-sm">
                 CLI + Skill
               </span>
             </div>
             <span className="text-[9.5px] font-mono text-muted-foreground mt-0.5">
-              stx CLI 探针指令 · Agent Skill 协议驱动
+              {labels.agentSub}
             </span>
           </div>
         </div>
