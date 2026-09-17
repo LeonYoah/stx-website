@@ -425,13 +425,35 @@ export function HeroBrandPanel(): React.JSX.Element {
       </div>
 
       <div className="stx-brand-content">
-        <div className="stx-brand-main">
+        {/* 中心：标题 + 副文 + CTA + curl + 单行能力证明（不与顶栏导航抢位） */}
+        <div className="stx-brand-core">
           <h1 className="stx-brand-title">
             <span className="stx-brand-title-main">{copy.title}</span>
           </h1>
-
           <p className="stx-brand-sub">{copy.sub}</p>
-
+          <div className="stx-brand-actions">
+            <Link className="button--glacier" to="/docs/get-started/quick-start">
+              {copy.deployCta}
+            </Link>
+            <Link
+              className="button--outline-glacier"
+              href="https://github.com/LeonYoah/SeaTunnelX"
+            >
+              Star on GitHub
+            </Link>
+          </div>
+          <div className="stx-install-command-bar stx-brand-install">
+            <span className="stx-cmd-prefix">$</span>
+            <code className="stx-cmd-code">{copy.installCmd}</code>
+            <button
+              type="button"
+              onClick={handleCopyCommand}
+              className="stx-cmd-copy-btn"
+              title={copy.copyTitle}
+            >
+              {copied ? copy.copied : copy.copy}
+            </button>
+          </div>
           <div className="stx-pill-row" aria-label={copy.chipsLabel}>
             {CHIP_ICONS.map(({key, Icon: ChipIcon}) => {
               const label = copy.chipLabels[key];
@@ -453,36 +475,17 @@ export function HeroBrandPanel(): React.JSX.Element {
               );
             })}
           </div>
+        </div>
 
-          <div className="stx-type-row" aria-live="polite">
-            <span className="stx-type-label">{copy.capabilityPrefix}</span>
+        {/* 右下：轮播词（无「能力：」前缀，不作导航） */}
+        <div className="stx-brand-corner stx-brand-corner--br">
+          <div
+            className="stx-type-row"
+            aria-live="polite"
+            aria-label={copy.capabilityPrefix}
+          >
             <span className="stx-type-text">{typed || '\u00A0'}</span>
             <span className="stx-type-caret" aria-hidden="true" />
-          </div>
-
-          <div className="stx-brand-actions">
-            <Link className="button--glacier" to="/docs/get-started/quick-start">
-              {copy.deployCta}
-            </Link>
-            <Link
-              className="button--outline-glacier"
-              href="https://github.com/LeonYoah/SeaTunnelX"
-            >
-              Star on GitHub
-            </Link>
-          </div>
-
-          <div className="stx-install-command-bar stx-brand-install">
-            <span className="stx-cmd-prefix">$</span>
-            <code className="stx-cmd-code">{copy.installCmd}</code>
-            <button
-              type="button"
-              onClick={handleCopyCommand}
-              className="stx-cmd-copy-btn"
-              title={copy.copyTitle}
-            >
-              {copied ? copy.copied : copy.copy}
-            </button>
           </div>
         </div>
       </div>

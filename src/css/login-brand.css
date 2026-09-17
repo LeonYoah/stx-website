@@ -565,15 +565,16 @@
 }
 
 .stx-brand-content {
+  --stx-brand-core-gap: clamp(1.85rem, 3vh, 2.5rem);
   position: relative;
   z-index: 2;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   height: 100%;
   min-height: 0;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: var(--stx-hero-pad-y) var(--stx-hero-pad-x);
+  box-sizing: border-box;
+  padding: clamp(1.75rem, 3.5vh, 2.75rem) var(--stx-hero-pad-x);
   transform: translate3d(
     calc(var(--mouse-x-norm) * 4px),
     calc(var(--mouse-y-norm) * 3px),
@@ -582,17 +583,32 @@
   will-change: transform;
 }
 
-.stx-brand-main {
-  position: relative;
-  z-index: 1;
-  /* 居中铺开：块在视口中央，内部元素也居中 / Centered block + centered children */
-  max-width: min(1280px, 100%);
-  width: 100%;
+/* 角落只留右下打字机；能力条不进顶角，避免与顶栏文档导航撞车 */
+.stx-brand-corner {
+  position: absolute;
+  z-index: 3;
+}
+
+.stx-brand-corner--br {
+  right: var(--stx-hero-pad-x);
+  bottom: clamp(1.15rem, 2.8vh, 1.85rem);
+  max-width: min(360px, 48vw);
+}
+
+/* 中间文案块：标题/副文/标签纵向拉开 */
+.stx-brand-core {
+  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
+  max-width: min(980px, 100%);
+  width: 100%;
+  margin-inline: auto;
   gap: 0;
+  overflow: visible;
+  padding-block: clamp(3.5rem, 8vh, 5.75rem);
 }
 
 .stx-brand-title {
@@ -601,6 +617,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
+  max-width: min(720px, 100%);
 }
 
 .stx-brand-title-main {
@@ -620,41 +637,67 @@ html[lang='en'] .stx-brand-title-main {
 }
 
 .stx-brand-sub {
-  margin: clamp(28px, 3.6vh, 40px) auto 0;
-  max-width: 46em;
+  margin: var(--stx-brand-core-gap) auto 0;
+  max-width: 34em;
   font-size: var(--stx-hero-sub);
-  line-height: 1.7;
-  font-weight: 500;
+  line-height: 1.65;
+  font-weight: 450;
   color: var(--stx-stage-muted);
   text-wrap: pretty;
 }
 
+/* 单行标签：全宽；勿换行、勿用 center+overflow 裁左圆角 */
 .stx-pill-row {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 14px;
-  margin-top: clamp(40px, 5vh, 56px);
-  max-width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: safe center;
+  gap: 0.45rem;
+  align-self: stretch;
+  width: 100%;
+  box-sizing: border-box;
+  margin: calc(var(--stx-brand-core-gap) + 0.5rem) 0 0;
+  padding: 2px 4px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.stx-pill-row::-webkit-scrollbar {
+  display: none;
+}
+
+.stx-pill-sep {
+  display: none;
 }
 
 .stx-pill {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
+  border: 1px solid var(--stx-pill-border, color-mix(in srgb, var(--stx-stage-fg) 12%, transparent));
   border-radius: 999px;
-  border: 1px solid var(--stx-pill-border);
-  background: var(--stx-pill-bg);
-  padding: 10px 14px;
-  font-size: clamp(12px, min(1vw, 1.5vh), 14px);
-  font-weight: 700;
-  color: var(--stx-stage-fg);
+  background: var(--stx-pill-bg, color-mix(in srgb, var(--stx-stage-fg) 4%, transparent));
+  padding: 0.3rem 0.62rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--stx-stage-soft);
+  white-space: nowrap;
   backdrop-filter: blur(8px);
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .stx-pill:hover {
-  border-color: color-mix(in srgb, var(--stx-stage-accent) 45%, var(--stx-pill-border));
+  color: var(--stx-stage-fg);
+  border-color: color-mix(in srgb, var(--stx-stage-accent) 40%, transparent);
+  background: color-mix(in srgb, var(--stx-stage-accent) 8%, transparent);
 }
 
 button.stx-pill {
@@ -665,20 +708,17 @@ button.stx-pill {
 }
 
 .stx-pill--agent {
-  border-color: color-mix(in srgb, var(--stx-stage-accent) 50%, var(--stx-pill-border));
-  background: color-mix(in srgb, var(--stx-stage-accent) 12%, var(--stx-pill-bg));
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  border-color: color-mix(in srgb, var(--stx-stage-accent) 45%, transparent);
+  background: color-mix(in srgb, var(--stx-stage-accent) 12%, transparent);
+  color: var(--stx-stage-accent);
 }
 
 .stx-pill--agent:hover {
-  border-color: color-mix(in srgb, var(--stx-stage-accent) 70%, var(--stx-pill-border));
-  background: color-mix(in srgb, var(--stx-stage-accent) 18%, var(--stx-pill-bg));
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--stx-stage-accent) 18%, transparent);
+  color: var(--stx-stage-fg);
+  border-color: color-mix(in srgb, var(--stx-stage-accent) 65%, transparent);
+  background: color-mix(in srgb, var(--stx-stage-accent) 16%, transparent);
+  transform: none;
+  box-shadow: none;
 }
 
 .stx-pill--agent:focus-visible {
@@ -687,46 +727,42 @@ button.stx-pill {
 }
 
 .stx-pill-icon {
+  display: block;
   flex-shrink: 0;
-  color: var(--stx-stage-soft);
+  width: 13px;
+  height: 13px;
+  color: currentColor;
+  opacity: 0.85;
 }
 
-[data-theme='dark'] .stx-pill-icon {
-  color: rgba(255, 255, 255, 0.72);
-}
-
+/* 右下打字机：只留词本身 / BR typewriter: word only */
 .stx-type-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 14px;
-  align-items: center;
-  align-self: stretch;
-  gap: 10px;
-  margin-top: clamp(64px, 8vh, 96px);
-  margin-inline: auto;
-  min-height: 36px;
-  width: 100%;
-  max-width: min(720px, 100%);
-  text-align: left;
-}
-
-.stx-type-label {
-  font-size: clamp(14px, min(1.15vw, 1.7vh), 17px);
-  font-weight: 800;
-  color: var(--stx-stage-muted);
-  white-space: nowrap;
+  display: inline-grid;
+  grid-template-columns: minmax(0, max-content) 8px;
+  align-items: baseline;
+  justify-content: end;
+  gap: 6px;
+  margin: 0;
+  min-height: 1.35em;
+  width: auto;
+  max-width: 100%;
+  text-align: right;
 }
 
 .stx-type-text {
   min-width: 0;
-  font-size: clamp(15px, min(1.3vw, 2vh), 19px);
-  font-weight: 800;
-  color: var(--stx-stage-fg);
+  font-size: 0.9rem;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--stx-stage-soft);
 }
 
 .stx-type-caret {
-  width: 2px;
-  height: 20px;
-  background: var(--stx-stage-fg);
+  width: 1px;
+  height: 0.85em;
+  align-self: center;
+  background: currentColor;
+  opacity: 0.4;
   animation: stx-blink-caret 1s step-end infinite;
 }
 
@@ -734,8 +770,9 @@ button.stx-pill {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: clamp(14px, 1.6vh, 18px);
-  margin-top: clamp(44px, 5.5vh, 60px);
+  gap: 10px;
+  margin: 2.25rem 0 0;
+  max-width: min(720px, 100%);
 }
 
 .stx-brand-actions .button--glacier,
@@ -747,11 +784,12 @@ button.stx-pill {
 }
 
 .stx-brand-install {
-  margin-top: clamp(28px, 3.4vh, 40px);
-  margin-inline: auto;
-  margin-bottom: 0;
-  max-width: min(720px, 100%);
+  margin: 1.85rem auto 0;
+  max-width: min(560px, 100%);
   width: 100%;
+  padding: 6px 10px 6px 12px;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--stx-stage-fg) 3%, transparent);
 }
 
 /* 暗色 Hero CTA：中性黑白，不走冰川青渐变 / Dark hero CTAs: neutral B/W */
@@ -896,8 +934,25 @@ button.stx-pill {
     --stx-hero-pad-y: clamp(16px, 2.4vh, 28px);
   }
 
-  .stx-type-row {
-    display: none;
+  .stx-brand-content {
+    --stx-brand-core-gap: 1rem;
+    padding-block: 1rem;
+  }
+
+  .stx-brand-core {
+    padding-block: 2.5rem;
+  }
+
+  .stx-brand-actions {
+    margin-top: 1.35rem;
+  }
+
+  .stx-brand-install {
+    margin-top: 1rem;
+  }
+
+  .stx-pill-row {
+    margin-top: 0.9rem;
   }
 }
 
@@ -967,7 +1022,40 @@ button.stx-pill {
   }
 
   .stx-brand-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-height: min(88dvh, 760px);
+    padding-block: 1.5rem;
+  }
+
+  .stx-brand-corner {
+    position: static;
+    max-width: none;
+  }
+
+  .stx-brand-corner--br {
+    inset: auto;
+    order: 3;
+    align-self: flex-end;
+  }
+
+  .stx-brand-core {
+    flex: 1 1 auto;
+    justify-content: center;
+    order: 2;
+    padding-block: 0.5rem;
+  }
+
+  .stx-pill-row {
+    flex-wrap: nowrap;
     justify-content: flex-start;
+    width: 100%;
+  }
+
+  .stx-type-row {
+    justify-content: flex-end;
+    text-align: right;
   }
 }
 
@@ -995,7 +1083,7 @@ button.stx-pill {
   }
 
   .stx-type-row {
-    margin-top: 64px;
+    margin-top: 0;
   }
 
   .stx-bw-slide-tunnel {
