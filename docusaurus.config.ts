@@ -82,6 +82,19 @@ const config: Config = {
       },
     },
   ],
+  // STX 自有 Kapa Ask AI（知识库覆盖 STX + SeaTunnel 源码/文档）
+  // STX-owned Kapa Ask AI widget (knowledge covers STX + SeaTunnel source/docs)
+  scripts: [
+    {
+      src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
+      'data-website-id': 'd9390efd-fdc5-4449-8aa1-bb2fd5fe13f3',
+      'data-project-name': 'STX',
+      'data-project-color': '#2563eb',
+      'data-project-logo':
+        'https://leonyoah.github.io/stx-website/img/stx-logo.png',
+      async: true,
+    },
+  ],
   stylesheets: [
     {
       href: 'https://cdn.npmmirror.com/packages/@fontsource-variable/inter/5.3.0/files/wght.css',
