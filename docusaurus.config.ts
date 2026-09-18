@@ -3,6 +3,9 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+/** GitHub Pages project base path / GitHub Pages 项目站基础路径 */
+const SITE_BASE_URL = '/stx-website/';
+
 /**
  * STX 文档站点核心配置文件 (Docusaurus v3)
  * STX documentation site core configuration file (Docusaurus v3)
@@ -40,7 +43,7 @@ const config: Config = {
   // 生产域名与基础路径配置（GitHub Pages 项目站）
   // Production URL and base route (GitHub Pages project site)
   url: 'https://leonyoah.github.io',
-  baseUrl: '/stx-website/',
+  baseUrl: SITE_BASE_URL,
 
   // GitHub 组织与仓库元信息
   // GitHub organization and repository metadata
@@ -91,7 +94,7 @@ const config: Config = {
       'data-website-id': 'd9390efd-fdc5-4449-8aa1-bb2fd5fe13f3',
       'data-project-name': 'STX',
       'data-project-color': '#2563eb',
-      'data-project-logo': '/stx-website/img/stx-mark.png',
+      'data-project-logo': `${SITE_BASE_URL}img/stx-mark.png`,
       'data-modal-title': 'Ask AI',
       'data-color-scheme-selector': "[data-theme='dark']",
       async: true,

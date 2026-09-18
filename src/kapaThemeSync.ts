@@ -4,9 +4,14 @@
  */
 
 function fixKapaModalLogoWidth(): void {
-  if (!document.getElementById('st-kapa-logo-fix')) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const id = 'st-kapa-logo-fix';
+  if (!document.getElementById(id)) {
     const style = document.createElement('style');
-    style.id = 'st-kapa-logo-fix';
+    style.id = id;
     style.textContent = `
       img[src*="stx-mark"] {
         width: auto !important;
