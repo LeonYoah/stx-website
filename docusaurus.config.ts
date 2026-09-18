@@ -84,8 +84,8 @@ const config: Config = {
   ],
   // STX 自有 Kapa Ask AI（知识库覆盖 STX + SeaTunnel 源码/文档）
   // STX-owned Kapa Ask AI widget (knowledge covers STX + SeaTunnel source/docs)
-  // 悬浮按钮用图形标；弹窗锁章由 clientModules 按 data-theme 运行时切换
-  // Launcher uses bird mark; modal lockup swapped at runtime via clientModules
+  // 文档站在白名单域名上展示；弹窗锁章由 clientModules 按 data-theme 切换
+  // Docs site is on an allowlisted origin; modal lockup swapped via clientModules
   clientModules: ['./src/kapaThemeSync.ts'],
   scripts: [
     {
