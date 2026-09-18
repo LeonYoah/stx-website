@@ -93,18 +93,18 @@ const config: Config = {
       'data-website-id': 'd9390efd-fdc5-4449-8aa1-bb2fd5fe13f3',
       'data-project-name': 'STX',
       'data-project-color': '#2563eb',
-      // Square mark only — wide lockups crop to bird + broken "S" in the header slot
-      // 仅用方形图形标——宽锁章会在标题槽裁成鸟标+残缺「S」
+      // Padded square mark — crest stays inside the header slot
+      // 带安全边距的方形标——鸟冠不会被标题槽裁切
       'data-project-logo':
-        'https://leonyoah.github.io/stx-website/img/stx-mark.png',
+        'https://leonyoah.github.io/stx-website/img/stx-mark-kapa.png',
       'data-modal-logo-src':
-        'https://leonyoah.github.io/stx-website/img/stx-mark.png',
+        'https://leonyoah.github.io/stx-website/img/stx-mark-kapa.png',
       'data-modal-title': 'Ask AI',
-      'data-modal-image-height': '22',
-      'data-modal-image-width': '22',
-      'data-modal-logo-height': '22px',
-      'data-modal-logo-width': '22px',
-      'data-modal-logo-max-height': '22px',
+      'data-modal-image-height': '28',
+      'data-modal-image-width': '28',
+      'data-modal-logo-height': '28px',
+      'data-modal-logo-width': '28px',
+      'data-modal-logo-max-height': '28px',
       'data-modal-header-min-height': '56px',
       'data-modal-header-padding-y': '14px',
       'data-launcher-button-image':
