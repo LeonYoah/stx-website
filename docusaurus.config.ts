@@ -82,10 +82,8 @@ const config: Config = {
       },
     },
   ],
-  // STX 自有 Kapa Ask AI（知识库覆盖 STX + SeaTunnel 源码/文档）
-  // STX-owned Kapa Ask AI widget (knowledge covers STX + SeaTunnel source/docs)
-  // 文档站在白名单域名上展示；弹窗锁章由 clientModules 按 data-theme 切换
-  // Docs site is on an allowlisted origin; modal lockup swapped via clientModules
+  // STX Ask AI — local mark; CSS unsets Mantine width that crops the crest
+  // STX Ask AI — 使用本地青鸾标；CSS 去掉会裁切鸟冠的 Mantine width
   clientModules: ['./src/kapaThemeSync.ts'],
   scripts: [
     {
@@ -93,22 +91,8 @@ const config: Config = {
       'data-website-id': 'd9390efd-fdc5-4449-8aa1-bb2fd5fe13f3',
       'data-project-name': 'STX',
       'data-project-color': '#2563eb',
-      // Padded square mark — crest stays inside the header slot
-      // 带安全边距的方形标——鸟冠不会被标题槽裁切
-      'data-project-logo':
-        'https://leonyoah.github.io/stx-website/img/stx-mark-kapa.png',
-      'data-modal-logo-src':
-        'https://leonyoah.github.io/stx-website/img/stx-mark-kapa.png',
+      'data-project-logo': '/stx-website/img/stx-mark.png',
       'data-modal-title': 'Ask AI',
-      'data-modal-image-height': '28',
-      'data-modal-image-width': '28',
-      'data-modal-logo-height': '28px',
-      'data-modal-logo-width': '28px',
-      'data-modal-logo-max-height': '28px',
-      'data-modal-header-min-height': '56px',
-      'data-modal-header-padding-y': '14px',
-      'data-launcher-button-image':
-        'https://leonyoah.github.io/stx-website/img/stx-mark.png',
       'data-color-scheme-selector': "[data-theme='dark']",
       async: true,
     },
