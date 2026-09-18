@@ -4,19 +4,21 @@
  */
 
 const MARK = 'https://leonyoah.github.io/stx-website/img/stx-mark.png';
+const LOGO_SIZE = '22px';
 
 function applyKapaModalLogo(): void {
   document.querySelectorAll('img').forEach((img) => {
     const src = img.getAttribute('src') || '';
-    if (
-      (src.includes('stx-logo') || src.includes('stx-mark')) &&
-      img.src !== MARK
-    ) {
-      // Force mark for any STX brand img Kapa injected into the modal header
-      // 强制将 Kapa 注入的 STX 品牌图统一为图形标
-      if (src.includes('stx-logo') || src.includes('/img/stx-')) {
+    if (src.includes('stx-logo') || src.includes('stx-mark')) {
+      if (src.includes('stx-logo') && img.src !== MARK) {
         img.src = MARK;
       }
+      img.style.height = LOGO_SIZE;
+      img.style.width = 'auto';
+      img.style.maxHeight = LOGO_SIZE;
+      img.style.maxWidth = LOGO_SIZE;
+      img.style.objectFit = 'contain';
+      img.style.display = 'block';
     }
   });
 }

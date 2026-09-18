@@ -100,6 +100,13 @@ const config: Config = {
       'data-modal-logo-src':
         'https://leonyoah.github.io/stx-website/img/stx-mark.png',
       'data-modal-title': 'Ask AI',
+      'data-modal-image-height': '22',
+      'data-modal-image-width': '22',
+      'data-modal-logo-height': '22px',
+      'data-modal-logo-width': '22px',
+      'data-modal-logo-max-height': '22px',
+      'data-modal-header-min-height': '56px',
+      'data-modal-header-padding-y': '14px',
       'data-launcher-button-image':
         'https://leonyoah.github.io/stx-website/img/stx-mark.png',
       'data-color-scheme-selector': "[data-theme='dark']",
