@@ -85,8 +85,8 @@ const config: Config = {
       },
     },
   ],
-  // STX Ask AI — local mark; CSS unsets Mantine width that crops the crest
-  // STX Ask AI — 使用本地青鸾标；CSS 去掉会裁切鸟冠的 Mantine width
+  // STX Ask AI — hide Kapa default ball; custom FAB via clientModules (aligned with console)
+  // STX Ask AI — 隐藏 Kapa 默认球；由 clientModules 挂载与控制台对齐的自定义 FAB
   clientModules: ['./src/kapaThemeSync.ts'],
   scripts: [
     {
@@ -96,6 +96,7 @@ const config: Config = {
       'data-project-color': '#2563eb',
       'data-project-logo': `${SITE_BASE_URL}img/stx-mark.png`,
       'data-modal-title': 'Ask AI',
+      'data-launcher-button-hidden': 'true',
       'data-color-scheme-selector': "[data-theme='dark']",
       async: true,
     },
