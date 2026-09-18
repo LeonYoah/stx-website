@@ -84,7 +84,9 @@ const config: Config = {
   ],
   // STX 自有 Kapa Ask AI（知识库覆盖 STX + SeaTunnel 源码/文档）
   // STX-owned Kapa Ask AI widget (knowledge covers STX + SeaTunnel source/docs)
-  // 浅/深色锁章随 Docusaurus data-theme 切换 / Light/dark lockups follow data-theme
+  // 悬浮按钮用图形标；弹窗锁章由 clientModules 按 data-theme 运行时切换
+  // Launcher uses bird mark; modal lockup swapped at runtime via clientModules
+  clientModules: ['./src/kapaThemeSync.ts'],
   scripts: [
     {
       src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
@@ -92,17 +94,11 @@ const config: Config = {
       'data-project-name': 'STX',
       'data-project-color': '#2563eb',
       'data-project-logo':
-        'https://leonyoah.github.io/stx-website/img/stx-logo.png',
-      'data-project-logo-dark':
         'https://leonyoah.github.io/stx-website/img/stx-logo-dark.png',
       'data-modal-logo-src':
-        'https://leonyoah.github.io/stx-website/img/stx-logo.png',
-      'data-modal-logo-src-dark':
         'https://leonyoah.github.io/stx-website/img/stx-logo-dark.png',
       'data-launcher-button-image':
-        'https://leonyoah.github.io/stx-website/img/stx-logo.png',
-      'data-launcher-button-image-dark':
-        'https://leonyoah.github.io/stx-website/img/stx-logo-dark.png',
+        'https://leonyoah.github.io/stx-website/img/stx-mark.png',
       'data-color-scheme-selector': "[data-theme='dark']",
       async: true,
     },
