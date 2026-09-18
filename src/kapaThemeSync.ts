@@ -1,58 +1,49 @@
 /**
- * Sync Kapa Ask AI logos with Docusaurus color mode at runtime.
- * 运行时将 Kapa Ask AI logo 与 Docusaurus 浅深色模式同步。
- *
- * Kapa does not reliably honor image *-dark data attributes, so we swap <img> src
- * when `data-theme` on <html> changes.
- * Kapa 对图片类 *-dark 属性支持不可靠，因此在 data-theme 变化时主动替换 <img> src。
+ * Keep Kapa modal logo on the square bird mark (avoid wide lockup crop artifacts).
+ * 保持 Kapa 弹窗 logo 为方形青鸾图形标（避免宽锁章裁切残影）。
  */
 
-const LIGHT_LOGO =
-  'https://leonyoah.github.io/stx-website/img/stx-logo.png';
-const DARK_LOGO =
-  'https://leonyoah.github.io/stx-website/img/stx-logo-dark.png';
 const MARK = 'https://leonyoah.github.io/stx-website/img/stx-mark.png';
 
-function isDarkMode(): boolean {
-  return document.documentElement.getAttribute('data-theme') === 'dark';
-}
-
-function applyKapaThemeLogos(): void {
-  const modalLogo = isDarkMode() ? DARK_LOGO : LIGHT_LOGO;
-
+function applyKapaModalLogo(): void {
   document.querySelectorAll('img').forEach((img) => {
     const src = img.getAttribute('src') || '';
-    if (src.includes('stx-mark')) {
-      if (img.src !== MARK) {
+    if (
+      (src.includes('stx-logo') || src.includes('stx-mark')) &&
+      img.src !== MARK
+    ) {
+      // Force mark for any STX brand img Kapa injected into the modal header
+      // 强制将 Kapa 注入的 STX 品牌图统一为图形标
+      if (src.includes('stx-logo') || src.includes('/img/stx-')) {
         img.src = MARK;
       }
-      return;
-    }
-    if (src.includes('stx-logo') && img.src !== modalLogo) {
-      img.src = modalLogo;
     }
   });
 }
 
-function startThemeObserver(): void {
-  applyKapaThemeLogos();
+function startObserver(): void {
+  applyKapaModalLogo();
   const observer = new MutationObserver(() => {
-    applyKapaThemeLogos();
+    applyKapaModalLogo();
   });
   observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['data-theme', 'class'],
   });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
 }
 
 if (typeof window !== 'undefined') {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startThemeObserver);
+    document.addEventListener('DOMContentLoaded', startObserver);
   } else {
-    startThemeObserver();
+    startObserver();
   }
 }
 
 export function onRouteDidUpdate(): void {
-  applyKapaThemeLogos();
+  applyKapaModalLogo();
 }

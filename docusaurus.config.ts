@@ -93,10 +93,13 @@ const config: Config = {
       'data-website-id': 'd9390efd-fdc5-4449-8aa1-bb2fd5fe13f3',
       'data-project-name': 'STX',
       'data-project-color': '#2563eb',
+      // Square mark only — wide lockups crop to bird + broken "S" in the header slot
+      // 仅用方形图形标——宽锁章会在标题槽裁成鸟标+残缺「S」
       'data-project-logo':
-        'https://leonyoah.github.io/stx-website/img/stx-logo-dark.png',
+        'https://leonyoah.github.io/stx-website/img/stx-mark.png',
       'data-modal-logo-src':
-        'https://leonyoah.github.io/stx-website/img/stx-logo-dark.png',
+        'https://leonyoah.github.io/stx-website/img/stx-mark.png',
+      'data-modal-title': 'Ask AI',
       'data-launcher-button-image':
         'https://leonyoah.github.io/stx-website/img/stx-mark.png',
       'data-color-scheme-selector': "[data-theme='dark']",
