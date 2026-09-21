@@ -308,7 +308,8 @@ const COPY: Record<
       'Checkpoint 可视化',
       'HOCON DAG 解析',
     ],
-    installCmd: 'curl -fsSL https://stx.seatunnelx.com/install.sh | bash',
+    installCmd:
+      'curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
     deployCta: '5 分钟快速部署',
     copy: '复制',
     copied: '已复制',
@@ -336,7 +337,8 @@ const COPY: Record<
       'Checkpoint visualization',
       'HOCON DAG parsing',
     ],
-    installCmd: 'curl -fsSL https://stx.seatunnelx.com/install.sh | bash',
+    installCmd:
+      'curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
     deployCta: 'Deploy in 5 minutes',
     copy: 'Copy',
     copied: 'Copied',
@@ -437,7 +439,7 @@ export function HeroBrandPanel(): React.JSX.Element {
             </Link>
             <Link
               className="button--outline-glacier"
-              href="https://github.com/LeonYoah/SeaTunnelX"
+              href="https://github.com/LeonYoah/stx"
             >
               Star on GitHub
             </Link>

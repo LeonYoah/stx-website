@@ -186,7 +186,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/LeonYoah/SeaTunnelX',
+          href: 'https://github.com/LeonYoah/stx',
           position: 'right',
           className: 'header-github-link',
           'aria-label': 'GitHub 仓库 / GitHub repository',
@@ -222,7 +222,7 @@ const config: Config = {
             },
             {
               label: 'GitHub 讨论区',
-              href: 'https://github.com/LeonYoah/SeaTunnelX/discussions',
+              href: 'https://github.com/LeonYoah/stx/discussions',
             },
           ],
         },
@@ -231,7 +231,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/LeonYoah/SeaTunnelX',
+              href: 'https://github.com/LeonYoah/stx',
             },
           ],
         },
