@@ -67,9 +67,22 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
         mediaAlt: 'STX 任务工作台',
       },
       {
+        id: 'dag',
+        image: '/img/screenshots/08-dag.png',
+        index: '04',
+        title: 'DAG 预览',
+        lead: '配置落成图，上下游一眼能对上。',
+        points: [
+          '从 HOCON 解析出执行拓扑',
+          'Source 与 Sink 的表路径同屏可见',
+          '点开算子即可看上下游与表结构',
+        ],
+        mediaAlt: 'STX DAG 预览',
+      },
+      {
         id: 'observe',
         image: '/img/screenshots/05-monitoring.png',
-        index: '04',
+        index: '05',
         title: '监控与诊断',
         lead: '异常不是终点，证据链才是。',
         points: [
@@ -127,9 +140,22 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
         mediaAlt: 'STX job workbench',
       },
       {
+        id: 'dag',
+        image: '/img/screenshots/08-dag.png',
+        index: '04',
+        title: 'DAG preview',
+        lead: 'Config becomes a graph you can read at a glance.',
+        points: [
+          'Execution topology parsed from HOCON',
+          'Source and sink table paths on the same view',
+          'Select an operator to inspect upstream, downstream, and schema',
+        ],
+        mediaAlt: 'STX DAG preview',
+      },
+      {
         id: 'observe',
         image: '/img/screenshots/05-monitoring.png',
-        index: '04',
+        index: '05',
         title: 'Monitoring & diagnosis',
         lead: 'An incident is not the end — evidence is.',
         points: [
