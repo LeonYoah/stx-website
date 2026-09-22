@@ -25,7 +25,7 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
       tag: 'SUPPORT',
       text: '全面兼容 Apache SeaTunnel 2.3.x+ 全系列版本与 100+ Connector 插件',
       actionText: '查看说明 ➔',
-      link: '/docs/features/cluster-management',
+      link: '/docs/host-cluster/cluster-management',
     },
     {
       tag: 'DOCS',
@@ -45,7 +45,7 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
       tag: 'SUPPORT',
       text: 'Compatible with Apache SeaTunnel 2.3.x+ and 100+ connector plugins',
       actionText: 'Learn more ➔',
-      link: '/docs/features/cluster-management',
+      link: '/docs/host-cluster/cluster-management',
     },
     {
       tag: 'DOCS',

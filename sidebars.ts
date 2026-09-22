@@ -13,21 +13,27 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '🚀 快速入门',
+      label: '快速入门',
       collapsed: false,
       items: ['get-started/quick-start'],
     },
     {
       type: 'category',
-      label: '🏛️ 架构与设计',
+      label: '架构与设计',
       collapsed: false,
-      items: ['architecture/overview'],
+      items: [
+        'architecture/overview',
+        'architecture/cli',
+      ],
     },
     {
       type: 'category',
-      label: '💻 功能与运维',
+      label: '主机与集群管理',
       collapsed: false,
-      items: ['features/cluster-management'],
+      items: [
+        'host-cluster/host-management',
+        'host-cluster/cluster-management',
+      ],
     },
   ],
 };

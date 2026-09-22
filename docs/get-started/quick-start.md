@@ -1,10 +1,10 @@
 ---
 title: 快速部署 STX
 sidebar_label: 快速部署
-description: 在 Linux 上一键安装 STX 控制面，打开控制台并完成首次登录。
+description: 在 Linux 上一键安装 STX，打开 Web UI 并完成首次登录。
 ---
 
-本文介绍如何在 Linux 上一键安装并启动 STX 控制面。默认装最新 Release。
+本文介绍如何在 Linux 上一键安装并启动 STX。默认装最新 Release。
 
 ## 前置准备
 
@@ -14,7 +14,7 @@ description: 在 Linux 上一键安装 STX 控制面，打开控制台并完成�
 | :--- | :--- | :--- |
 | **操作系统** | Ubuntu / Debian、Rocky / Alma / RHEL 8+、CentOS 7（仅 amd64）等带 systemd 的 Linux | 需 glibc ≥ 2.17 |
 | **架构** | amd64 或 arm64 | CentOS 7 仅支持 amd64 |
-| **开放端口** | API `17800`、前端 `17880`、gRPC `17890` | 确保防火墙放行 |
+| **开放端口** | API `17800`、Web UI `17880`、gRPC `17890` | 确保防火墙放行 |
 | **可选依赖** | 本机 Node ≥ 18.18 | 有则可跳过内置 Node；否则安装器会按 glibc 自动选取 |
 
 ---
@@ -51,13 +51,13 @@ systemctl status stx
 
 ---
 
-## 步骤 2：打开控制台并登录
+## 步骤 2：打开 Web UI 并登录
 
 默认端口：
 
 | 服务 | 地址 |
 | :--- | :--- |
-| **控制台** | `http://<服务器IP>:17880` |
+| **Web UI** | `http://<服务器IP>:17880` |
 | **API** | `http://<服务器IP>:17800` |
 | **gRPC** | `17890`（Agent 通信） |
 
@@ -66,15 +66,21 @@ systemctl status stx
 - **用户名**：`admin`
 - **密码**：`admin123`（或 `config.yaml` 中 `auth.default_admin_password`）
 
-登录后进入概览页，确认控制面状态正常即可。
+登录页大致如下：
+
+![STX 登录页](/img/screenshots/00-login.png)
+
+登录后进入概览页，确认服务状态正常即可。
 
 ---
 
 ## 步骤 3：纳管主机与集群
 
-1. 左侧进入 **主机管理** → 添加主机，填写 IP 即可。
-2. 安装 Agent，状态变为 Online。
-3. 进入 **集群管理**，一键安装集群或者注册集群（自动发现并纳管该主机上的 SeaTunnel 节点）。
+1. 左侧进入 **主机管理** → 添加主机（物理机 / 虚拟机 + IP）。
+2. 按引导安装 Agent，状态变为在线（需放行 gRPC `17890`）。
+3. 进入 **集群管理**：一键安装新集群，或先建集群定义再发现并绑定已有 SeaTunnel 进程。
+
+详细说明见 [主机管理](../host-cluster/host-management) 与 [集群管理](../host-cluster/cluster-management)。
 
 ---
 
@@ -82,7 +88,7 @@ systemctl status stx
 
 ### 离线安装
 
-在能访问 GitHub 的机器上生成 bundle，再拷到目标机：
+在能访问 GitHub 的机器上生成 bundle，再拷到要安装 STX 的机器：
 
 ```bash
 # 海外
@@ -110,7 +116,7 @@ mkdir -p data
 docker compose up -d                 # 默认 MySQL
 ```
 
-中国镜像可 `cp .env.cn.example .env` 后启动。控制台同样是 `http://127.0.0.1:17880`。
+中国镜像可 `cp .env.cn.example .env` 后启动。Web UI 同样是 `http://127.0.0.1:17880`。
 
 ### 单容器体验（无监控）
 
@@ -153,7 +159,7 @@ ss -lntp | grep -E '17800|17880|17890'
 
 ### 2. Agent 连不上控制面
 
-确认目标机能访问控制面 **gRPC `17890`**，并检查安全组 / 防火墙。
+确认被纳管主机（装 Agent 的机器）能访问 STX 安装机的 **gRPC `17890`**，并检查安全组 / 防火墙。
 
 ### 3. 中国网络拉 Release 失败
 

@@ -12,16 +12,18 @@ description: 欢迎查阅 STX 官方文档，快速了解系统定位与使用�
 
 | 你的目标 | 推荐阅读 | 说明 |
 | :--- | :--- | :--- |
-| **初次接触** | [快速部署 STX](./get-started/quick-start) | 5 分钟在单机或测试服务器上启动 STX 并接入集群 |
-| **了解底层设计** | [架构与进程模型](./architecture/overview) | 搞懂 Control Plane、Scheduler、Worker 与 Agent 的协作关系 |
-| **纳管现有集群** | [集群全生命周期管理](./features/cluster-management) | 掌握集群接入、节点扩缩容与健康探针机制 |
+| **初次接触** | [快速部署 STX](./get-started/quick-start) | 5 分钟在 Linux 上启动服务并登录 Web UI |
+| **了解底层设计** | [系统架构](./architecture/overview) | 搞懂 STX Server、Web UI、Agent 与默认端口 |
+| **了解命令行** | [CLI 设计](./architecture/cli) | 为何原生 CLI、审计可追溯、给 AI Agent 用 |
+| **纳管主机** | [主机管理](./host-cluster/host-management) | 登记物理机 / 虚拟机、安装 Agent、理解在线与绑定规则 |
+| **管理集群** | [集群管理](./host-cluster/cluster-management) | 纳管已有进程或一键安装，完成启停与扩节点 |
 
 ---
 
 ## 核心功能一览
 
-* **主机与探针纳管**：一键分发并安装 `stx-agent`，实时采集主机负载与 SeaTunnel 进程状态。
-* **集群管理**：支持一键安装 SeaTunnel Zeta 集群，提供 Master/Worker 节点的平滑启停与状态流转。
-* **配置中心**：在线维护 `seatunnel.yaml`、`hazelcast.yaml` 等核心配置，支持历史版本 diff 比对与回滚。
+* **主机管理**：登记物理机 / 虚拟机，一键安装 `stx-agent`，按心跳判定在线并采集资源指标。
+* **集群管理**：创建集群定义后，纳管已有 SeaTunnel 进程或一键分发安装；支持混合 / 分离部署与节点启停。
+* **配置中心**：在线维护 `seatunnel.yaml`、`hazelcast.yaml` 等核心配置，支持历史版本对比与回滚。
 * **插件生态管理**：可视化查看当前集群已安装的 Connector 插件，支持一键下载与版本同步。
-* **一体化监控**：内置 Prometheus 与 Grafana 指标对接，精准监控作业同步速率与节点资源瓶颈。
+* **一体化监控**：对接 Prometheus 与 Grafana，监控作业同步速率与节点资源瓶颈。

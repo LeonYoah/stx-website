@@ -5,13 +5,13 @@
   "sidebar.docsSidebar.doc.文档总览": {
     "message": "Docs overview"
   },
-  "sidebar.docsSidebar.category.🚀 快速入门": {
-    "message": "🚀 Getting started"
+  "sidebar.docsSidebar.category.快速入门": {
+    "message": "Getting started"
   },
-  "sidebar.docsSidebar.category.🏛️ 架构与设计": {
-    "message": "🏛️ Architecture"
+  "sidebar.docsSidebar.category.架构与设计": {
+    "message": "Architecture"
   },
-  "sidebar.docsSidebar.category.💻 功能与运维": {
-    "message": "💻 Features & ops"
+  "sidebar.docsSidebar.category.主机与集群管理": {
+    "message": "Host & cluster"
   }
 }

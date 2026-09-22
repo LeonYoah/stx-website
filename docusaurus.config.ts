@@ -11,6 +11,13 @@ const SITE_BASE_URL = '/stx-website/';
  * STX documentation site core configuration file (Docusaurus v3)
  */
 const config: Config = {
+  // 启用 Markdown 中的 Mermaid 图渲染
+  // Enable Mermaid diagram rendering in Markdown
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+
   // 注入 Tailwind CSS 与 @ 别名支持插件
   // Inject Tailwind CSS and @ alias support plugin
   plugins: [
@@ -147,6 +154,9 @@ const config: Config = {
   // 界面外观与交互组件配置
   // Theme UI and interactive component configuration
   themeConfig: {
+    mermaid: {
+      theme: { light: 'neutral', dark: 'dark' },
+    },
     // 社交分享卡片封面图
     // Social card image for OpenGraph / Twitter previews
     image: 'img/stx-logo.png',
@@ -177,8 +187,8 @@ const config: Config = {
           position: 'left',
         },
         {
-          to: '/docs/features/cluster-management',
-          label: '集群管理',
+          to: '/docs/host-cluster/host-management',
+          label: '主机与集群',
           position: 'left',
         },
         {
@@ -208,8 +218,12 @@ const config: Config = {
               to: '/docs/architecture/overview',
             },
             {
-              label: '集群纳管',
-              to: '/docs/features/cluster-management',
+              label: '主机管理',
+              to: '/docs/host-cluster/host-management',
+            },
+            {
+              label: '集群管理',
+              to: '/docs/host-cluster/cluster-management',
             },
           ],
         },

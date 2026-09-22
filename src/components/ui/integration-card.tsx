@@ -24,6 +24,8 @@ interface ArchNode {
   y: number;
   path: string;
   delay: number;
+  /** 当前版本尚未适配 / Not adapted in the current release */
+  comingSoon?: boolean;
 }
 
 /**
@@ -203,6 +205,7 @@ const ARCH_LAYOUT = [
     y: 155,
     path: "M 112 171 H 200 V 175 H 262",
     delay: 0.2,
+    comingSoon: true,
   },
   {
     id: "flink",
@@ -212,6 +215,7 @@ const ARCH_LAYOUT = [
     y: 252,
     path: "M 112 268 H 195 Q 215 268 215 230 V 195 Q 215 175 235 175 H 262",
     delay: 0.3,
+    comingSoon: true,
   },
   {
     id: "vm",
@@ -230,6 +234,7 @@ const ARCH_LAYOUT = [
     y: 155,
     path: "M 338 175 H 400 V 171 H 488",
     delay: 0.5,
+    comingSoon: true,
   },
   {
     id: "k8s",
@@ -239,6 +244,7 @@ const ARCH_LAYOUT = [
     y: 252,
     path: "M 338 175 H 365 Q 385 175 385 210 V 240 Q 385 268 405 268 H 488",
     delay: 0.6,
+    comingSoon: true,
   },
 ];
 
@@ -332,6 +338,7 @@ export function Integration() {
           control: "STX control plane",
           agent: "AI Agent entry",
           agentSub: "stx CLI probes · Agent Skill protocol",
+          notYet: "Not yet",
         }
       : {
           engines: "SeaTunnel 引擎",
@@ -339,6 +346,7 @@ export function Integration() {
           control: "STX 控制面",
           agent: "AI Agent 入口",
           agentSub: "stx CLI 探针指令 · Agent Skill 协议驱动",
+          notYet: "未适配",
         };
 
   return (
@@ -368,12 +376,14 @@ export function Integration() {
             d={node.path}
             reverse={node.category === "engine"}
             color={
-              node.category === "engine"
-                ? "var(--stx-topo-engine, #8ecad6)"
-                : "var(--stx-topo-infra, #38bdf8)"
+              node.comingSoon
+                ? "var(--stx-topo-muted, #94a3b8)"
+                : node.category === "engine"
+                  ? "var(--stx-topo-engine, #8ecad6)"
+                  : "var(--stx-topo-infra, #38bdf8)"
             }
-            strokeWidth={1.8}
-            pulseWidth={3}
+            strokeWidth={node.comingSoon ? 1.2 : 1.8}
+            pulseWidth={node.comingSoon ? 2 : 3}
           />
         ))}
 
@@ -431,7 +441,10 @@ export function Integration() {
         return (
           <div
             key={node.id}
-            className="group absolute flex flex-col items-center gap-1 cursor-pointer"
+            className={cn(
+              "group absolute flex flex-col items-center gap-1 cursor-pointer",
+              node.comingSoon && "opacity-55",
+            )}
             style={{
               left: `${(node.x / 600) * 100}%`,
               top: `${(node.y / 450) * 100}%`,
@@ -446,9 +459,15 @@ export function Integration() {
             <span className="px-0.5 text-center text-[10.5px] sm:text-[11px] font-mono font-bold leading-tight text-slate-800 transition-colors group-hover:text-foreground whitespace-nowrap dark:text-slate-100">
               {node.name}
             </span>
-            <span className="px-0.5 text-center text-[9px] font-mono leading-tight text-muted-foreground whitespace-nowrap">
-              {node.sub}
-            </span>
+            {node.comingSoon ? (
+              <span className="rounded border border-amber-500/35 bg-amber-500/10 px-1.5 py-px text-[8.5px] font-mono font-bold leading-tight text-amber-700 whitespace-nowrap dark:border-amber-400/40 dark:bg-amber-400/10 dark:text-amber-300">
+                {labels.notYet}
+              </span>
+            ) : (
+              <span className="px-0.5 text-center text-[9px] font-mono leading-tight text-muted-foreground whitespace-nowrap">
+                {node.sub}
+              </span>
+            )}
           </div>
         );
       })}
@@ -543,7 +562,22 @@ export const IntegrationCard = ({
 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const locale = useHomeLocale();
   const architectureUrl = useBaseUrl('/docs/architecture/overview');
+  const statusCopy =
+    locale === "en"
+      ? {
+          engines: "Engines: 1/3",
+          env: "Env: VM / Host",
+          agent: "AI entry: CLI + Skill",
+          architecture: "Architecture ➔",
+        }
+      : {
+          engines: "引擎: 1/3",
+          env: "环境: 虚拟机 / 主机",
+          agent: "AI 入口: CLI + Skill",
+          architecture: "架构设计 ➔",
+        };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -641,22 +675,20 @@ export const IntegrationCard = ({
         <div className="flex items-center gap-3 sm:gap-4">
           <span className="text-emerald-500 flex items-center gap-1">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            引擎: 3/3
+            {statusCopy.engines}
           </span>
           <span className="text-border">|</span>
-          <span className="text-foreground/70">
-            环境: 物理机/容器/K8s
-          </span>
+          <span className="text-foreground/70">{statusCopy.env}</span>
           <span className="hidden sm:inline text-border">|</span>
           <span className="hidden sm:inline text-foreground/55">
-            AI 入口: CLI + Skill
+            {statusCopy.agent}
           </span>
         </div>
         <a
           href={architectureUrl}
           className="inline-flex items-center gap-1 font-semibold text-foreground hover:underline ml-auto dark:text-white"
         >
-          架构设计 ➔
+          {statusCopy.architecture}
         </a>
       </CardContent>
     </Card>

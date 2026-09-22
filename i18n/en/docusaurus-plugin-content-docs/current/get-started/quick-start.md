@@ -51,13 +51,13 @@ systemctl status stx
 
 ---
 
-## Step 2: Open the console and sign in
+## Step 2: Open the Web UI and sign in
 
 Default ports:
 
 | Service | Address |
 | :--- | :--- |
-| **Console** | `http://<server-ip>:17880` |
+| **Web UI** | `http://<server-ip>:17880` |
 | **API** | `http://<server-ip>:17800` |
 | **gRPC** | `17890` (Agent) |
 
@@ -66,15 +66,21 @@ Default credentials:
 - **Username**: `admin`
 - **Password**: `admin123` (or `auth.default_admin_password` in `config.yaml`)
 
-Open the overview page and confirm the control plane is healthy.
+Login page:
+
+![STX login](/img/screenshots/00-login.png)
+
+After sign-in, open the overview and confirm the service looks healthy.
 
 ---
 
 ## Step 3: Onboard hosts and clusters
 
-1. Go to **Hosts** → add a host (IP is enough).
-2. Install the Agent until status is Online.
-3. Open **Clusters** → one-click install or register a cluster (discovers SeaTunnel nodes on that host).
+1. Go to **Hosts** → add a host (`bare_metal` + IP).
+2. Follow the guide to install the Agent until status is Online (allow gRPC `17890`).
+3. Open **Clusters**: one-click install a new cluster, or create a cluster definition then discover and bind existing SeaTunnel processes.
+
+See [Host management](/docs/host-cluster/host-management) and [Cluster management](/docs/host-cluster/cluster-management) for details.
 
 ---
 
