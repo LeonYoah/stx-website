@@ -35,6 +35,12 @@ const sidebars: SidebarsConfig = {
         'host-cluster/cluster-management',
       ],
     },
+    {
+      type: 'category',
+      label: '调试工作台',
+      collapsed: false,
+      items: ['workbench/overview'],
+    },
   ],
 };
 

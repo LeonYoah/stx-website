@@ -13,5 +13,8 @@
   },
   "sidebar.docsSidebar.category.主机与集群管理": {
     "message": "Host & cluster"
+  },
+  "sidebar.docsSidebar.category.调试工作台": {
+    "message": "Debug workbench"
   }
 }

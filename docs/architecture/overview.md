@@ -130,7 +130,7 @@ sequenceDiagram
   Ag->>API: 心跳（资源与存活）
 ```
 
-主机与集群操作见 [主机管理](../host-cluster/host-management) 与 [集群管理](../host-cluster/cluster-management)。命令行如何登录、确认写操作见 [CLI 设计](./cli)。
+主机与集群操作见 [主机管理](../host-cluster/host-management) 与 [集群管理](../host-cluster/cluster-management)。作业配置与调试见 [调试工作台](../workbench/overview)。命令行如何登录、确认写操作见 [CLI 设计](./cli)。
 
 ## 部署形态
 

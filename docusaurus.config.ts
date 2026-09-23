@@ -192,6 +192,11 @@ const config: Config = {
           position: 'left',
         },
         {
+          to: '/docs/workbench/overview',
+          label: '调试工作台',
+          position: 'left',
+        },
+        {
           type: 'localeDropdown',
           position: 'right',
         },
@@ -224,6 +229,10 @@ const config: Config = {
             {
               label: '集群管理',
               to: '/docs/host-cluster/cluster-management',
+            },
+            {
+              label: '调试工作台',
+              to: '/docs/workbench/overview',
             },
           ],
         },
