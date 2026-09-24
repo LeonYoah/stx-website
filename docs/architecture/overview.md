@@ -4,7 +4,7 @@ sidebar_label: 系统架构
 description: STX 服务端、Web UI 与 Agent 的进程模型、端口与协作关系。
 ---
 
-STX 是 Apache SeaTunnel 的运维平台。先分清两类机器：
+先看 STX 安装在哪台机器，再看 SeaTunnel 跑在哪台机器。这两种角色可以在同一台机器上，也可以分开。
 
 | 角色 | 是什么 | 上面跑什么 |
 | :--- | :--- | :--- |
@@ -13,7 +13,7 @@ STX 是 Apache SeaTunnel 的运维平台。先分清两类机器：
 
 Web UI 与元数据在 STX 安装机一侧；对 SeaTunnel 的操作由被纳管主机上的 Agent 执行并上报。
 
-### 举例
+## 一个三台机器的例子
 
 假设机房里有 3 台机器：
 
@@ -68,7 +68,7 @@ flowchart LR
 
 主要能力包括：配置级 DAG 解析、Catalog 元数据探测、Checkpoint / IMAP 存储探测、source / transform 预览。默认堆内存上限约 **512MB**。
 
-Web UI 可在集群维度查看其状态、日志，并执行启停 / 重启；安装与运行时探测会优先使用该服务。STX Server 要通过 Agent（或可达的 proxy 地址）访问节点上的 **18080**，网络需打通。
+Web UI 可在集群维度查看其状态、日志，并执行启停 / 重启；安装与运行时探测会优先使用该服务。STX Server 要通过 Agent（或可达的 proxy 地址）访问节点上的 **18080**，网络需要连通。
 
 分工可以简单记：**Agent 管主机与进程编排；proxy 负责需要 SeaTunnel Java 能力的解析与探测。**
 

@@ -87,6 +87,17 @@
   color: var(--mimo-soft);
 }
 
+.stx-agent-demo__guide-link {
+  color: var(--mimo-accent);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.stx-agent-demo__guide-link:hover {
+  color: var(--mimo-ink);
+}
+
 /* —— 窗口型：浮层工作台 + 段内留白，不撑满视口 —— */
 .stx-agent-demo:not(.stx-agent-demo--embedded) .stx-mimo {
   width: 100%;

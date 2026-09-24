@@ -69,726 +69,260 @@ export type AgentChrome = {
   placeholderIdle: string;
 };
 
-const CDC_CONF = `env {
-  parallelism = 1
-  job.mode = "STREAMING"
-  checkpoint.interval = 10000
-}
-
-source {
-  MySQL-CDC {
-    plugin_output = "orders_cdc"
-    username = "{{MYSQL_USER}}"
-    password = "{{password}}"
-    base-url = "jdbc:mysql://mysql.prod:3306/"
-    database-names = ["shop"]
-    table-names = ["shop.orders"]
-    startup.mode = "initial"
-  }
-}
-
-sink {
-  Hive {
-    plugin_input = ["orders_cdc"]
-    table_name = "ods.orders_cdc"
-    metastore_uri = "thrift://hive-metastore:9083"
-  }
-}`;
-
-const CDC_DRAFT_DETAIL_ZH = `已用 \`stx sync draft\` 生成草稿，请确认是否符合要求：
-
-\`\`\`hocon
-${CDC_CONF}
-\`\`\`
-
-是否按此配置继续？`;
-
-const CDC_DRAFT_DETAIL_EN = `Drafted with \`stx sync draft\`. Please confirm:
-
-\`\`\`hocon
-${CDC_CONF}
-\`\`\`
-
-Continue with this config?`;
-
 const SCENARIOS_ZH: Scenario[] = [
   {
     id: 'diagnose',
-    label: '线上集群健康巡检',
-    chatTitle: 'SeaTunnel 集群诊断',
-    projectName: 'zeta-prod 运维',
-    welcomeTitle:
-      '可视化管理 + 原生 AI Agent（CLI + Skill）：让 SeaTunnel 运维清晰透明',
-    welcomeSub: '用自然语言驱动 stx：集群、任务、日志与源码一气呵成。',
-    prompt:
-      '帮我看看线上 SeaTunnel 现在有哪些集群在跑，任务是否健康；若有失败任务，拉错误日志并对照源码给出根因。',
-    reply:
-      '先列集群与运行中任务，再定位失败作业日志，最后对照 SeaTunnel 源码给出可执行修复建议。',
+    label: '集群与失败任务',
+    chatTitle: '查集群与失败任务',
+    projectName: '生产环境示例',
+    welcomeTitle: '一句话开始排查，过程能看清',
+    welcomeSub: 'AI Agent 通过 STX Skill 使用真实 CLI 命令；这里展示的是示例数据。',
+    prompt: '帮我看看 6 号集群有没有失败的同步作业，先查状态和日志，不要改动环境。',
+    reply: '先查集群和节点，再列出失败作业、读取日志。全程只查询，不执行重启或恢复。',
     midUsers: [],
     phases: [
       {
-        title: '拉取运行中集群',
-        tool: 'stx cluster list',
-        icon: 'cli',
-        queries: [
-          'zeta-prod · Zeta · healthy 3/3',
-          'spark-batch · Spark · healthy 4/4',
-          'flink-cdc · Flink · degraded 2/3',
-        ],
-        detail:
-          '通过 `stx cluster list` 汇总引擎类型、节点心跳与纳管状态。',
+        title: '列出集群', tool: 'stx cluster list --output table', icon: 'cli',
+        queries: ['集群 6 · zeta-prod', '版本 2.3.13', '先确认目标集群'],
+        detail: 'stx cluster list --output table：确认集群编号和版本。这里的编号与状态仅用于演示。',
       },
       {
-        title: '枚举运行 / 失败任务',
-        tool: 'stx job list',
-        icon: 'jobs',
-        queries: [
-          'job-1831 orders_cdc_sync · RUNNING',
-          'job-1842 inventory_enrich · FAILED',
-          'job-1850 user_profile_stream · RUNNING',
-        ],
-        detail:
-          '`stx job list --cluster zeta-prod --state RUNNING,FAILED`，锁定失败作业 job-1842。',
+        title: '查看节点', tool: 'stx cluster node list 6', icon: 'jobs',
+        queries: ['查看节点列表', '检查在线状态', '不修改集群'],
+        detail: 'stx cluster node list 6：单独查看 6 号集群的节点信息，不从作业失败推断集群故障。',
       },
       {
-        title: '采集失败任务日志',
-        tool: 'stx job logs',
-        icon: 'logs',
-        queries: [
-          'Checkpoint barrier timeout 30s',
-          'JDBC batch failed: Duplicate key',
-          'JobMaster · SinkException',
-        ],
-        detail: '`stx job logs --id job-1842 --tail 40`，定位到 JDBC Sink 写冲突。',
+        title: '筛选失败作业', tool: 'stx sync job list --status FAILED', icon: 'sync',
+        queries: ['作业 1842 · FAILED', '记录作业编号', '核对所属任务'],
+        detail: 'stx sync job list --status FAILED：从返回结果中核对作业所属集群和任务，再选要查看的作业编号。',
       },
       {
-        title: '对照 SeaTunnel 源码',
-        tool: 'stx skill read',
-        icon: 'code',
-        queries: [
-          'JdbcSinkWriter.java:214',
-          'ignoreDuplicate / upsert 策略',
-          '建议 stx job restart',
-        ],
-        detail:
-          '`stx skill read` 打开 JdbcSinkWriter 冲突分支，确认根因为主键冲突而非集群宕机。',
+        title: '读取作业日志', tool: 'stx sync job logs 1842 --lines 40', icon: 'logs',
+        queries: ['示例：Duplicate key', '对照任务配置', '暂不自动恢复'],
+        detail: 'stx sync job logs 1842 --lines 40：按日志线索检查配置与目标表。仅凭一条报错不能断定全部原因。',
       },
     ],
-    completedTitle: '诊断完成',
-    completedSummary:
-      '根因是 JDBC Sink 主键冲突。可改为 upsert，或清理冲突数据后执行 `stx job restart --id job-1842`。',
+    completedTitle: '查询完成 · 等待你决定',
+    completedSummary: '已示范通过 CLI 查集群、节点、失败作业和日志；未执行写操作。',
     findings: [
-      {
-        number: '01',
-        title: '集群面健康',
-        quote: 'zeta-prod 节点 3/3 在线，控制面心跳正常。',
-      },
-      {
-        number: '02',
-        title: '任务面异常',
-        quote: 'job-1842 失败，日志指向 Duplicate key。',
-      },
-      {
-        number: '03',
-        title: '源码可解释',
-        quote: '非 upsert 模式下冲突直接抛 SinkException。',
-      },
+      {number: '01', title: '目标集群', quote: '先确认集群编号和节点状态。'},
+      {number: '02', title: '失败作业', quote: '按 FAILED 筛选后核对作业归属。'},
+      {number: '03', title: '后续操作', quote: '日志只是线索，修改配置或恢复作业前需要再次确认。'},
     ],
-    artifactTitle: 'job-1842 诊断纪要',
-    artifactMeta: 'SeaTunnel · stx skill',
-    artifactBody: `# job-1842 诊断纪要
+    artifactTitle: '排查记录（示例）',
+    artifactMeta: 'stx cluster · stx sync job',
+    artifactBody: `# 排查记录（示例）
 
-根因：JDBC Sink 主键冲突（Duplicate key）
+集群：6 · zeta-prod
+作业：1842 · FAILED
 
-建议：
-1. Sink 改为 upsert / 开启 ignoreDuplicate
-2. 清理冲突数据后重提
-3. stx job restart --id job-1842`,
+已查询：
+- stx cluster list --output table
+- stx cluster node list 6
+- stx sync job list --status FAILED
+- stx sync job logs 1842 --lines 40
+
+下一步：核对任务配置与日志全文，确认后再决定是否修改或恢复。`,
   },
   {
     id: 'cdc-hive',
-    label: 'MySQL CDC → Hive 提交',
-    chatTitle: '同步任务提交',
-    projectName: 'data-sync studio',
-    welcomeTitle: '用 stx 提交同步任务',
-    welcomeSub: '从连接器文档生成 HOCON，测试连接、抽 DAG、预览后发布运行。',
-    prompt:
-      '帮我提交一下 MySQL CDC 到 Hive 的任务。MySQL url 是 jdbc:mysql://mysql.prod:3306/，密码用系统变量 {{password}}，库表 shop.orders，落到 Hive ods.orders_cdc。',
-    reply:
-      '收到。我会用 stx 走完整链路：对照 connector 文档生成 HOCON（密码引用 {{password}}）→ 请你确认 → 测连 → 抽 DAG → 询问预览 → 发布运行。',
+    label: '创建同步任务',
+    chatTitle: 'MySQL CDC → Hive',
+    projectName: '同步任务示例',
+    welcomeTitle: '从配置文件到任务提交',
+    welcomeSub: '先核对连接器与配置，写入和提交前分别请你确认。',
+    prompt: '我要把 MySQL 的订单变更写入 Hive。先检查连接器和配置，确认后再创建任务。',
+    reply: '先列出 6 号集群可用连接器。配置文件由你检查；创建、发布和提交都需要明确确认。',
     midUsers: [
-      {
-        afterPhases: 2,
-        text: '确认，按这份 HOCON 继续。密码保持 {{password}} 系统变量。',
-      },
-      {
-        afterPhases: 4,
-        text: '是，先预览几行数据，没问题再正式发布运行。',
-      },
+      {afterPhases: 1, text: '配置文件我检查过了，可以创建任务。'},
+      {afterPhases: 4, text: '验证和连接测试通过，可以发布；提交运行前再问我。'},
+      {afterPhases: 5, text: '同意提交运行，之后把作业状态发给我。'},
     ],
     phases: [
       {
-        title: '读取连接器源码与文档',
-        tool: 'stx skill read',
-        icon: 'code',
-        queries: [
-          'docs: MySQL-CDC / Hive',
-          'plugin: connector-cdc-mysql',
-          'plugin: connector-hive',
-        ],
-        detail:
-          '`stx skill read` 对齐 Source=`MySQL-CDC`、Sink=`Hive` 字段；密码走全局变量 {{password}}。',
+        title: '检查连接器', tool: 'stx sync plugin list --cluster-id 6 --type source', icon: 'code',
+        queries: ['检查 MySQL-CDC', '检查 Hive', '确认配置文件内容'],
+        detail: '分别执行 stx sync plugin list --cluster-id 6 --type source 和 --type sink，确认 MySQL-CDC 与 Hive 在目标集群可用。配置文件需使用该版本连接器接受的字段。',
       },
       {
-        title: '生成 HOCON 并请确认',
-        tool: 'stx sync draft',
-        icon: 'sync',
-        queries: [
-          'env.job.mode = STREAMING',
-          'password = "{{password}}"',
-          'source MySQL-CDC → sink Hive',
-        ],
-        detail: CDC_DRAFT_DETAIL_ZH,
+        title: '创建任务', tool: 'stx sync task create', icon: 'sync',
+        queries: ['--name orders-to-hive', '--cluster-id 6', '示例任务编号 12'],
+        detail: 'stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm：创建任务草稿，尚未发布或运行。',
       },
       {
-        title: '测试连接',
-        tool: 'stx sync test',
-        icon: 'cli',
-        queries: [
-          'Source[0]-MySQL-CDC ok',
-          'Sink[0]-Hive ok',
-          'vars: {{password}} resolved',
-        ],
-        detail:
-          '`stx sync test`：MySQL CDC 与 Hive Metastore 均通过；系统变量 {{password}} 已解析。',
+        title: '验证配置', tool: 'stx sync task validate 12', icon: 'cli',
+        queries: ['语法与插件字段', '读取验证结果', '有错先改配置'],
+        detail: 'stx sync task validate 12：验证已保存的配置。验证成功不等于源端和目标端一定可以连接。',
       },
       {
-        title: '提取 DAG',
-        tool: 'stx sync dag',
-        icon: 'jobs',
-        queries: [
-          'Source[0]-MySQL-CDC',
-          '→ Sink[0]-Hive',
-          'edges=1 · nodes=2',
-        ],
-        detail:
-          '`stx sync dag`：`MySQL-CDC(orders_cdc) → Hive(ods.orders_cdc)`。是否预览源端样例数据？',
+        title: '测试连接', tool: 'stx sync task test-connections 12', icon: 'jobs',
+        queries: ['检查源端连接', '检查目标端连接', '失败时停止'],
+        detail: 'stx sync task test-connections 12：单独测试连接；若失败，先修正配置，不继续发布。',
       },
       {
-        title: '预览数据',
-        tool: 'stx sync preview',
-        icon: 'logs',
-        queries: [
-          'preview job_id=9124',
-          'rows=8 · cols=12',
-          'order_id / user_id / amount …',
-        ],
-        detail:
-          '`stx sync preview` 已返回样例行，字段与 shop.orders 对齐。准备发布并提交。',
+        title: '发布配置版本', tool: 'stx sync task publish 12 --confirm', icon: 'sync',
+        queries: ['生成历史版本', '不自动运行', '等待提交确认'],
+        detail: 'stx sync task publish 12 --confirm：冻结当前配置为一个历史版本。发布与提交运行是两步。',
       },
       {
-        title: '发布并运行',
-        tool: 'stx sync submit',
-        icon: 'sync',
-        queries: [
-          'publish version=v3',
-          'engine_job_id=883921',
-          'status=RUNNING',
-        ],
-        detail:
-          '`stx sync submit` 已发布 v3 并在 Zeta 提交运行；binlog 位点开始推进。',
+        title: '提交并查看状态', tool: 'stx sync task submit 12 --wait --confirm', icon: 'logs',
+        queries: ['提交会占用集群资源', '返回作业编号', '再查询运行状态'],
+        detail: 'stx sync task submit 12 --wait --confirm：提交任务。返回的执行状态不等于持续运行状态；随后用 stx sync job list --task_id 12 查询。',
       },
     ],
-    completedTitle: '任务已发布运行',
-    completedSummary:
-      'MySQL CDC → Hive 已完成：配置确认 → stx sync test → dag → preview → submit，作业 RUNNING。',
+    completedTitle: '流程演示完成',
+    completedSummary: '命令按检查、创建、验证、测试、发布、提交的顺序执行；实际结果要以 CLI 返回为准。',
     findings: [
-      {
-        number: '01',
-        title: '配置合规',
-        quote: '密码使用 {{password}}，url / 库表 / Hive 表名已按你的要求写入。',
-      },
-      {
-        number: '02',
-        title: '链路打通',
-        quote: 'test / dag / preview 均通过。',
-      },
-      {
-        number: '03',
-        title: '已上线',
-        quote: 'stx sync submit · engine_job_id=883921 · RUNNING',
-      },
+      {number: '01', title: '先检查', quote: '目标集群有对应连接器，配置文件经人工确认。'},
+      {number: '02', title: '再发布', quote: '创建任务与发布版本是不同操作。'},
+      {number: '03', title: '提交后查询', quote: '提交成功后还要查看作业是否持续运行。'},
     ],
-    artifactTitle: 'mysql_cdc_to_hive.v3.conf',
-    artifactMeta: 'stx sync · published v3',
-    artifactBody: CDC_CONF,
+    artifactTitle: '同步任务步骤（示例）',
+    artifactMeta: 'stx sync task',
+    artifactBody: `# MySQL CDC → Hive（示例）
+
+配置文件：task.conf（先按当前连接器字段检查）
+集群：6
+任务：12
+
+stx sync plugin list --cluster-id 6 --type source
+stx sync plugin list --cluster-id 6 --type sink
+stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm
+stx sync task validate 12
+stx sync task test-connections 12
+stx sync task publish 12 --confirm
+stx sync task submit 12 --wait --confirm
+stx sync job list --task_id 12`,
   },
   {
     id: 'upgrade',
-    label: 'SeaTunnel 升级验证',
-    chatTitle: 'Upgrade 验证 · 2.3.13',
-    projectName: 'upgrade-lab',
-    welcomeTitle: '升级前兼容验证',
-    welcomeSub: '搭 2.3.13 小型验证集群，冒烟 + 差异报告，验收后再决定是否升级。',
-    prompt:
-      '我们目前要从 SeaTunnel 2.3.8 升级到 2.3.13。帮我搭建一个 2.3.13 的小型验证集群，验证现有配置在新版本是否兼容、运行是否报错，最后给出差异报告供验收评估。',
-    reply:
-      '可以。流程是：用 stx 拉起 2.3.13 小型验证集群 → 装好连接器 → 把现有典型配置拿去冒烟 → 产出配置差异报告 → 整理验收清单，由你评估是否对生产执行升级（本轮不做正式 Execute）。',
-    midUsers: [
-      {
-        afterPhases: 3,
-        text: '冒烟结果可以，继续出差异报告和验收清单吧。',
-      },
-    ],
+    label: '升级前预检',
+    chatTitle: '升级前预检 · 2.3.13',
+    projectName: '升级评估示例',
+    welcomeTitle: '先看预检，再决定要不要升级',
+    welcomeSub: '展示现有升级命令；不创建验证集群，也不执行升级。',
+    prompt: '想把 8 号 SeaTunnel 集群升级到 2.3.13。先帮我看看准备情况，不要执行升级。',
+    reply: '我会核对目标集群和可用安装包，再运行升级预检。发现问题先告诉你，本轮不创建升级计划或执行升级。',
+    midUsers: [],
     phases: [
       {
-        title: '搭建 2.3.13 小型验证集群',
-        tool: 'stx cluster create',
-        icon: 'cli',
-        queries: [
-          'cluster=upgrade-verify-2313',
-          'nodes=1 · engine=Zeta',
-          'package=apache-seatunnel-2.3.13',
-        ],
-        detail:
-          '`stx cluster create` + `stx package install --version 2.3.13`，单节点验证集群就绪，与生产隔离。',
+        title: '确认目标集群', tool: 'stx cluster get 8', icon: 'cli',
+        queries: ['集群编号 8', '核对当前版本', '核对部署模式'],
+        detail: 'stx cluster get 8：先检查集群资料，避免把别的集群当成升级目标。',
       },
       {
-        title: '准备目标版连接器',
-        tool: 'stx plugin install',
-        icon: 'upgrade',
-        queries: [
-          'connector-cdc-mysql@2.3.13',
-          'connector-hive@2.3.13',
-          'connector-jdbc@2.3.13',
-        ],
-        detail:
-          '`stx plugin install` 为目标版本装好生产常用连接器，供后续冒烟使用。',
+        title: '检查安装包', tool: 'stx package list', icon: 'upgrade',
+        queries: ['目标版本 2.3.13', '检查包是否可用', '缺包先准备'],
+        detail: 'stx package list：确认目标 SeaTunnel 版本是否已有可用安装包；没有时先准备安装包。',
       },
       {
-        title: '配置兼容冒烟',
-        tool: 'stx job smoke',
-        icon: 'jobs',
-        queries: [
-          'batch.template → ok',
-          'mysql-cdc→hive draft → ok',
-          'jdbc upsert sample → ok',
-        ],
-        detail:
-          '`stx job smoke` 用现有三类配置在 2.3.13 验证集群跑通：批模板、CDC→Hive、JDBC upsert，均无报错。',
-      },
-      {
-        title: '生成配置差异报告',
-        tool: 'stx upgrade diff',
-        icon: 'logs',
-        queries: [
-          'seatunnel.yaml · http.port keep',
-          'checkpoint.namespace keep',
-          'deprecated keys: 2 · new keys: 5',
-        ],
-        detail:
-          '`stx upgrade diff --from 2.3.8 --to 2.3.13`：保留本地 http/checkpoint；标出废弃项与新增默认项，形成可审阅差异报告。',
-      },
-      {
-        title: '验收清单（待评估）',
-        tool: 'stx upgrade review',
-        icon: 'upgrade',
-        queries: [
-          'smoke: passed',
-          'diff report: attached',
-          'decision: pending human approve',
-        ],
-        detail:
-          '`stx upgrade review` 汇总冒烟结果与差异报告。请验收后决定是否对生产执行升级；本演示到验收为止，不自动 Execute。',
+        title: '运行升级预检', tool: 'stx upgrade precheck', icon: 'logs',
+        queries: ['检查目标安装目录', '查看预检结果', '不执行升级'],
+        detail: 'stx upgrade precheck 8 --target-version 2.3.13 --target-install-dir /tmp/seatunnel-2.3.13-new：返回预检结果；后续计划需另行创建。',
       },
     ],
-    completedTitle: '验证完成 · 待你验收',
-    completedSummary:
-      '2.3.13 小型验证集群已冒烟通过，配置差异报告已产出。请验收后评估是否对生产升级；本轮未执行正式 SWITCH_VERSION。',
+    completedTitle: '预检演示结束',
+    completedSummary: '展示了升级前需要查的集群、安装包与预检命令；没有创建计划，也没有执行升级。',
     findings: [
-      {
-        number: '01',
-        title: '验证集群',
-        quote: 'upgrade-verify-2313 · SeaTunnel 2.3.13 · 单节点 Zeta 就绪。',
-      },
-      {
-        number: '02',
-        title: '冒烟通过',
-        quote: '三类现有配置在新版本运行无报错。',
-      },
-      {
-        number: '03',
-        title: '待验收决策',
-        quote: '差异报告已给出；是否升级由你确认后再执行。',
-      },
+      {number: '01', title: '集群资料', quote: '确认编号、版本和部署模式。'},
+      {number: '02', title: '目标安装包', quote: '先确认 2.3.13 在环境中可用。'},
+      {number: '03', title: '预检结果', quote: '只有阅读实际预检输出后，才能决定下一步。'},
     ],
-    artifactTitle: 'upgrade-diff 2.3.8→2.3.13',
-    artifactMeta: 'stx upgrade review',
-    artifactBody: `# upgrade verification
+    artifactTitle: '升级前检查（示例）',
+    artifactMeta: 'stx upgrade precheck',
+    artifactBody: `# 升级前检查（示例）
 
-verify_cluster: upgrade-verify-2313 (2.3.13)
-from_prod: 2.3.8
+集群：8
+目标版本：2.3.13
 
-smoke:
-- batch.template → ok
-- mysql-cdc→hive → ok
-- jdbc upsert → ok
+stx cluster get 8
+stx package list
+stx upgrade precheck 8 --target-version 2.3.13 --target-install-dir /tmp/seatunnel-2.3.13-new
 
-diff highlights:
-- keep: http.port, checkpoint.namespace
-- review: 2 deprecated keys, 5 new defaults
-
-next:
-1. human accept diff report
-2. decide go / no-go
-3. only then: stx upgrade execute (not in this demo)
-
-result: verification complete · pending approval`,
+本轮未创建升级计划，未执行升级。请根据实际预检结果决定后续操作。`,
   },
 ];
 
 const SCENARIOS_EN: Scenario[] = [
   {
-    id: 'diagnose',
-    label: 'Prod cluster health check',
-    chatTitle: 'SeaTunnel cluster diagnosis',
-    projectName: 'zeta-prod ops',
-    welcomeTitle:
-      'Visual ops + native AI Agent (CLI + Skill): make SeaTunnel ops clear',
-    welcomeSub:
-      'Drive stx with natural language: clusters, jobs, logs, and source in one flow.',
-    prompt:
-      'Check which SeaTunnel clusters are running in prod and whether jobs are healthy. If any failed, pull error logs and map them to source for root cause.',
-    reply:
-      'I will list clusters and running jobs, locate failed job logs, then map them to SeaTunnel source for actionable fixes.',
+    id: 'diagnose', label: 'Clusters and failed jobs', chatTitle: 'Inspect failed jobs', projectName: 'Production example',
+    welcomeTitle: 'Start with a question. See each command.',
+    welcomeSub: 'An AI Agent uses the real STX CLI through its Skill. All results here are illustrative.',
+    prompt: 'Check cluster 6 and its failed sync jobs. Read logs, but do not change anything.',
+    reply: 'I will inspect the cluster, nodes, failed jobs, and logs. No restart or recovery.',
     midUsers: [],
     phases: [
-      {
-        title: 'List running clusters',
-        tool: 'stx cluster list',
-        icon: 'cli',
-        queries: [
-          'zeta-prod · Zeta · healthy 3/3',
-          'spark-batch · Spark · healthy 4/4',
-          'flink-cdc · Flink · degraded 2/3',
-        ],
-        detail:
-          '`stx cluster list` summarizes engine type, node heartbeat, and managed status.',
-      },
-      {
-        title: 'List running / failed jobs',
-        tool: 'stx job list',
-        icon: 'jobs',
-        queries: [
-          'job-1831 orders_cdc_sync · RUNNING',
-          'job-1842 inventory_enrich · FAILED',
-          'job-1850 user_profile_stream · RUNNING',
-        ],
-        detail:
-          '`stx job list --cluster zeta-prod --state RUNNING,FAILED` pinpoints failed job-1842.',
-      },
-      {
-        title: 'Collect failed job logs',
-        tool: 'stx job logs',
-        icon: 'logs',
-        queries: [
-          'Checkpoint barrier timeout 30s',
-          'JDBC batch failed: Duplicate key',
-          'JobMaster · SinkException',
-        ],
-        detail:
-          '`stx job logs --id job-1842 --tail 40` points to a JDBC Sink write conflict.',
-      },
-      {
-        title: 'Map to SeaTunnel source',
-        tool: 'stx skill read',
-        icon: 'code',
-        queries: [
-          'JdbcSinkWriter.java:214',
-          'ignoreDuplicate / upsert strategy',
-          'suggest stx job restart',
-        ],
-        detail:
-          '`stx skill read` opens the JdbcSinkWriter conflict branch; root cause is primary-key conflict, not cluster downtime.',
-      },
+      {title: 'List clusters', tool: 'stx cluster list --output table', icon: 'cli', queries: ['cluster 6 · zeta-prod', 'SeaTunnel 2.3.13', 'confirm target'], detail: 'List clusters and confirm the target ID. IDs and statuses here are examples.'},
+      {title: 'Inspect nodes', tool: 'stx cluster node list 6', icon: 'jobs', queries: ['node list', 'online status', 'read-only'], detail: 'Inspect cluster nodes; a failed job does not necessarily mean a failed cluster.'},
+      {title: 'Filter failed jobs', tool: 'stx sync job list --status FAILED', icon: 'sync', queries: ['job 1842 · FAILED', 'verify cluster', 'verify task'], detail: 'Filter failed jobs, then verify which cluster and task own each returned job.'},
+      {title: 'Read job logs', tool: 'stx sync job logs 1842 --lines 40', icon: 'logs', queries: ['example: Duplicate key', 'inspect config', 'no auto-recovery'], detail: 'Read 40 lines, then compare the full log and task config. One error line is not a complete diagnosis.'},
     ],
-    completedTitle: 'Diagnosis complete',
-    completedSummary:
-      'Root cause: JDBC Sink primary-key conflict. Switch to upsert, or clean conflicting rows then run `stx job restart --id job-1842`.',
-    findings: [
-      {
-        number: '01',
-        title: 'Cluster healthy',
-        quote: 'zeta-prod nodes 3/3 online; control-plane heartbeat OK.',
-      },
-      {
-        number: '02',
-        title: 'Job failure',
-        quote: 'job-1842 failed; logs show Duplicate key.',
-      },
-      {
-        number: '03',
-        title: 'Source-backed',
-        quote: 'Without upsert, conflicts throw SinkException.',
-      },
-    ],
-    artifactTitle: 'job-1842 diagnosis notes',
-    artifactMeta: 'SeaTunnel · stx skill',
-    artifactBody: `# job-1842 diagnosis notes
+    completedTitle: 'Inspection complete', completedSummary: 'Read-only example: clusters, nodes, failed jobs, and logs. No write operation was run.',
+    findings: [{number: '01', title: 'Target cluster', quote: 'Verify the cluster ID and nodes.'}, {number: '02', title: 'Failed job', quote: 'Filter by FAILED and check ownership.'}, {number: '03', title: 'Next step', quote: 'Review the full log before changing config or recovering a job.'}],
+    artifactTitle: 'Investigation notes (example)', artifactMeta: 'stx cluster · stx sync job',
+    artifactBody: `# Investigation notes (example)
 
-Root cause: JDBC Sink primary-key conflict (Duplicate key)
+stx cluster list --output table
+stx cluster node list 6
+stx sync job list --status FAILED
+stx sync job logs 1842 --lines 40
 
-Recommendations:
-1. Switch Sink to upsert / enable ignoreDuplicate
-2. Clean conflicting data, then resubmit
-3. stx job restart --id job-1842`,
+No write commands were run.`,
   },
   {
-    id: 'cdc-hive',
-    label: 'MySQL CDC → Hive submit',
-    chatTitle: 'Sync job submit',
-    projectName: 'data-sync studio',
-    welcomeTitle: 'Submit a sync job with stx',
-    welcomeSub:
-      'Generate HOCON from connector docs, test, extract DAG, preview, then publish.',
-    prompt:
-      'Submit a MySQL CDC to Hive job. MySQL url is jdbc:mysql://mysql.prod:3306/, password uses system var {{password}}, table shop.orders, sink Hive ods.orders_cdc.',
-    reply:
-      'Got it. Full stx path: draft HOCON from connector docs (password = {{password}}) → confirm → test → DAG → preview → publish.',
-    midUsers: [
-      {
-        afterPhases: 2,
-        text: 'Confirmed. Keep password as {{password}} system variable.',
-      },
-      {
-        afterPhases: 4,
-        text: 'Yes — preview a few rows first, then publish if it looks good.',
-      },
-    ],
+    id: 'cdc-hive', label: 'Create a sync task', chatTitle: 'MySQL CDC → Hive', projectName: 'Sync example',
+    welcomeTitle: 'From config file to submitted job', welcomeSub: 'Review connectors and configuration first. Confirm writes separately.',
+    prompt: 'I want to sync MySQL order changes into Hive. Check connectors and config before creating the task.',
+    reply: 'I will inspect available plugins first. Creating, publishing, and submitting require your confirmation.',
+    midUsers: [{afterPhases: 1, text: 'I reviewed the config. You may create the task.'}, {afterPhases: 4, text: 'Validation passed. Publish the version; ask me before submitting.'}, {afterPhases: 5, text: 'I approve submitting the job. Check its status afterwards.'}],
     phases: [
-      {
-        title: 'Read connector docs',
-        tool: 'stx skill read',
-        icon: 'code',
-        queries: [
-          'docs: MySQL-CDC / Hive',
-          'plugin: connector-cdc-mysql',
-          'plugin: connector-hive',
-        ],
-        detail:
-          '`stx skill read` aligns Source=`MySQL-CDC`, Sink=`Hive`; password uses global {{password}}.',
-      },
-      {
-        title: 'Draft HOCON for confirm',
-        tool: 'stx sync draft',
-        icon: 'sync',
-        queries: [
-          'env.job.mode = STREAMING',
-          'password = "{{password}}"',
-          'source MySQL-CDC → sink Hive',
-        ],
-        detail: CDC_DRAFT_DETAIL_EN,
-      },
-      {
-        title: 'Test connections',
-        tool: 'stx sync test',
-        icon: 'cli',
-        queries: [
-          'Source[0]-MySQL-CDC ok',
-          'Sink[0]-Hive ok',
-          'vars: {{password}} resolved',
-        ],
-        detail:
-          '`stx sync test`: MySQL CDC and Hive Metastore passed; {{password}} resolved.',
-      },
-      {
-        title: 'Extract DAG',
-        tool: 'stx sync dag',
-        icon: 'jobs',
-        queries: [
-          'Source[0]-MySQL-CDC',
-          '→ Sink[0]-Hive',
-          'edges=1 · nodes=2',
-        ],
-        detail:
-          '`stx sync dag`: `MySQL-CDC(orders_cdc) → Hive(ods.orders_cdc)`. Preview sample rows?',
-      },
-      {
-        title: 'Preview data',
-        tool: 'stx sync preview',
-        icon: 'logs',
-        queries: [
-          'preview job_id=9124',
-          'rows=8 · cols=12',
-          'order_id / user_id / amount …',
-        ],
-        detail:
-          '`stx sync preview` returned sample rows aligned with shop.orders. Ready to publish.',
-      },
-      {
-        title: 'Publish and run',
-        tool: 'stx sync submit',
-        icon: 'sync',
-        queries: [
-          'publish version=v3',
-          'engine_job_id=883921',
-          'status=RUNNING',
-        ],
-        detail:
-          '`stx sync submit` published v3 on Zeta; binlog offset is advancing.',
-      },
+      {title: 'Check connectors', tool: 'stx sync plugin list --cluster-id 6 --type source', icon: 'code', queries: ['MySQL-CDC', 'Hive', 'review task.conf'], detail: 'List sources with --type source, then sinks with --type sink on cluster 6. Review the config against supported fields.'},
+      {title: 'Create task', tool: 'stx sync task create', icon: 'sync', queries: ['--name orders-to-hive', '--cluster-id 6', 'example task ID 12'], detail: 'Create a draft: stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm. This does not submit it.'},
+      {title: 'Validate', tool: 'stx sync task validate 12', icon: 'cli', queries: ['syntax and plugin fields', 'read validation result', 'fix errors first'], detail: 'Validate the saved config. Success does not prove source and sink connectivity.'},
+      {title: 'Test connections', tool: 'stx sync task test-connections 12', icon: 'jobs', queries: ['source check', 'sink check', 'stop if failed'], detail: 'Test source and sink connections. Do not publish if this check fails.'},
+      {title: 'Publish version', tool: 'stx sync task publish 12 --confirm', icon: 'sync', queries: ['freeze history', 'not running yet', 'wait for approval'], detail: 'Publishing freezes a task version. Submission is a separate operation.'},
+      {title: 'Submit and inspect', tool: 'stx sync task submit 12 --wait --confirm', icon: 'logs', queries: ['consumes cluster resources', 'get job ID', 'check status separately'], detail: 'Submit, then use stx sync job list --task_id 12 to check the job status. Execution completion does not imply the streaming job is still running.'},
     ],
-    completedTitle: 'Job published and running',
-    completedSummary:
-      'MySQL CDC → Hive done: confirm → stx sync test → dag → preview → submit · RUNNING.',
-    findings: [
-      {
-        number: '01',
-        title: 'Config OK',
-        quote: 'Password uses {{password}}; url / tables / Hive name match your request.',
-      },
-      {
-        number: '02',
-        title: 'Pipeline OK',
-        quote: 'test / dag / preview all passed.',
-      },
-      {
-        number: '03',
-        title: 'Live',
-        quote: 'stx sync submit · engine_job_id=883921 · RUNNING',
-      },
-    ],
-    artifactTitle: 'mysql_cdc_to_hive.v3.conf',
-    artifactMeta: 'stx sync · published v3',
-    artifactBody: CDC_CONF,
+    completedTitle: 'Workflow illustrated', completedSummary: 'Inspect, create, validate, test, publish, then submit. Actual outcomes depend on CLI responses.',
+    findings: [{number: '01', title: 'Inspect first', quote: 'Check plugins and review the config.'}, {number: '02', title: 'Publish separately', quote: 'Creating and publishing are different operations.'}, {number: '03', title: 'Check after submit', quote: 'Query the job status after submission.'}],
+    artifactTitle: 'Sync commands (example)', artifactMeta: 'stx sync task',
+    artifactBody: `# MySQL CDC → Hive (example)
+
+stx sync plugin list --cluster-id 6 --type source
+stx sync plugin list --cluster-id 6 --type sink
+stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm
+stx sync task validate 12
+stx sync task test-connections 12
+stx sync task publish 12 --confirm
+stx sync task submit 12 --wait --confirm
+stx sync job list --task_id 12`,
   },
   {
-    id: 'upgrade',
-    label: 'SeaTunnel upgrade verify',
-    chatTitle: 'Upgrade verify · 2.3.13',
-    projectName: 'upgrade-lab',
-    welcomeTitle: 'Pre-upgrade compatibility check',
-    welcomeSub:
-      'Stand up a small 2.3.13 verify cluster, smoke + diff report, then you decide.',
-    prompt:
-      'We need to upgrade SeaTunnel from 2.3.8 to 2.3.13. Stand up a small 2.3.13 verify cluster, check whether existing configs are compatible, and produce a diff report for acceptance.',
-    reply:
-      'Plan: create a 2.3.13 verify cluster with stx → install connectors → smoke existing configs → emit config diff → acceptance checklist. No production Execute in this demo.',
-    midUsers: [
-      {
-        afterPhases: 3,
-        text: 'Smoke looks good — continue with the diff report and checklist.',
-      },
-    ],
+    id: 'upgrade', label: 'Upgrade precheck', chatTitle: 'Precheck · 2.3.13', projectName: 'Upgrade example',
+    welcomeTitle: 'Check first, decide later', welcomeSub: 'Real upgrade commands, without creating a verification cluster or executing an upgrade.',
+    prompt: 'We may upgrade cluster 8 to SeaTunnel 2.3.13. Check readiness; do not upgrade it.',
+    reply: 'I will inspect the cluster and package list, then run a precheck. No plan or execution in this example.',
+    midUsers: [],
     phases: [
-      {
-        title: 'Create 2.3.13 verify cluster',
-        tool: 'stx cluster create',
-        icon: 'cli',
-        queries: [
-          'cluster=upgrade-verify-2313',
-          'nodes=1 · engine=Zeta',
-          'package=apache-seatunnel-2.3.13',
-        ],
-        detail:
-          '`stx cluster create` + `stx package install --version 2.3.13`; single-node verify cluster ready, isolated from prod.',
-      },
-      {
-        title: 'Install target connectors',
-        tool: 'stx plugin install',
-        icon: 'upgrade',
-        queries: [
-          'connector-cdc-mysql@2.3.13',
-          'connector-hive@2.3.13',
-          'connector-jdbc@2.3.13',
-        ],
-        detail:
-          '`stx plugin install` installs common prod connectors for the target version.',
-      },
-      {
-        title: 'Config smoke tests',
-        tool: 'stx job smoke',
-        icon: 'jobs',
-        queries: [
-          'batch.template → ok',
-          'mysql-cdc→hive draft → ok',
-          'jdbc upsert sample → ok',
-        ],
-        detail:
-          '`stx job smoke` ran three existing configs on 2.3.13: batch template, CDC→Hive, JDBC upsert — all green.',
-      },
-      {
-        title: 'Generate config diff',
-        tool: 'stx upgrade diff',
-        icon: 'logs',
-        queries: [
-          'seatunnel.yaml · http.port keep',
-          'checkpoint.namespace keep',
-          'deprecated keys: 2 · new keys: 5',
-        ],
-        detail:
-          '`stx upgrade diff --from 2.3.8 --to 2.3.13`: keep local http/checkpoint; flag deprecated and new defaults.',
-      },
-      {
-        title: 'Acceptance checklist',
-        tool: 'stx upgrade review',
-        icon: 'upgrade',
-        queries: [
-          'smoke: passed',
-          'diff report: attached',
-          'decision: pending human approve',
-        ],
-        detail:
-          '`stx upgrade review` summarizes smoke + diff. You decide whether to upgrade prod; this demo stops at acceptance.',
-      },
+      {title: 'Inspect target', tool: 'stx cluster get 8', icon: 'cli', queries: ['cluster ID 8', 'current version', 'deployment mode'], detail: 'Verify the target cluster before an upgrade.'},
+      {title: 'Check packages', tool: 'stx package list', icon: 'upgrade', queries: ['target 2.3.13', 'check availability', 'prepare if missing'], detail: 'See whether the target SeaTunnel package is available in this environment.'},
+      {title: 'Run precheck', tool: 'stx upgrade precheck', icon: 'logs', queries: ['target install directory', 'read the response', 'no execution'], detail: 'Run stx upgrade precheck 8 --target-version 2.3.13 --target-install-dir /tmp/seatunnel-2.3.13-new. A plan is a separate step.'},
     ],
-    completedTitle: 'Verification done · awaiting you',
-    completedSummary:
-      '2.3.13 verify cluster smoked green; config diff is ready. Decide go/no-go for prod; no SWITCH_VERSION in this run.',
-    findings: [
-      {
-        number: '01',
-        title: 'Verify cluster',
-        quote: 'upgrade-verify-2313 · SeaTunnel 2.3.13 · single-node Zeta ready.',
-      },
-      {
-        number: '02',
-        title: 'Smoke passed',
-        quote: 'Three existing configs ran cleanly on the new version.',
-      },
-      {
-        number: '03',
-        title: 'Pending decision',
-        quote: 'Diff report ready; upgrade only after you confirm.',
-      },
-    ],
-    artifactTitle: 'upgrade-diff 2.3.8→2.3.13',
-    artifactMeta: 'stx upgrade review',
-    artifactBody: `# upgrade verification
+    completedTitle: 'Precheck example complete', completedSummary: 'Demonstrates cluster, package, and precheck commands. No plan was created and no upgrade was executed.',
+    findings: [{number: '01', title: 'Cluster', quote: 'Confirm ID, version, and mode.'}, {number: '02', title: 'Package', quote: 'Check 2.3.13 availability.'}, {number: '03', title: 'Precheck', quote: 'Read the actual response before deciding what to do next.'}],
+    artifactTitle: 'Pre-upgrade steps (example)', artifactMeta: 'stx upgrade precheck',
+    artifactBody: `# Pre-upgrade steps (example)
 
-verify_cluster: upgrade-verify-2313 (2.3.13)
-from_prod: 2.3.8
+stx cluster get 8
+stx package list
+stx upgrade precheck 8 --target-version 2.3.13 --target-install-dir /tmp/seatunnel-2.3.13-new
 
-smoke:
-- batch.template → ok
-- mysql-cdc→hive → ok
-- jdbc upsert → ok
-
-diff highlights:
-- keep: http.port, checkpoint.namespace
-- review: 2 deprecated keys, 5 new defaults
-
-next:
-1. human accept diff report
-2. decide go / no-go
-3. only then: stx upgrade execute (not in this demo)
-
-result: verification complete · pending approval`,
+No plan created; no upgrade executed.`,
   },
 ];
 
 const CHROME_ZH: AgentChrome = {
-  ariaDemo: 'stx Skill 对话演示',
+  ariaDemo: 'STX CLI 场景演示（示例数据）',
   ariaNav: 'stx 工作台导航',
   ariaComposer: '演示输入框',
   searchToast: '演示模式：搜索暂不可用',
@@ -826,7 +360,7 @@ const CHROME_ZH: AgentChrome = {
 };
 
 const CHROME_EN: AgentChrome = {
-  ariaDemo: 'stx Skill chat demo',
+  ariaDemo: 'STX CLI scenario demo (illustrative data)',
   ariaNav: 'stx workspace nav',
   ariaComposer: 'Demo input',
   searchToast: 'Demo: search unavailable',

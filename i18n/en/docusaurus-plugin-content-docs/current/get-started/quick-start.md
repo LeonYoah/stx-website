@@ -1,171 +1,104 @@
 ---
-title: Quick Deploy STX
-sidebar_label: Quick Deploy
-description: Install the STX control plane on Linux in one command, open the console, and sign in.
+title: Quick deploy STX
+sidebar_label: Quick deploy
+description: Install STX on Linux, connect a host, and use the CLI locally or remotely.
 ---
 
-This guide installs and starts the STX control plane on Linux. It installs the latest Release by default.
+Install STX on a Linux machine to start the Web UI, STX Server, and agent gRPC service. Then sign in and connect a managed host.
 
-## Prerequisites
+## Check before installing
 
-One-click install targets **Linux** (amd64 / arm64). macOS / Windows are fine for local development, not for this installer.
+| Check | Requirement |
+| :--- | :--- |
+| System | Linux with systemd and glibc ≥ 2.17; amd64 or arm64. CentOS 7 supports amd64 only. |
+| Browser access | Reach port `17880` on the STX installation host. |
+| Managed host access | Reach ports `17800` and `17890` on the STX installation host. |
+| Node.js | An existing Node ≥ 18.18 can be reused. Otherwise, the installer provides one. |
 
-| Check | Minimum | Notes |
-| :--- | :--- | :--- |
-| **OS** | Ubuntu / Debian, Rocky / Alma / RHEL 8+, CentOS 7 (amd64 only), or other systemd Linux | glibc ≥ 2.17 |
-| **Arch** | amd64 or arm64 | CentOS 7 is amd64 only |
-| **Ports** | API `17800`, UI `17880`, gRPC `17890` | Open in firewall / security group |
-| **Optional** | Local Node ≥ 18.18 | Skips bundled Node; otherwise the installer picks by glibc |
+:::note
+The one-click installer targets Linux. macOS and Windows are for local development, not this installation path.
+:::
 
----
+## 1. Install and check the service
 
-## Step 1: Online one-click install (recommended)
+Run one command on the Linux machine that will host STX. The default installation directory is `/opt/stx`.
 
 ```bash
-# Global
+# Direct access to GitHub
 curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash
 
-# China (URL already uses gh-proxy)
+# Proxy URL for networks in China
 curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash
 ```
 
-Useful flags:
-
-- `--install-dir /opt/stx` — install root (default `/opt/stx`)
-- `--arch amd64|arm64` — force architecture
-- `--without-node` — skip bundled Node
-- `--without-observability` — skip Prometheus / Alertmanager / Grafana
-- `--no-systemd` / `--no-start` — skip systemd unit or auto-start
-
-:::tip
-The script picks a Node variant from glibc (&lt; 2.27 → `glibc217`). If Node ≥ 18.18 is already on the host, bundling is skipped.
-:::
-
-After install:
+Check the result:
 
 ```bash
 /opt/stx/bin/status.sh
-# or
+# If installed as a systemd service:
 systemctl status stx
 ```
 
----
+Common installer flags include `--install-dir`, `--arch`, `--without-node`, `--without-observability`, `--no-systemd`, and `--no-start`.
 
-## Step 2: Open the Web UI and sign in
+## 2. Open the Web UI
 
-Default ports:
+If the STX installation host is `10.0.0.10`, open `http://10.0.0.10:17880` in your browser. Replace that sample address with the host's actual address.
 
-| Service | Address |
+![STX sign-in page](/img/screenshots/00-login.png)
+
+The default username is `admin`, and the default password is `admin123`. If `auth.default_admin_password` was set during installation, use that password instead.
+
+| Service | Default port |
 | :--- | :--- |
-| **Web UI** | `http://<server-ip>:17880` |
-| **API** | `http://<server-ip>:17800` |
-| **gRPC** | `17890` (Agent) |
+| Web UI | `17880` |
+| STX Server HTTP API | `17800` |
+| stx-agent gRPC | `17890` |
 
-Default credentials:
+## 3. Connect a host
 
-- **Username**: `admin`
-- **Password**: `admin123` (or `auth.default_admin_password` in `config.yaml`)
+1. In the Web UI, create a host with a name and IP address. Choose the physical/virtual machine type.
+2. Copy the generated stx-agent installation command and run it **on the managed host**.
+3. Return to the host list. When the host is online, you can discover SeaTunnel processes or install a cluster.
 
-Login page:
+![Host list](/img/screenshots/03-hosts.png)
 
-![STX login](/img/screenshots/00-login.png)
+:::caution Agent download address
+The generated command uses `app.external_url`. For a separate managed host, set it to an address that host can reach, such as `http://10.0.0.10:17800`, not `localhost` on the STX installation host.
+:::
 
-After sign-in, open the overview and confirm the service looks healthy.
+For detailed host and cluster operations, see the short English outlines for [host management](../host-cluster/host-management) and [cluster management](../host-cluster/cluster-management), or switch to Chinese for the complete guides.
 
----
+## Install STX CLI
 
-## Step 3: Onboard hosts and clusters
+The same `stx` binary serves both purposes: `stx api` starts STX Server; commands such as `stx login` and `stx cluster list` act as a client. Think of the `hadoop` command after installing Hadoop.
 
-1. Go to **Hosts** → add a host (`bare_metal` + IP).
-2. Follow the guide to install the Agent until status is Online (allow gRPC `17890`).
-3. Open **Clusters**: one-click install a new cluster, or create a cluster definition then discover and bind existing SeaTunnel processes.
+### Client and server on the same host
 
-See [Host management](/docs/host-cluster/host-management) and [Cluster management](/docs/host-cluster/cluster-management) for details.
-
----
-
-## Other install options
-
-### Offline install
-
-Build a bundle on a machine with GitHub access, then copy it to the target:
+A full installation already includes the binary. No second CLI install is needed:
 
 ```bash
-# Global
-curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/download-bundle.sh | bash
-# China
-curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/download-bundle.sh | bash
+/opt/stx/stx login --server http://127.0.0.1:17800
+/opt/stx/stx cluster list --output table
 ```
 
-CentOS 7 example: `bash -s -- --node-variant glibc217 --arch amd64`.
+Replace `/opt/stx` if you chose a different installation directory. Login credentials are saved for the user running the command.
+
+### Separate client and server
+
+If the STX installation host is `10.0.0.10`, copy its binary to another Linux host **with the same CPU architecture**. Run these commands on the client host:
 
 ```bash
-tar -xzf dist/offline/stx-offline-bundle-*-linux-*.tar.gz
-cd stx-offline-bundle-*-linux-*
-sudo ./install.sh --install-dir /opt/stx --offline
+scp user@10.0.0.10:/opt/stx/stx ./stx
+chmod +x ./stx
+./stx login --server http://10.0.0.10:17800
+./stx cluster list --output table
 ```
 
-### Full Docker Compose stack
+Replace `user` with an SSH account that can read the file. You can also transfer the file over an internal network or USB drive, then start at `chmod`. Copying the binary does not start STX Server on the client; only access to port **17800** on the installation host is needed for remote commands.
 
-```bash
-mkdir -p stx-docker && cd stx-docker
-curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
-cd docker
-cp config.example.yaml config.yaml   # set database type / passwords
-mkdir -p data
-docker compose up -d                 # MySQL by default
-```
+:::note Different CPU architectures
+Check `uname -m` on both machines. If they differ, get `stx-linux-amd64` or `stx-linux-arm64` for the **client's** architecture from the Release matching your STX Server version. Copy it to the client as `stx`. The server host's binary will not run on a different architecture.
+:::
 
-For China images, `cp .env.cn.example .env` then start. Console: `http://127.0.0.1:17880`.  
-Persistent data lives under `./data/` (relative bind mounts).
-
-### Single-container trial (no monitoring)
-
-```bash
-# Global GHCR
-docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-all-in-one:latest
-
-# China Huawei SWR
-docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:latest
-```
-
-### Start / stop (binary install)
-
-```bash
-/opt/stx/bin/start.sh                 # default --observability auto
-/opt/stx/bin/stop.sh
-/opt/stx/bin/status.sh
-# or systemctl restart stx
-```
-
-The local observability stack is started by `start.sh` in `auto` mode when the stack is present and `observability.enabled` is not `false`. Force off:
-
-```bash
-/opt/stx/bin/start.sh --observability off
-```
-
----
-
-## FAQ
-
-### 1. Port already in use
-
-Defaults: `17800` / `17880` / `17890`. Check with:
-
-```bash
-ss -lntp | grep -E '17800|17880|17890'
-```
-
-Edit `config.yaml` under the install dir and restart, or free the conflicting process.
-
-### 2. Agent cannot reach the control plane
-
-Ensure the agent host can reach control-plane **gRPC `17890`**, and check security groups / firewalls.
-
-### 3. China network fails to fetch Release assets
-
-Prefer the `v4.gh-proxy.org`-prefixed install commands, or open asset URLs via [gh-proxy.com](https://gh-proxy.com/).
-
-### 4. Local development instead of one-click install?
-
-See the upstream [README](https://github.com/LeonYoah/stx/blob/main/README.md) (Go ≥ 1.24, Node ≥ 18, pnpm ≥ 8).
+For command usage, see [STX CLI](../architecture/cli).

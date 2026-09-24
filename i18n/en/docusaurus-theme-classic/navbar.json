@@ -1,0 +1,11 @@
+{
+  "logo.alt": {
+    "message": "STX logo"
+  },
+  "item.label.文档中心": {
+    "message": "Documentation"
+  },
+  "item.label.在线体验": {
+    "message": "Try online"
+  }
+}

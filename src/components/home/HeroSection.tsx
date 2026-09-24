@@ -8,6 +8,7 @@ gsap.registerPlugin(useGSAP);
 /**
  * 首屏仅品牌文案，Agent 对话下移为独立窗口，避免双栏拥挤。
  * Brand-only hero; agent chat lives in its own section below.
+ * Demo 入口放在品牌 CTA 组内（对齐 Databricks「Try」位），不另起底栏条。
  */
 export function HeroSection(): React.JSX.Element {
   const containerRef = useRef<HTMLElement | null>(null);

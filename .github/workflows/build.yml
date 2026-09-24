@@ -1,6 +1,5 @@
-# 构建并部署 Docusaurus 到 GitHub Pages
-# Build and deploy Docusaurus to GitHub Pages
-name: Deploy to GitHub Pages
+# 只检查构建；站点由自己的服务器提供，不再发布到 GitHub Pages。
+name: Build website
 
 on:
   push:
@@ -9,14 +8,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  contents: read
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,10 +32,4 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm run build
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+        run: pnpm build

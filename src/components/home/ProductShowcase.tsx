@@ -62,7 +62,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
         points: [
           'HOCON 与 DAG 结构可视化编辑',
           'Checkpoint 与运行态可逐层排查',
-          '从草稿到调试，动作连贯可复现',
+          '从调试到运行，动作连贯可复现',
         ],
         mediaAlt: 'STX 调试工作台',
       },
@@ -135,7 +135,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
         points: [
           'Edit HOCON with a visual DAG view',
           'Inspect checkpoints and runtime state layer by layer',
-          'Move from draft to debug with reproducible steps',
+          'Debug the script, then run with a clear trail',
         ],
         mediaAlt: 'STX debug workbench',
       },

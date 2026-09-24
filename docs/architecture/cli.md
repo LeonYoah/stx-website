@@ -1,24 +1,35 @@
 ---
-title: CLI 设计
-sidebar_label: CLI 设计
-description: 为何原生提供 stx CLI、审计如何追溯每次调用，以及如何登录、确认写操作与对接 AI Agent。
+title: STX CLI
+sidebar_label: STX CLI
+description: 使用 stx 命令连接 STX Server，查询集群、查看日志并执行操作。
 ---
 
-## 为什么原生做 CLI
+同一个 `stx` 文件既能运行 STX Server，也能作为 CLI 使用。输入 `stx api` 是启动服务；输入 `stx login`、`stx cluster list` 是操作远端 STX。你可以把这个文件复制到同架构的 Linux 机器上，只用它的 CLI 能力，不必登录 STX 安装机。这和部署 Hadoop 后使用 `hadoop` 命令操作文件很像。需要在被纳管主机上执行的操作，仍由 Server 通知 `stx-agent`。
 
-现在已经进入 **AI Agent** 时代。大模型要和各个系统打通，目前最顺的范式就是 **CLI**：模型生成、执行、根据输出再决策，比直接操浏览器或裸调一堆 HTTP 接口省事得多。
+## 先试几条命令
 
-所以 STX 把命令行做成一等公民，而不是 Web UI 的附属：
+假设 STX Server 在 `10.0.0.10`。在装好 CLI 的机器上执行：
 
-| 使用方 | 为什么需要 CLI |
-| :--- | :--- |
-| **人** | 脚本化、批量、CI / 流水线里可重复执行 |
-| **AI Agent** | 用自然语言落到 `stx …` 命令，即可完成主机、集群、配置等运维动作 |
+```bash
+stx login --server http://10.0.0.10:17800
+stx whoami
+stx cluster list --output table
+stx sync job list --status FAILED --output table
+```
 
-Web UI 擅长可视化与引导；CLI 擅长被人和模型稳定调用。两者共用同一套 STX Server。  
-模型也可能下错令——所以 CLI 调用必须**进审计、可回放**，见下文「审计日志」。
+`login` 会提示输入用户名和密码。查询命令不会更改远端环境。看到失败的作业编号后，用 `stx sync job logs <作业编号> --lines 40` 查看日志；`stx sync job logs --help` 可查看可用参数。STX CLI 不负责替你判断故障：人或 AI Agent 可以依据输出继续排查。
 
-`stx` 既是安装机上的服务入口（如 `stx api`），也是连远端 STX Server 的命令行客户端。下文说的「CLI」指后者。
+想让支持 Skill 的 AI Agent 知道这些命令，可以在安装 CLI 的机器上运行 `stx skill show` 查看内置说明，再按自己的工具安装 Skill。**Skill 是命令使用说明，不是另一个 STX 服务。**
+
+还没有安装？先看[快速部署中的「安装 STX CLI」](../get-started/quick-start#安装-stx-cli)，按本机是否同时运行 STX Server 选择步骤。
+
+## 客户端与服务端
+
+STX Server 的默认 API 地址是 `http://10.0.0.10:17800`（示例 IP）。同机使用 CLI 时也可连接 `http://127.0.0.1:17800`。登录后先用只读命令查看当前环境，写操作需要明确确认。
+
+:::note
+`stx api` 用于启动 STX Server。只复制 `stx` 到另一台机器，并运行 `stx login`、`stx host …` 等命令，不会启动服务。
+:::
 
 ## 它怎么工作
 
@@ -157,6 +168,10 @@ CLI 访问 STX Server 时会自动带上：
 | **审计日志** | 谁（用户）、用哪种客户端、对什么资源做了什么、结果如何 | `stx audit list --client_type cli` |
 | **命令日志** | STX Server 实际下发给 stx-agent 的命令及执行状态 | `stx audit command list --request_id <id>` |
 
+详情里可看 **执行与命令调用追查**：同一次操作（如 `diagnostics.task.create`）下，边上 stx-agent 实际执行了哪些命令，例如 `get_logs`、`thread_dump`（含 `jcmd … Thread.print` 等），便于核对 AI / 脚本是否下对了令。
+
+![执行与命令调用追查：实际执行命令](/img/screenshots/17-command-trace.png)
+
 排查「AI / 脚本刚执行过什么」时，典型路径：
 
 1. `stx audit list --client_type cli --size 50`（必要时加 `--result_status failed`、时间范围）
@@ -191,3 +206,14 @@ stx cluster create --name demo --deployment-mode hybrid --version 2.3.13 --confi
 ```
 
 主机 / 集群具体操作见 [主机管理](../host-cluster/host-management) 与 [集群管理](../host-cluster/cluster-management)；整体进程与端口见 [系统架构](./overview)。
+
+## 精选模板
+
+在终端查看精选模板，或把本地 HOCON 片段保存到工作台：
+
+```bash
+stx sync curated list --section source
+stx sync curated create --name my-jdbc --section source --content-file ./fragment.conf --confirm
+```
+
+可用分区包括 `env`、`source`、`transform`、`sink` 和 `combo`。修改、删除自己的模板以及复制系统模板，分别用 `stx sync curated update`、`delete`、`fork`；先运行对应命令的 `--help` 查看参数。Web UI 用法见[调试工作台](../workbench/overview)。

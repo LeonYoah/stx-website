@@ -9,6 +9,7 @@ import Link from '@docusaurus/Link';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import {useHomeLocale, type HomeLocale} from './useHomeLocale';
+import {GitHubStarButton} from './GitHubStarButton';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -281,6 +282,8 @@ const COPY: Record<
     capabilities: string[];
     installCmd: string;
     deployCta: string;
+    demoCta: string;
+    githubCta: string;
     copy: string;
     copied: string;
     copyTitle: string;
@@ -310,7 +313,9 @@ const COPY: Record<
     ],
     installCmd:
       'curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
-    deployCta: '5 分钟快速部署',
+    demoCta: '在线体验',
+    deployCta: '快速部署',
+    githubCta: 'Star',
     copy: '复制',
     copied: '已复制',
     copyTitle: '复制到剪贴板',
@@ -339,7 +344,9 @@ const COPY: Record<
     ],
     installCmd:
       'curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
-    deployCta: 'Deploy in 5 minutes',
+    demoCta: 'Try online',
+    deployCta: 'Deploy',
+    githubCta: 'Star',
     copy: 'Copy',
     copied: 'Copied',
     copyTitle: 'Copy to clipboard',
@@ -434,15 +441,21 @@ export function HeroBrandPanel(): React.JSX.Element {
           </h1>
           <p className="stx-brand-sub">{copy.sub}</p>
           <div className="stx-brand-actions">
-            <Link className="button--glacier" to="/docs/get-started/quick-start">
-              {copy.deployCta}
+            <Link
+              className="button--glacier"
+              href="https://demo.stxcli.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {copy.demoCta}
             </Link>
             <Link
               className="button--outline-glacier"
-              href="https://github.com/LeonYoah/stx"
+              to="/docs/get-started/quick-start"
             >
-              Star on GitHub
+              {copy.deployCta}
             </Link>
+            <GitHubStarButton label={copy.githubCta} />
           </div>
           <div className="stx-install-command-bar stx-brand-install">
             <span className="stx-cmd-prefix">$</span>

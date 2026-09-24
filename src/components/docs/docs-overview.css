@@ -1,0 +1,63 @@
+.stx-doc-overview .stx-doc-intro {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  max-width: 44rem;
+  color: var(--stx-doc-muted);
+  margin: 1.7rem 0 3.5rem;
+}
+.stx-doc-overview h2 {
+  font-size: 1.5rem;
+  letter-spacing: -.035em;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+}
+.stx-doc-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+.stx-doc-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 15.5rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--stx-doc-border);
+  color: var(--stx-doc-text);
+  background: var(--stx-doc-panel);
+  text-decoration: none !important;
+  transition: border-color .23s ease, background-color .23s ease, transform .23s ease;
+}
+.stx-doc-card:hover {
+  color: var(--stx-doc-text);
+  border-color: var(--stx-doc-accent);
+  background: var(--stx-doc-panel-hover);
+  transform: translateY(-3px);
+}
+.stx-doc-card:active {transform: translateY(-1px) scale(.99)}
+.stx-doc-card-top {display: flex; justify-content: space-between; align-items: flex-start; color: var(--stx-doc-accent); margin-bottom: 1.5rem}
+.stx-doc-card-top > span {font: 500 .75rem var(--font-mono); color: var(--stx-doc-faint)}
+.stx-doc-card strong {font-size: 1.04rem; font-weight: 600; margin-bottom: .55rem}
+.stx-doc-card-detail {font-size: .94rem; line-height: 1.7; color: var(--stx-doc-muted)}
+.stx-doc-card-more {margin-top: auto; padding-top: 1.25rem; font-size: .83rem; font-weight: 600; color: var(--stx-doc-accent)}
+.stx-doc-card-more span {margin-left: .3rem; transition: transform .2s ease; display: inline-block}
+.stx-doc-card:hover .stx-doc-card-more span {transform: translate(2px, -2px)}
+.stx-doc-topics {border-top: 1px solid var(--stx-doc-border); margin-bottom: 2rem}
+.stx-doc-topics details {border-bottom: 1px solid var(--stx-doc-border)}
+.stx-doc-topics summary {list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem .3rem; font-weight: 550; transition: color .2s ease}
+.stx-doc-topics summary::-webkit-details-marker {display: none}
+.stx-doc-topics summary:hover, .stx-doc-topics details[open] summary {color: var(--stx-doc-accent)}
+.stx-doc-topic-plus {width: 1rem; height: 1rem; position: relative; flex: none}
+.stx-doc-topic-plus::before, .stx-doc-topic-plus::after {content: ''; position: absolute; background: currentColor; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: transform .25s ease}
+.stx-doc-topic-plus::before {width: 11px; height: 1px}
+.stx-doc-topic-plus::after {width: 1px; height: 11px}
+.stx-doc-topics details[open] .stx-doc-topic-plus::after {transform: translate(-50%, -50%) rotate(90deg)}
+.stx-doc-topic-body {padding: 0 .3rem 1.35rem; animation: stx-topic-enter .28s ease-out}
+.stx-doc-topic-body p {color: var(--stx-doc-muted); font-size: .93rem; margin: 0 0 1rem}
+.stx-doc-topic-body > div {display: flex; flex-wrap: wrap; gap: .65rem}
+.stx-doc-topic-body a {display: inline-flex; gap: .5rem; align-items: center; font-size: .84rem; padding: .5rem .8rem; color: var(--stx-doc-text); background: var(--stx-doc-panel); border: 1px solid var(--stx-doc-border); text-decoration: none; transition: border-color .2s, color .2s}
+.stx-doc-topic-body a:hover {color: var(--stx-doc-accent); border-color: var(--stx-doc-accent)}
+@keyframes stx-topic-enter {from {opacity: 0; transform: translateY(-5px)} to {opacity: 1; transform: translateY(0)}}
+@media (max-width: 700px) {.stx-doc-cards {grid-template-columns: 1fr}.stx-doc-card {min-height: 13rem}}
+@media (prefers-reduced-motion: reduce) {.stx-doc-card, .stx-doc-card-more span, .stx-doc-topic-body, .stx-doc-topic-plus::after {animation: none; transition: none}}

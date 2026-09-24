@@ -3,8 +3,9 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
-/** GitHub Pages project base path / GitHub Pages 项目站基础路径 */
-const SITE_BASE_URL = '/stx-website/';
+// 自建服务器从站点根目录提供：首页 /，文档 /docs/。
+const SITE_BASE_URL = '/';
+const SITE_URL = (process.env.SITE_URL || 'http://localhost:3000').replace(/\/+$/, '');
 
 /**
  * STX 文档站点核心配置文件 (Docusaurus v3)
@@ -47,9 +48,8 @@ const config: Config = {
   tagline: 'Apache SeaTunnel 一站式运维平台',
   favicon: 'img/stx-favicon.ico',
 
-  // 生产域名与基础路径配置（GitHub Pages 项目站）
-  // Production URL and base route (GitHub Pages project site)
-  url: 'https://leonyoah.github.io',
+  // 发布时设置 SITE_URL=https://你的域名；本地构建使用 localhost。
+  url: SITE_URL,
   baseUrl: SITE_BASE_URL,
 
   // GitHub 组织与仓库元信息
@@ -57,9 +57,8 @@ const config: Config = {
   organizationName: 'LeonYoah',
   projectName: 'stx-website',
 
-  // 避免死链阻止构建（设置容错警告）
-  // Avoid broken links breaking the build (set to warn)
-  onBrokenLinks: 'warn',
+  // 发现站内失效链接时中止构建，避免发布后出现 404。
+  onBrokenLinks: 'throw',
 
   // 国际化双语配置（中文为主，英文为辅）
   // Internationalization configuration (Chinese primary, English secondary)
@@ -134,6 +133,7 @@ const config: Config = {
           // 指向文档源码仓库编辑地址
           // Points to the docs source repository edit URL
           editUrl: 'https://github.com/LeonYoah/stx-website/tree/main/',
+          editLocalizedFiles: true,
           showLastUpdateTime: false,
           showLastUpdateAuthor: false,
         },
@@ -177,101 +177,16 @@ const config: Config = {
           label: '文档中心',
         },
         {
-          to: '/docs/get-started/quick-start',
-          label: '快速部署',
-          position: 'left',
-        },
-        {
-          to: '/docs/architecture/overview',
-          label: '架构设计',
-          position: 'left',
-        },
-        {
-          to: '/docs/host-cluster/host-management',
-          label: '主机与集群',
-          position: 'left',
-        },
-        {
-          to: '/docs/workbench/overview',
-          label: '调试工作台',
-          position: 'left',
+          href: 'https://demo.stxcli.com',
+          label: '在线体验',
+          position: 'right',
+          className: 'header-demo-link',
         },
         {
           type: 'localeDropdown',
           position: 'right',
         },
-        {
-          href: 'https://github.com/LeonYoah/stx',
-          position: 'right',
-          className: 'header-github-link',
-          'aria-label': 'GitHub 仓库 / GitHub repository',
-        },
       ],
-    },
-    footer: {
-      style: 'dark',
-      links: [
-        {
-          title: '文档与指引 / Docs',
-          items: [
-            {
-              label: '快速开始',
-              to: '/docs/get-started/quick-start',
-            },
-            {
-              label: '系统架构',
-              to: '/docs/architecture/overview',
-            },
-            {
-              label: '主机管理',
-              to: '/docs/host-cluster/host-management',
-            },
-            {
-              label: '集群管理',
-              to: '/docs/host-cluster/cluster-management',
-            },
-            {
-              label: '调试工作台',
-              to: '/docs/workbench/overview',
-            },
-            {
-              label: '告警中心',
-              to: '/docs/alerts-diagnostics/alert-center',
-            },
-            {
-              label: '错误中心',
-              to: '/docs/alerts-diagnostics/error-center',
-            },
-            {
-              label: '排障经验库',
-              to: '/docs/alerts-diagnostics/troubleshooting-memory',
-            },
-          ],
-        },
-        {
-          title: '生态与社区 / Community',
-          items: [
-            {
-              label: 'Apache SeaTunnel 官网',
-              href: 'https://seatunnel.apache.org',
-            },
-            {
-              label: 'GitHub 讨论区',
-              href: 'https://github.com/LeonYoah/stx/discussions',
-            },
-          ],
-        },
-        {
-          title: '代码仓库 / Repository',
-          items: [
-            {
-              label: 'GitHub',
-              href: 'https://github.com/LeonYoah/stx',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} STX Project. Built with Docusaurus.`,
     },
     // 色彩模式：默认暗色（更具冰川青夜间极客质感），支持用户切换
     // Color mode: dark mode by default for Glacier Cyan aesthetic, supports toggling

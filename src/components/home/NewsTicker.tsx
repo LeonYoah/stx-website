@@ -18,7 +18,7 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
     {
       tag: 'RELEASE',
       text: 'STX 1.0 社区预览版正式发布：一键纳管与图形化集群生命周期控制面',
-      actionText: '快速体验 ➔',
+      actionText: '快速部署 ➔',
       link: '/docs/get-started/quick-start',
     },
     {
@@ -38,7 +38,7 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
     {
       tag: 'RELEASE',
       text: 'STX 1.0 community preview: one-click onboarding and visual cluster lifecycle control',
-      actionText: 'Try it ➔',
+      actionText: 'Deploy ➔',
       link: '/docs/get-started/quick-start',
     },
     {

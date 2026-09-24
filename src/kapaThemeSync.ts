@@ -6,7 +6,7 @@
 
 const FAB_ID = 'stx-ask-ai-fab';
 const STYLE_ID = 'st-kapa-ask-ai-styles';
-const MARK_SRC = '/stx-website/img/stx-mark.png';
+const MARK_SRC = '/img/stx-mark.png';
 
 function isZh(): boolean {
   const lang = document.documentElement.lang || '';

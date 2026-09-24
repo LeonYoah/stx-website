@@ -99,9 +99,9 @@
   flex: 1 1 auto;
   width: 100%;
   margin: 0 auto;
-  /* 桌面默认撑满可用高度；内容超出由子区滚动 / Fill viewport; children scroll */
-  min-height: calc(100dvh - var(--stx-nav-h));
-  height: calc(100dvh - var(--stx-nav-h));
+  /* 让出底部 demo 提示条，由 flex 撑满剩余高度 / Leave room for demo tip */
+  min-height: 0;
+  height: auto;
   overflow: hidden;
   /* 无边框一体舞台：与页面背景融合，不做成卡片壳 / Borderless stage melts into page */
   border-radius: 0;
@@ -592,7 +592,7 @@
 .stx-brand-corner--br {
   right: var(--stx-hero-pad-x);
   bottom: clamp(1.15rem, 2.8vh, 1.85rem);
-  max-width: min(360px, 48vw);
+  max-width: min(360px, 42vw);
 }
 
 /* 中间文案块：标题/副文/标签纵向拉开 */
@@ -767,10 +767,12 @@ button.stx-pill {
 }
 
 .stx-brand-actions {
+  --stx-cta-h: 42px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
   margin: 2.25rem 0 0;
   max-width: min(720px, 100%);
 }
@@ -779,8 +781,88 @@ button.stx-pill {
 .stx-brand-actions .button--outline-glacier,
 .stx-brand-actions a.button--glacier,
 .stx-brand-actions a.button--outline-glacier {
-  font-size: clamp(13px, 1.5vh, 15px) !important;
-  padding: clamp(10px, 1.4vh, 14px) clamp(16px, 1.8vw, 24px) !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: var(--stx-cta-h) !important;
+  min-height: var(--stx-cta-h) !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  padding: 0 20px !important;
+  border-radius: 8px !important;
+}
+
+/* GitHub Star 胶囊：与同排 CTA 等高对齐 */
+.stx-brand-actions .stx-gh-star {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: stretch;
+  height: var(--stx-cta-h);
+  min-height: var(--stx-cta-h);
+  margin: 0;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--stx-stage-fg, #111) 16%, transparent);
+  background: color-mix(in srgb, var(--stx-stage-fg, #111) 4%, transparent);
+  color: var(--stx-stage-fg, #111);
+  text-decoration: none !important;
+  overflow: hidden;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  vertical-align: middle;
+}
+
+.stx-brand-actions .stx-gh-star:hover {
+  background: color-mix(in srgb, var(--stx-stage-fg, #111) 8%, transparent);
+  border-color: color-mix(in srgb, var(--stx-stage-fg, #111) 28%, transparent);
+  text-decoration: none !important;
+  color: var(--stx-stage-fg, #111);
+}
+
+.stx-brand-actions .stx-gh-star__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.stx-brand-actions .stx-gh-star__icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  opacity: 0.92;
+}
+
+.stx-brand-actions .stx-gh-star__count {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  border-left: 1px solid color-mix(in srgb, var(--stx-stage-fg, #111) 14%, transparent);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  background: color-mix(in srgb, var(--stx-stage-fg, #111) 3%, transparent);
+}
+
+[data-theme='dark'] .stx-brand-actions .stx-gh-star {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+[data-theme='dark'] .stx-brand-actions .stx-gh-star:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.36);
+  color: #fff;
+}
+
+[data-theme='dark'] .stx-brand-actions .stx-gh-star__count {
+  border-left-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .stx-brand-install {
@@ -1076,10 +1158,16 @@ button.stx-pill {
   .stx-brand-actions .button--glacier,
   .stx-brand-actions .button--outline-glacier,
   .stx-brand-actions a.button--glacier,
-  .stx-brand-actions a.button--outline-glacier {
+  .stx-brand-actions a.button--outline-glacier,
+  .stx-brand-actions .stx-gh-star {
     width: 100%;
     justify-content: center;
     text-align: center;
+  }
+
+  .stx-brand-actions .stx-gh-star__action {
+    flex: 1;
+    justify-content: center;
   }
 
   .stx-type-row {
