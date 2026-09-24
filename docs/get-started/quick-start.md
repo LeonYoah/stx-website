@@ -87,7 +87,7 @@ systemctl status stx
 
 ## 安装 STX CLI
 
-`stx` 是同一个二进制文件：运行 `stx api` 时启动 STX Server；运行 `stx login`、`stx cluster list` 等命令时，它就是客户端。可以把它理解成 Hadoop 部署后的 `hadoop` 命令。
+STX 客户端和服务端用的是同一个二进制文件：运行 `stx server` 时启动 STX Server；运行 `stx login`、`stx cluster list` 等命令时，它就是客户端。可以把它理解成 Hadoop 部署后的 `hadoop` 命令。
 
 ### 客户端和服务端在同一台机器
 
@@ -119,7 +119,7 @@ chmod +x ./stx
 先在两台机器分别运行 `uname -m`。如果一台是 `x86_64`，另一台是 `aarch64`，不能直接复制安装机上的文件。请在能联网的机器上下载**与客户端架构及 STX Server 版本相符**的 Release 文件（`stx-linux-amd64` 或 `stx-linux-arm64`），再复制到客户端并命名为 `stx`。只复制二进制文件是为了使用 CLI，不会安装完整服务。
 :::
 
-下一步看 [STX CLI 用法](../architecture/cli)。
+下一步看 [STX CLI 用法](../architecture/cli)。给 AI Agent 用时执行 `stx skill install`（见 [安装 Skill](../architecture/cli#给-ai-agent-安装-skill)）。
 
 ## 其他安装方式
 

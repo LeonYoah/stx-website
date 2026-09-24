@@ -33,7 +33,7 @@
 | 「主机管理」里登记、跑探针的机器 | **被纳管主机** |
 | 边上的探针进程 | **stx-agent**（不要笼统叫 Agent，以免和 AI Agent 混淆） |
 | 主机类型（当前可用） | **物理机 / 虚拟机**（不要写 `bare_metal`） |
-| 后端进程 | **STX Server**（可附 `stx api`） |
+| 后端进程 | **STX Server**（可附 `stx server`） |
 | 节点上的 Java 辅助进程 | **stx-java-proxy**（说「辅助进程 / 独立进程」，不要 sidecar） |
 | 部署模式 | **混合 / 分离**（CLI 示例里保留真实参数即可） |
 | 大模型侧智能体 | **AI Agent**（与 stx-agent 区分开） |

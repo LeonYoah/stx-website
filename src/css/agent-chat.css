@@ -88,6 +88,8 @@
 }
 
 .stx-agent-demo__guide-link {
+  display: inline;
+  white-space: nowrap;
   color: var(--mimo-accent);
   font-weight: 650;
   text-decoration: underline;

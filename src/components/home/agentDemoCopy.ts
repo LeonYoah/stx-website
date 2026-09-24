@@ -141,18 +141,43 @@ const SCENARIOS_ZH: Scenario[] = [
     phases: [
       {
         title: '检查连接器', tool: 'stx sync plugin list --cluster-id 6 --type source', icon: 'code',
-        queries: ['检查 MySQL-CDC', '检查 Hive', '确认配置文件内容'],
-        detail: '分别执行 stx sync plugin list --cluster-id 6 --type source 和 --type sink，确认 MySQL-CDC 与 Hive 在目标集群可用。配置文件需使用该版本连接器接受的字段。',
+        queries: ['检查 MySQL-CDC', '检查 Hive', '对照 task.conf'],
+        detail: `分别执行 stx sync plugin list --cluster-id 6 --type source 和 --type sink，确认 MySQL-CDC 与 Hive 在目标集群可用。对照 task.conf：
+
+env {
+  parallelism = 2
+  job.mode = "STREAMING"
+  checkpoint.interval = 10000
+}
+
+source {
+  MySQL-CDC {
+    plugin_output = "cdc"
+    url = "jdbc:mysql://10.0.0.21:3306/shop"
+    username = "cdc_user"
+    password = "{{cdc_password}}"
+    table-names = ["shop.orders"]
+    startup.mode = "initial"
+  }
+}
+
+sink {
+  Hive {
+    plugin_input = ["cdc"]
+    table_name = "ods.orders_cdc"
+    metastore_uri = "thrift://10.0.0.30:9083"
+  }
+}`,
       },
       {
         title: '创建任务', tool: 'stx sync task create', icon: 'sync',
-        queries: ['--name orders-to-hive', '--cluster-id 6', '示例任务编号 12'],
-        detail: 'stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm：创建任务草稿，尚未发布或运行。',
+        queries: ['--name orders-to-hive', '--config-file task.conf', '示例任务编号 12'],
+        detail: 'stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm：用上面的 task.conf 创建任务草稿，尚未发布或运行。',
       },
       {
         title: '验证配置', tool: 'stx sync task validate 12', icon: 'cli',
-        queries: ['语法与插件字段', '读取验证结果', '有错先改配置'],
-        detail: 'stx sync task validate 12：验证已保存的配置。验证成功不等于源端和目标端一定可以连接。',
+        queries: ['语法与插件字段', '读取验证结果', '有错先改 task.conf'],
+        detail: 'stx sync task validate 12：验证已保存的 task.conf（env / source.MySQL-CDC / sink.Hive）。验证成功不等于源端和目标端一定可以连接。',
       },
       {
         title: '测试连接', tool: 'stx sync task test-connections 12', icon: 'jobs',
@@ -177,22 +202,32 @@ const SCENARIOS_ZH: Scenario[] = [
       {number: '02', title: '再发布', quote: '创建任务与发布版本是不同操作。'},
       {number: '03', title: '提交后查询', quote: '提交成功后还要查看作业是否持续运行。'},
     ],
-    artifactTitle: '同步任务步骤（示例）',
-    artifactMeta: 'stx sync task',
-    artifactBody: `# MySQL CDC → Hive（示例）
+    artifactTitle: 'task.conf',
+    artifactMeta: 'MySQL-CDC → Hive · 示例配置',
+    artifactBody: `env {
+  parallelism = 2
+  job.mode = "STREAMING"
+  checkpoint.interval = 10000
+}
 
-配置文件：task.conf（先按当前连接器字段检查）
-集群：6
-任务：12
+source {
+  MySQL-CDC {
+    plugin_output = "cdc"
+    url = "jdbc:mysql://10.0.0.21:3306/shop"
+    username = "cdc_user"
+    password = "{{cdc_password}}"
+    table-names = ["shop.orders"]
+    startup.mode = "initial"
+  }
+}
 
-stx sync plugin list --cluster-id 6 --type source
-stx sync plugin list --cluster-id 6 --type sink
-stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm
-stx sync task validate 12
-stx sync task test-connections 12
-stx sync task publish 12 --confirm
-stx sync task submit 12 --wait --confirm
-stx sync job list --task_id 12`,
+sink {
+  Hive {
+    plugin_input = ["cdc"]
+    table_name = "ods.orders_cdc"
+    metastore_uri = "thrift://10.0.0.30:9083"
+  }
+}`,
   },
   {
     id: 'upgrade',
@@ -276,26 +311,65 @@ No write commands were run.`,
     reply: 'I will inspect available plugins first. Creating, publishing, and submitting require your confirmation.',
     midUsers: [{afterPhases: 1, text: 'I reviewed the config. You may create the task.'}, {afterPhases: 4, text: 'Validation passed. Publish the version; ask me before submitting.'}, {afterPhases: 5, text: 'I approve submitting the job. Check its status afterwards.'}],
     phases: [
-      {title: 'Check connectors', tool: 'stx sync plugin list --cluster-id 6 --type source', icon: 'code', queries: ['MySQL-CDC', 'Hive', 'review task.conf'], detail: 'List sources with --type source, then sinks with --type sink on cluster 6. Review the config against supported fields.'},
-      {title: 'Create task', tool: 'stx sync task create', icon: 'sync', queries: ['--name orders-to-hive', '--cluster-id 6', 'example task ID 12'], detail: 'Create a draft: stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm. This does not submit it.'},
-      {title: 'Validate', tool: 'stx sync task validate 12', icon: 'cli', queries: ['syntax and plugin fields', 'read validation result', 'fix errors first'], detail: 'Validate the saved config. Success does not prove source and sink connectivity.'},
+      {title: 'Check connectors', tool: 'stx sync plugin list --cluster-id 6 --type source', icon: 'code', queries: ['MySQL-CDC', 'Hive', 'review task.conf'], detail: `List sources with --type source, then sinks with --type sink on cluster 6. Review task.conf:
+
+env {
+  parallelism = 2
+  job.mode = "STREAMING"
+  checkpoint.interval = 10000
+}
+
+source {
+  MySQL-CDC {
+    plugin_output = "cdc"
+    url = "jdbc:mysql://10.0.0.21:3306/shop"
+    username = "cdc_user"
+    password = "{{cdc_password}}"
+    table-names = ["shop.orders"]
+    startup.mode = "initial"
+  }
+}
+
+sink {
+  Hive {
+    plugin_input = ["cdc"]
+    table_name = "ods.orders_cdc"
+    metastore_uri = "thrift://10.0.0.30:9083"
+  }
+}`},
+      {title: 'Create task', tool: 'stx sync task create', icon: 'sync', queries: ['--name orders-to-hive', '--config-file task.conf', 'example task ID 12'], detail: 'Create a draft: stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm. This does not submit it.'},
+      {title: 'Validate', tool: 'stx sync task validate 12', icon: 'cli', queries: ['syntax and plugin fields', 'read validation result', 'fix task.conf first'], detail: 'Validate the saved task.conf (env / source.MySQL-CDC / sink.Hive). Success does not prove source and sink connectivity.'},
       {title: 'Test connections', tool: 'stx sync task test-connections 12', icon: 'jobs', queries: ['source check', 'sink check', 'stop if failed'], detail: 'Test source and sink connections. Do not publish if this check fails.'},
       {title: 'Publish version', tool: 'stx sync task publish 12 --confirm', icon: 'sync', queries: ['freeze history', 'not running yet', 'wait for approval'], detail: 'Publishing freezes a task version. Submission is a separate operation.'},
       {title: 'Submit and inspect', tool: 'stx sync task submit 12 --wait --confirm', icon: 'logs', queries: ['consumes cluster resources', 'get job ID', 'check status separately'], detail: 'Submit, then use stx sync job list --task_id 12 to check the job status. Execution completion does not imply the streaming job is still running.'},
     ],
     completedTitle: 'Workflow illustrated', completedSummary: 'Inspect, create, validate, test, publish, then submit. Actual outcomes depend on CLI responses.',
     findings: [{number: '01', title: 'Inspect first', quote: 'Check plugins and review the config.'}, {number: '02', title: 'Publish separately', quote: 'Creating and publishing are different operations.'}, {number: '03', title: 'Check after submit', quote: 'Query the job status after submission.'}],
-    artifactTitle: 'Sync commands (example)', artifactMeta: 'stx sync task',
-    artifactBody: `# MySQL CDC → Hive (example)
+    artifactTitle: 'task.conf', artifactMeta: 'MySQL-CDC → Hive · example config',
+    artifactBody: `env {
+  parallelism = 2
+  job.mode = "STREAMING"
+  checkpoint.interval = 10000
+}
 
-stx sync plugin list --cluster-id 6 --type source
-stx sync plugin list --cluster-id 6 --type sink
-stx sync task create --name orders-to-hive --cluster-id 6 --config-file task.conf --confirm
-stx sync task validate 12
-stx sync task test-connections 12
-stx sync task publish 12 --confirm
-stx sync task submit 12 --wait --confirm
-stx sync job list --task_id 12`,
+source {
+  MySQL-CDC {
+    plugin_output = "cdc"
+    url = "jdbc:mysql://10.0.0.21:3306/shop"
+    username = "cdc_user"
+    password = "{{cdc_password}}"
+    table-names = ["shop.orders"]
+    startup.mode = "initial"
+  }
+}
+
+sink {
+  Hive {
+    plugin_input = ["cdc"]
+    table_name = "ods.orders_cdc"
+    metastore_uri = "thrift://10.0.0.30:9083"
+  }
+}`,
   },
   {
     id: 'upgrade', label: 'Upgrade precheck', chatTitle: 'Precheck · 2.3.13', projectName: 'Upgrade example',

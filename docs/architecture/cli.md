@@ -4,7 +4,7 @@ sidebar_label: STX CLI
 description: 使用 stx 命令连接 STX Server，查询集群、查看日志并执行操作。
 ---
 
-同一个 `stx` 文件既能运行 STX Server，也能作为 CLI 使用。输入 `stx api` 是启动服务；输入 `stx login`、`stx cluster list` 是操作远端 STX。你可以把这个文件复制到同架构的 Linux 机器上，只用它的 CLI 能力，不必登录 STX 安装机。这和部署 Hadoop 后使用 `hadoop` 命令操作文件很像。需要在被纳管主机上执行的操作，仍由 Server 通知 `stx-agent`。
+STX 客户端和服务端用的是同一个二进制文件：运行 `stx server` 启动服务；运行 `stx login`、`stx cluster list` 是操作远端 STX。你可以把这个文件复制到同架构的 Linux 机器上，只用它的 CLI 能力，不必登录 STX 安装机。这和部署 Hadoop 后使用 `hadoop` 命令操作文件很像。需要在被纳管主机上执行的操作，仍由 Server 通知 `stx-agent`。
 
 ## 先试几条命令
 
@@ -19,16 +19,16 @@ stx sync job list --status FAILED --output table
 
 `login` 会提示输入用户名和密码。查询命令不会更改远端环境。看到失败的作业编号后，用 `stx sync job logs <作业编号> --lines 40` 查看日志；`stx sync job logs --help` 可查看可用参数。STX CLI 不负责替你判断故障：人或 AI Agent 可以依据输出继续排查。
 
-想让支持 Skill 的 AI Agent 知道这些命令，可以在安装 CLI 的机器上运行 `stx skill show` 查看内置说明，再按自己的工具安装 Skill。**Skill 是命令使用说明，不是另一个 STX 服务。**
+要让 AI Agent 调用 `stx`，在本机执行 `stx skill install`（见[给 AI Agent 安装 Skill](#给-ai-agent-安装-skill)）。**Skill 是本机命令说明，不是另一个服务。**
 
-还没有安装？先看[快速部署中的「安装 STX CLI」](../get-started/quick-start#安装-stx-cli)，按本机是否同时运行 STX Server 选择步骤。
+还没有安装 CLI？先看[快速部署中的「安装 STX CLI」](../get-started/quick-start#安装-stx-cli)，按本机是否同时运行 STX Server 选择步骤。
 
 ## 客户端与服务端
 
 STX Server 的默认 API 地址是 `http://10.0.0.10:17800`（示例 IP）。同机使用 CLI 时也可连接 `http://127.0.0.1:17800`。登录后先用只读命令查看当前环境，写操作需要明确确认。
 
 :::note
-`stx api` 用于启动 STX Server。只复制 `stx` 到另一台机器，并运行 `stx login`、`stx host …` 等命令，不会启动服务。
+`stx server` 用于启动 STX Server。只复制 `stx` 到另一台机器，并运行 `stx login`、`stx host …` 等命令，不会启动服务。
 :::
 
 ## 它怎么工作
@@ -79,7 +79,7 @@ stx logout
 
 常用环境变量：`STX_SERVER`、`STX_NAMESPACE`、`STX_TOKEN`、`STX_TIMEOUT`（默认请求超时 **30s**）、`STX_OUTPUT`、`STX_USERNAME`。
 
-## 读操作与写操作
+## 命令风险设计
 
 操作在服务端登记了风险等级。对 CLI 的直观影响：
 
@@ -103,17 +103,6 @@ stx host create --name node-1 --ip-address 10.0.0.21 --confirm
 stx cluster create --name demo --deployment-mode hybrid --version 2.3.13 --confirm
 stx cluster restart 6 --confirm
 ```
-
-## 命令从哪里来
-
-| 类型 | 说明 | 例子 |
-| :--- | :--- | :--- |
-| **登记生成** | 多数 API 在操作登记表里声明后，自动生成同名 CLI | `stx cluster start`、`stx host list` |
-| **手写增强** | 请求体复杂或流程特殊的，单独实现 | `stx cluster create`、`stx host install …`、同步任务相关命令 |
-| **本机命令** | 不访问远端，只管本地配置 | `stx namespace …` |
-| **服务进程** | 在 STX 安装机上起服务 | `stx api` / `stx server` |
-
-业务命令大致按域分组，与 Web UI 能力对应，例如：`host`、`cluster`、`package`、`plugin`、`config`、`monitor`、`diagnostics`、`sync` 等。具体子命令以 `stx <域> --help` 为准。
 
 ## 输出格式
 
@@ -140,7 +129,24 @@ stx whoami --pick username,roles
 | 鉴权 | 浏览器会话 | `login` 写入本地命名空间的 token |
 | 写保护 | 界面上的确认框 | `--confirm`（及必要时的二次确认） |
 
-人和 AI Agent 走同一套命令与确认规则，避免「模型专用另一套接口」。Skill / 智能运维入口也按「会调 `stx`」来设计，而不是去模拟点击页面。
+人和 AI Agent 走同一套命令与确认规则。AI Agent 通过本机 Skill 调用 `stx`，而不是模拟点击页面。
+
+## 给 AI Agent 安装 Skill
+
+在跑 AI Agent 的同一用户下安装本机说明文件（不访问 Server；查询/改环境前仍要 `stx login`）：
+
+```bash
+stx skill install
+stx skill status --output table
+```
+
+| `--target` | 路径 |
+| :--- | :--- |
+| `claude` | `~/.claude/skills/stx/SKILL.md` |
+| `agents` | `~/.agents/skills/stx/SKILL.md` |
+| `all`（默认） | 两处都写 |
+
+`install` 不覆盖已有文件；升级 CLI 后用 `stx skill update`。语言默认跟本机 locale，可用 `--language zh-CN` / `en`。
 
 ## 审计日志
 
@@ -206,14 +212,3 @@ stx cluster create --name demo --deployment-mode hybrid --version 2.3.13 --confi
 ```
 
 主机 / 集群具体操作见 [主机管理](../host-cluster/host-management) 与 [集群管理](../host-cluster/cluster-management)；整体进程与端口见 [系统架构](./overview)。
-
-## 精选模板
-
-在终端查看精选模板，或把本地 HOCON 片段保存到工作台：
-
-```bash
-stx sync curated list --section source
-stx sync curated create --name my-jdbc --section source --content-file ./fragment.conf --confirm
-```
-
-可用分区包括 `env`、`source`、`transform`、`sink` 和 `combo`。修改、删除自己的模板以及复制系统模板，分别用 `stx sync curated update`、`delete`、`fork`；先运行对应命令的 `--help` 查看参数。Web UI 用法见[调试工作台](../workbench/overview)。

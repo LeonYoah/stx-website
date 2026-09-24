@@ -54,7 +54,7 @@ flowchart LR
 
 | 进程 | 怎么起 | 职责 |
 | :--- | :--- | :--- |
-| **STX Server（`stx api`）** | 一键安装后随服务启动 | HTTP API、鉴权、元数据；同时提供 Agent 所需的 gRPC 服务 |
+| **STX Server（`stx server`）** | 一键安装后随服务启动 | HTTP API、鉴权、元数据；同时提供 Agent 所需的 gRPC 服务 |
 | **Web UI** | 一键安装后随服务启动 | 网页界面（主机、集群、安装包、插件、监控等） |
 | **stx-agent** | 在被纳管主机上执行安装命令 | 注册与心跳；预检、安装、启停、配置推送、进程发现等 |
 | **stx-java-proxy** | 由平台在节点上托管启停 | 独立 Java 辅助进程，复用已安装的 SeaTunnel 运行时做配置解析与存储探测等 |
