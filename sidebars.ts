@@ -41,6 +41,16 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: ['workbench/overview'],
     },
+    {
+      type: 'category',
+      label: '告警与诊断',
+      collapsed: false,
+      items: [
+        'alerts-diagnostics/alert-center',
+        'alerts-diagnostics/error-center',
+        'alerts-diagnostics/troubleshooting-memory',
+      ],
+    },
   ],
 };
 

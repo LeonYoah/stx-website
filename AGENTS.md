@@ -13,7 +13,7 @@
 6. **图要真能渲染。** Mermaid 依赖 `@docusaurus/theme-mermaid` + `markdown.mermaid: true`；改完在站点里确认，不要只看编辑器 Markdown 预览。
 7. **讲 Web UI 操作时配截图。** 列表页、关键入口、状态列等单靠文字不够；图放 `static/img/screenshots/`，文中用 `/img/screenshots/…`。没有现成图就先向用户要，不要空写「见某某页」。
 8. **信息架构：首页是官网落地页；文档区侧栏竖排。** 侧栏分类用纯文字，不加 emoji 小图标。
-9. **功能文档先讲为什么，再展开能力。** 不要一上来堆前置条件清单；约束嵌进对应步骤即可。
+9. **能直接写入口与操作就不要堆「为什么」。** 简单页：入口 → 截图 → 表格；只有能力不直观时才补动机。不要先堆前置条件清单。
 10. **用语与产品 UI / i18n 对齐。** 按钮名、状态名、保存 vs 发布等以 STX 前端文案为准；产品改了文案，官网同步改 docs，而不是改本文件。
 
 ## 对文章的要求
@@ -41,7 +41,7 @@
 ### 文档结构
 
 - 中文默认内容在 `docs/`；侧栏在 `sidebars.ts`；英文标签在 `i18n/en/.../current.json`。
-- 主机 / 集群 → `docs/host-cluster/`；工作台 → `docs/workbench/`；架构 / CLI → `docs/architecture/`。
+- 主机 / 集群 → `docs/host-cluster/`；工作台 → `docs/workbench/`；告警与诊断 → `docs/alerts-diagnostics/`；架构 / CLI → `docs/architecture/`。
 - 改路径时同步顶栏、页脚、首页链接与旧路径引用。
 
 ## 文章风格

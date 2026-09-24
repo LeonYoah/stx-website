@@ -234,6 +234,18 @@ const config: Config = {
               label: '调试工作台',
               to: '/docs/workbench/overview',
             },
+            {
+              label: '告警中心',
+              to: '/docs/alerts-diagnostics/alert-center',
+            },
+            {
+              label: '错误中心',
+              to: '/docs/alerts-diagnostics/error-center',
+            },
+            {
+              label: '排障经验库',
+              to: '/docs/alerts-diagnostics/troubleshooting-memory',
+            },
           ],
         },
         {
