@@ -281,8 +281,8 @@ stx upgrade precheck 8 --target-version 2.3.13 --target-install-dir /tmp/seatunn
 const SCENARIOS_EN: Scenario[] = [
   {
     id: 'diagnose', label: 'Clusters and failed jobs', chatTitle: 'Inspect failed jobs', projectName: 'Production example',
-    welcomeTitle: 'Start with a question. See each command.',
-    welcomeSub: 'An AI Agent uses the real STX CLI through its Skill. All results here are illustrative.',
+    welcomeTitle: 'Start troubleshooting in one sentence',
+    welcomeSub: 'An AI Agent uses the real STX CLI through its Skill. Results here are sample data.',
     prompt: 'Check cluster 6 and its failed sync jobs. Read logs, but do not change anything.',
     reply: 'I will inspect the cluster, nodes, failed jobs, and logs. No restart or recovery.',
     midUsers: [],

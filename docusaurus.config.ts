@@ -45,7 +45,8 @@ const config: Config = {
   // 站点主标题与简短描述
   // Main title and short tagline of the site
   title: 'STX',
-  tagline: 'Apache SeaTunnel 一站式运维平台',
+  tagline: '面向 Apache SeaTunnel 的一站式运维平台',
+  // English UI chrome uses locale files; homepage/footer carry EN product copy.
   favicon: 'img/stx-favicon.ico',
 
   // 发布时设置 SITE_URL=https://你的域名；本地构建使用 localhost。

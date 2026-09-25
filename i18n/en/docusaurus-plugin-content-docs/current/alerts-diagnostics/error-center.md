@@ -1,22 +1,30 @@
 ---
 title: Errors
 sidebar_label: Errors
-description: Inspect grouped SeaTunnel errors and their event samples.
-hide_table_of_contents: true
+description: Aggregate SeaTunnel ERROR logs by fingerprint and filter by frequency; show "Known solution" when a matching fix exists.
 ---
 
-import ChineseGuideLink from '@site/src/components/docs/ChineseGuideLink';
+Web UI **Alerts & Diagnostics** → **Diagnostics** → **Errors** (`/diagnostics`). The same page also has [Inspections](./diagnostic-report) and [Troubleshooting library](./troubleshooting-memory).
 
-:::note English guide in progress
-This is a short overview. <ChineseGuideLink docId="alerts-diagnostics/error-center" />
+![Error groups and known solution markers](/img/screenshots/20-error-groups.png)
+
+## View error groups
+
+| Column | Description |
+| :--- | :--- |
+| **Error group** | Summary aggregated by fingerprint |
+| **Known solution** | Shown when the troubleshooting library has a matching fix |
+| **Exception class / Source node** | For example `java.sql.SQLException`; host and node |
+| **Occurrence count / Last seen** | Total count and most recent time |
+
+:::tip
+**Known solution** in the list means the troubleshooting library has a matching fix. Open details to verify log samples before applying.
 :::
 
-This guide covers error groups, frequency filters, event samples, and available solutions.
+Frequency filters: **High frequency critical** (≥10), **Medium frequency warning** (3–9), **Low frequency occasional** (&lt;3). Filter by cluster; search summary / exception class / source file. Click **Details** for event samples and evidence; to collect more on-site data, go to **Inspections** for check records and the [diagnostic report](./diagnostic-report).
 
-## At a glance
+## Which errors appear
 
-- stx-agent reports ERROR and FATAL entries from SeaTunnel node logs.
-- Events are grouped by an error fingerprint.
-- A matching troubleshooting record is marked as an available solution.
+**stx-agent** incrementally scans node SeaTunnel logs for `ERROR` / `FATAL`, reports them, and groups by fingerprint. stx-agent must be online; exceptions not written to these logs will not appear here.
 
-![Error groups and solutions](/img/screenshots/20-error-groups.png)
+For CLI queries, see [STX CLI](../architecture/cli).

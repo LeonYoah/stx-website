@@ -1,23 +1,30 @@
 {
-  "version": {
-    "message": "Version: {version}"
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
   },
   "sidebar.docsSidebar.doc.文档总览": {
-    "message": "Docs overview"
+    "message": "Docs overview",
+    "description": "The label for the doc item 文档总览 in sidebar docsSidebar"
   },
   "sidebar.docsSidebar.category.快速入门": {
-    "message": "Getting started"
+    "message": "Getting started",
+    "description": "The label for category 快速入门 in sidebar docsSidebar"
   },
   "sidebar.docsSidebar.category.架构与设计": {
-    "message": "Architecture"
+    "message": "Architecture",
+    "description": "The label for category 架构与设计 in sidebar docsSidebar"
   },
   "sidebar.docsSidebar.category.主机与集群管理": {
-    "message": "Host & cluster"
+    "message": "Hosts & clusters",
+    "description": "The label for category 主机与集群管理 in sidebar docsSidebar"
   },
   "sidebar.docsSidebar.category.调试工作台": {
-    "message": "Debug workbench"
+    "message": "Debug workbench",
+    "description": "The label for category 调试工作台 in sidebar docsSidebar"
   },
   "sidebar.docsSidebar.category.告警与诊断": {
-    "message": "Alerts & diagnostics"
+    "message": "Alerts & diagnostics",
+    "description": "The label for category 告警与诊断 in sidebar docsSidebar"
   }
 }

@@ -335,17 +335,17 @@ export function Integration() {
       ? {
           engines: "SeaTunnel engines",
           deploys: "Deployment shapes",
-          control: "STX control plane",
+          control: "STX ops platform",
           agent: "AI Agent entry",
-          agentSub: "stx CLI probes · Agent Skill protocol",
+          agentSub: "stx CLI · Skill",
           notYet: "Not yet",
         }
       : {
           engines: "SeaTunnel 引擎",
           deploys: "SeaTunnel 部署形态",
-          control: "STX 控制面",
+          control: "STX 运维平台",
           agent: "AI Agent 入口",
-          agentSub: "stx CLI 探针指令 · Agent Skill 协议驱动",
+          agentSub: "stx CLI · Skill",
           notYet: "未适配",
         };
 

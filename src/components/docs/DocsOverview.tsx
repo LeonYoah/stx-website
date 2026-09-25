@@ -23,18 +23,18 @@ const groups = [
 ];
 
 const pathsEn = [
-  {number: '01', title: 'Quick deploy', detail: 'Install STX on Linux, open the Web UI, and connect a host.', to: '/docs/get-started/quick-start', icon: 'terminal'},
-  {number: '02', title: 'System architecture', detail: 'See where STX Server and stx-agent run and which ports they use.', to: '/docs/architecture/overview', icon: 'nodes'},
-  {number: '03', title: 'Hosts & clusters', detail: 'Register hosts and manage SeaTunnel cluster processes.', to: '/docs/host-cluster/host-management', icon: 'server'},
-  {number: '04', title: 'Debug workbench', detail: 'Check connector settings and preview a job draft.', to: '/docs/workbench/overview', icon: 'code'},
+  {number: '01', title: 'Quick deploy', detail: 'Install STX on Linux, open the Web UI, and complete first login.', to: '/docs/get-started/quick-start', icon: 'terminal'},
+  {number: '02', title: 'System architecture', detail: 'Learn how the STX install machine, managed hosts, and processes connect.', to: '/docs/architecture/overview', icon: 'nodes'},
+  {number: '03', title: 'Hosts & clusters', detail: 'Register hosts, install stx-agent, and manage SeaTunnel clusters.', to: '/docs/host-cluster/host-management', icon: 'server'},
+  {number: '04', title: 'Debug workbench', detail: 'Review connector parameters, then write and debug sync jobs.', to: '/docs/workbench/overview', icon: 'code'},
 ];
 
 const groupsEn = [
-  {title: 'Install and connect', description: 'Check the installation host and its Web UI, API, and gRPC addresses.', links: [{label: 'Quick deploy', to: '/docs/get-started/quick-start'}, {label: 'Architecture and ports', to: '/docs/architecture/overview'}]},
-  {title: 'Manage the runtime', description: 'Connect a host, then attach an existing cluster or install a new one.', links: [{label: 'Host management', to: '/docs/host-cluster/host-management'}, {label: 'Cluster management', to: '/docs/host-cluster/cluster-management'}]},
-  {title: 'Edit and debug jobs', description: 'Use connector templates, check connections, inspect the DAG, and preview data.', links: [{label: 'Debug workbench', to: '/docs/workbench/overview'}]},
-  {title: 'Alerts & diagnostics', description: 'Review alerts, inspect grouped errors, then read inspection reports and troubleshooting records.', links: [{label: 'Alert center', to: '/docs/alerts-diagnostics/alert-center'}, {label: 'Errors', to: '/docs/alerts-diagnostics/error-center'}, {label: 'Inspection & report', to: '/docs/alerts-diagnostics/diagnostic-report'}, {label: 'Experience library', to: '/docs/alerts-diagnostics/troubleshooting-memory'}]},
-  {title: 'Use the CLI', description: 'Sign in and learn how read and write commands differ.', links: [{label: 'STX CLI', to: '/docs/architecture/cli'}]},
+  {title: 'Install and connect', description: 'Prepare the install environment and confirm Web UI, API, and gRPC addresses.', links: [{label: 'Quick deploy', to: '/docs/get-started/quick-start'}, {label: 'Architecture and default ports', to: '/docs/architecture/overview'}]},
+  {title: 'Manage the runtime', description: 'Start by registering hosts, then attach an existing cluster or install a new one.', links: [{label: 'Host management', to: '/docs/host-cluster/host-management'}, {label: 'Cluster management', to: '/docs/host-cluster/cluster-management'}]},
+  {title: 'Edit and debug jobs', description: 'In the Web UI, review connector docs, debug jobs, and check run results.', links: [{label: 'Debug workbench', to: '/docs/workbench/overview'}]},
+  {title: 'Alerts & diagnostics', description: 'Start from alerts or errors, run inspections, then read reports and known fixes.', links: [{label: 'Alert center', to: '/docs/alerts-diagnostics/alert-center'}, {label: 'Errors', to: '/docs/alerts-diagnostics/error-center'}, {label: 'Inspection & report', to: '/docs/alerts-diagnostics/diagnostic-report'}, {label: 'Experience library', to: '/docs/alerts-diagnostics/troubleshooting-memory'}]},
+  {title: 'Use the CLI', description: 'Learn CLI usage, the command risk model, and how to install Skill for AI Agents.', links: [{label: 'STX CLI', to: '/docs/architecture/cli'}]},
 ];
 
 function Symbol({name}: {name: string}) {
@@ -67,7 +67,7 @@ export default function DocsOverview(): React.JSX.Element {
   }, {scope: root});
 
   return <div ref={root} className="stx-doc-overview">
-    <p className="stx-doc-intro">{isEnglish ? 'English guides are being prepared. Start with the quick deploy guide or browse these short topic outlines. Each outline links to the complete Chinese guide.' : '按你要做的事选择一篇文档。初次使用可以从快速部署开始；已有 STX 环境时，直接查看相应功能。'}</p>
+    <p className="stx-doc-intro">{isEnglish ? 'Pick a guide for the task at hand. Start with Quick deploy on first use; if you already have STX, jump to the matching topic.' : '按你要做的事选择一篇文档。初次使用可以从快速部署开始；已有 STX 环境时，直接查看相应功能。'}</p>
     <h2 id={isEnglish ? "start-here" : "从这里开始"}>{isEnglish ? "Start here" : "从这里开始"}</h2>
     <div className="stx-doc-cards">
       {cards.map(item => <Link className="stx-doc-card" to={item.to} key={item.number}>

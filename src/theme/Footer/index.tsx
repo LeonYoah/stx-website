@@ -9,6 +9,7 @@ const docsZh = [
   {label: '系统架构', to: '/docs/architecture/overview'},
   {label: '主机与集群', to: '/docs/host-cluster/host-management'},
   {label: '调试工作台', to: '/docs/workbench/overview'},
+  {label: 'STX CLI', to: '/docs/architecture/cli'},
 ];
 
 const docsEn = [
@@ -17,6 +18,7 @@ const docsEn = [
   {label: 'System architecture', to: '/docs/architecture/overview'},
   {label: 'Hosts & clusters', to: '/docs/host-cluster/host-management'},
   {label: 'Debug workbench', to: '/docs/workbench/overview'},
+  {label: 'STX CLI', to: '/docs/architecture/cli'},
 ];
 
 export default function Footer(): React.JSX.Element {
@@ -37,7 +39,7 @@ export default function Footer(): React.JSX.Element {
           <Link to="/" aria-label={isEnglish ? 'STX home' : 'STX 首页'}>
             <ThemedImage className="stx-footer-logo" sources={{light: logoLight, dark: logoDark}} alt="STX" />
           </Link>
-          <p>{isEnglish ? 'Operations and job management for Apache SeaTunnel.' : '面向 Apache SeaTunnel 的运维与任务管理。'}</p>
+          <p>{isEnglish ? 'All-in-one ops for Apache SeaTunnel, with a native AI Agent entry (CLI + Skill).' : '面向 Apache SeaTunnel 的一站式运维平台；并原生提供 AI Agent 智能运维入口（CLI + Skill）。'}</p>
           <button type="button" onClick={backToTop}>{isEnglish ? 'Back to top' : '返回顶部'} <span aria-hidden="true">↑</span></button>
         </div>
         <nav className="stx-footer-group" aria-label={isEnglish ? 'Documentation' : '文档'}>

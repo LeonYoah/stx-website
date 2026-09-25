@@ -17,19 +17,19 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
   zh: [
     {
       tag: 'RELEASE',
-      text: 'STX 1.0 社区预览版正式发布：一键纳管与图形化集群生命周期控制面',
+      text: 'STX 1.0 社区预览版：一键纳管与图形化集群生命周期管理',
       actionText: '快速部署 ➔',
       link: '/docs/get-started/quick-start',
     },
     {
       tag: 'SUPPORT',
-      text: '全面兼容 Apache SeaTunnel 2.3.x+ 全系列版本与 100+ Connector 插件',
+      text: '兼容 Apache SeaTunnel 2.3.x+ 与 100+ Connector 插件',
       actionText: '查看说明 ➔',
       link: '/docs/host-cluster/cluster-management',
     },
     {
       tag: 'DOCS',
-      text: '对标 Apache Doris 工业级文档标准与冰川青设计系统全面上线',
+      text: '中英文文档已同步：快速部署、主机集群、工作台、CLI 与 Skill',
       actionText: '阅读文档 ➔',
       link: '/docs/',
     },
@@ -37,19 +37,19 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
   en: [
     {
       tag: 'RELEASE',
-      text: 'STX 1.0 community preview: one-click onboarding and visual cluster lifecycle control',
-      actionText: 'Deploy ➔',
+      text: 'STX 1.0 community preview: one-click onboarding and visual cluster lifecycle management',
+      actionText: 'Quick deploy ➔',
       link: '/docs/get-started/quick-start',
     },
     {
       tag: 'SUPPORT',
-      text: 'Compatible with Apache SeaTunnel 2.3.x+ and 100+ connector plugins',
+      text: 'Works with Apache SeaTunnel 2.3.x+ and 100+ connector plugins',
       actionText: 'Learn more ➔',
       link: '/docs/host-cluster/cluster-management',
     },
     {
       tag: 'DOCS',
-      text: 'Industrial-grade docs and the Glacier teal design system are live',
+      text: 'English docs are live: quick deploy, hosts & clusters, workbench, CLI, and Skill',
       actionText: 'Read docs ➔',
       link: '/docs/',
     },

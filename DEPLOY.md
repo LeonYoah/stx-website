@@ -2,6 +2,16 @@
 
 站点放在域名根目录。中文首页是 `/`，中文文档是 `/docs/`；英文首页是 `/en/`，英文文档是 `/en/docs/`。**不要**把构建产物再放进服务器的 `/docs` 子目录，否则路径会重复。
 
+## 本地预览（中英文）
+
+`docusaurus start` **一次只跑一种语言**。在开发服里点语言切换跳到 `/en/…` 会 404，这是 Docusaurus 限制，不是英文文档没了。
+
+| 目的 | 命令 | 打开 |
+| :--- | :--- | :--- |
+| 日常改中文 | `pnpm start` | http://localhost:3000/docs/ |
+| 只改英文 | `pnpm start:en` | http://localhost:3002/**en**/docs/ |
+| 中英文切换 | `pnpm preview` | http://localhost:3002/docs/ 与 /en/docs/ |
+
 ## 构建
 
 在构建机上设置实际访问域名，并生成静态文件：
@@ -32,7 +42,18 @@ server {
     }
 
     location / {
-        try_files $uri $uri/ /index.html;
+        # 静态站点：有文件就返回；不要一律回落到中文 index.html，否则 /en/* 会错页
+        try_files $uri $uri/ =404;
+    }
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+
+    # 英文 404（可选，按目录区分）
+    location ^~ /en/ {
+        try_files $uri $uri/ /en/404.html;
     }
 }
 ```

@@ -1,22 +1,28 @@
 ---
-title: Experience library
-sidebar_label: Experience library
-description: Find and record verified troubleshooting steps.
-hide_table_of_contents: true
+title: Troubleshooting library
+sidebar_label: Troubleshooting library
+description: Record verified fixes; error groups can show "Known solution" to find handling steps for similar issues.
 ---
 
-import ChineseGuideLink from '@site/src/components/docs/ChineseGuideLink';
+Web UI **Alerts & Diagnostics** → **Diagnostics** → **Troubleshooting library**.
 
-:::note English guide in progress
-This is a short overview. <ChineseGuideLink docId="alerts-diagnostics/troubleshooting-memory" />
-:::
+![Fix records in the troubleshooting library](/img/screenshots/21-troubleshooting-records.png)
 
-This guide covers searching troubleshooting records and using them alongside error groups.
+## View records
 
-## At a glance
+| Type | Description |
+| :--- | :--- |
+| **Internal** | Fixes recorded in this environment |
+| **Built-in** | Product presets (such as high CPU) |
+| **Error log** | Attached to an ERROR fingerprint |
+| **Monitoring alert** | Attached to alert-type signals |
 
-- Search by title, fingerprint, keyword, tag, or author.
-- An error group can show when a matching record exists.
-- Record reusable steps after a new issue has been resolved.
+Cards include title, trigger condition or exception summary, **Verified troubleshooting steps**, plus root cause, prevention advice, tags, and more.
 
-![Troubleshooting records](/img/screenshots/21-troubleshooting-records.png)
+## Find and record
+
+- When **Known solution** appears on the **Errors** page → open the matching record and follow the steps.
+- Search: title, fingerprint, keywords, tags, author.
+- After resolving a new issue, click **Create solution** to write reusable steps.
+
+For CLI create or update, see [STX CLI](../architecture/cli).

@@ -322,8 +322,8 @@ const COPY: Record<
   },
   en: {
     title: 'Make SeaTunnel ops clearly visible',
-    sub: 'An all-in-one ops platform for Apache SeaTunnel, with a native AI Agent ops entry (CLI + Skill).',
-    chipsLabel: 'Product capabilities',
+    sub: 'An all-in-one ops platform for Apache SeaTunnel, with a native AI Agent entry (CLI + Skill).',
+    chipsLabel: 'Capabilities',
     capabilityPrefix: 'Capability:',
     chipLabels: {
       install: 'One-click install',
@@ -345,7 +345,7 @@ const COPY: Record<
     installCmd:
       'curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
     demoCta: 'Try online',
-    deployCta: 'Deploy',
+    deployCta: 'Quick deploy',
     githubCta: 'Star',
     copy: 'Copy',
     copied: 'Copied',
