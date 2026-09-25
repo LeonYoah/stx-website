@@ -291,7 +291,7 @@ const COPY: Record<
 > = {
   zh: {
     title: '让 SeaTunnel 运维清晰可见',
-    sub: '面向 Apache SeaTunnel 的一站式运维平台；并原生提供 AI Agent 智能运维入口（CLI + Skill）。',
+    sub: 'Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（CLI + Skill）。',
     chipsLabel: '产品能力',
     capabilityPrefix: '能力：',
     chipLabels: {
@@ -322,7 +322,7 @@ const COPY: Record<
   },
   en: {
     title: 'Make SeaTunnel ops clearly visible',
-    sub: 'An all-in-one ops platform for Apache SeaTunnel, with a native AI Agent entry (CLI + Skill).',
+    sub: 'All-in-one ops for Apache SeaTunnel, with native AI Agent (CLI + Skill).',
     chipsLabel: 'Capabilities',
     capabilityPrefix: 'Capability:',
     chipLabels: {

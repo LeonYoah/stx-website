@@ -16,10 +16,12 @@ After selecting a cluster, open **Templates** on the right. There are two tabs:
 
 | Tab | Usage |
 | :--- | :--- |
-| **Curated templates** | Open by default. Filter by `env`, `source`, `transform`, `sink`, or a combination; select a template to preview it, then click **Insert**. |
+| **Curated Templates** | Open by default. Filter by `env`, `source`, `transform`, `sink`, or a combination; select a template to preview it, then click **Insert**. |
 | **Raw default parameter templates** | Choose a Source, Transform, or Sink plugin and insert the HOCON parameter template it provides. Switch here when you need the full raw parameters for a plugin. |
 
-Curated templates can be combined as fragments. When you insert `env`, an existing `env` block in the script is replaced; inserting a **combined template** replaces the entire editor. If the script is not empty, you are asked to confirm first. After inserting, check sample addresses, databases, tables, paths, and credential variables before saving or publishing.
+![One-click insert from curated templates into the editor](/img/screenshots/27-workbench-template-insert.png)
+
+Curated templates can be combined as fragments. Select one to preview the HOCON below, then click **Insert** to write it into the editor. When you insert `env`, an existing `env` block in the script is replaced; inserting a **combined template** replaces the entire editor. If the script is not empty, you are asked to confirm first. After inserting, check sample addresses, databases, tables, paths, and credential variables before saving or publishing.
 
 **Template management** lets you create, duplicate, edit, and delete your own curated templates. System templates are read-only; click **Duplicate** to edit your own copy. To save part of the current script, select text in the editor, right-click **Save as curated template**, then enter a name and category. Use `{{variable_name}}` for passwords or secrets—do not write them in plain text.
 
@@ -126,6 +128,6 @@ Switch to **Checkpoint** at the bottom to open it. Streaming jobs usually need t
 4. **Test connection** → **DAG** to verify topology and table creation → **Preview** sample rows (you can **Save** at any time).
 5. **Publish new version** → **Run**; for streaming jobs, view position and lag on the Checkpoint page; use **Recover** / Savepoint stop when needed.
 
-New jobs default to a `FakeSource` → `Console` skeleton so you can practice editing and preview. You can also [install a cluster in one click](../host-cluster/cluster-management) for integration testing.
+New jobs default to a `FakeSource` → `Console` skeleton so you can practice editing and preview. You can also [install a cluster in one click](../host-cluster/cluster-management) for integration testing. If a connector JAR is missing on the cluster, download and install it from the [Plugin Marketplace](../packages-plugins/plugin-marketplace).
 
 For CLI usage, see [CLI design](../architecture/cli). For cluster onboarding, see [Cluster management](../host-cluster/cluster-management).

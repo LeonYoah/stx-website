@@ -744,10 +744,10 @@ html[class*='docs-doc-id-'] .navbar__link--active {background: transparent; colo
 html[class*='docs-doc-id-'] .stx-site-footer {background: var(--stx-doc-bg); border-color: var(--stx-doc-border)}
 .stx-footer-inner {width: min(100%, 1400px); margin-inline: auto; padding: 3.8rem clamp(1.5rem, 4vw, 4.5rem) 1.5rem}
 .stx-footer-main {display: grid; grid-template-columns: minmax(16rem, 1.7fr) minmax(8rem, .7fr) minmax(11rem, .8fr); gap: clamp(2rem, 5vw, 6rem); padding-bottom: 3.6rem}
-.stx-footer-brand {max-width: 23rem}
+.stx-footer-brand {max-width: 28rem}
 .stx-footer-brand > a {display: inline-flex; align-items: center; height: 2.5rem}
 .stx-footer-logo {width: auto; height: 2.5rem; display: block}
-.stx-footer-brand p {max-width: 19rem; margin: 1.15rem 0 1.35rem; font-size: .9rem; line-height: 1.7; color: var(--stx-footer-muted)}
+.stx-footer-brand p {max-width: 26rem; margin: 1.15rem 0 1.35rem; font-size: .9rem; line-height: 1.65; color: var(--stx-footer-muted); text-wrap: pretty}
 .stx-footer-brand button {display: inline-flex; align-items: center; gap: .4rem; padding: .2rem 0; border: 0; background: transparent; color: var(--ifm-font-color-base); font-family: var(--font-family-base); font-size: .82rem; font-weight: 550; cursor: pointer; transition: color .2s}
 .stx-footer-brand button:hover {color: var(--ifm-color-primary)}
 .stx-footer-brand button span {font-size: 1rem; transition: transform .2s}

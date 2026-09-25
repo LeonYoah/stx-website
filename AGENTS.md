@@ -41,7 +41,7 @@
 ### 文档结构
 
 - 中文默认内容在 `docs/`；侧栏在 `sidebars.ts`；英文标签在 `i18n/en/.../current.json`。
-- 主机 / 集群 → `docs/host-cluster/`；工作台 → `docs/workbench/`；告警与诊断 → `docs/alerts-diagnostics/`；架构 / CLI → `docs/architecture/`。
+- 主机 / 集群 → `docs/host-cluster/`；工作台 → `docs/workbench/`；安装包与插件 → `docs/packages-plugins/`；告警与诊断 → `docs/alerts-diagnostics/`；架构 / CLI → `docs/architecture/`。
 - 改路径时同步顶栏、页脚、首页链接与旧路径引用。
 
 ## 文章风格

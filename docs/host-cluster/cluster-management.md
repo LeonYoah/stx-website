@@ -40,7 +40,7 @@ Web UI 打开 **集群管理**。列表可按运行中、部署中、已停止�
 
 ## 一键安装
 
-Web UI 的 **安装包管理** 中需要有目标版本的安装包。可以先上传，也可以下载。
+Web UI 的[安装包管理](../packages-plugins/package-management)中需要有目标版本的安装包。可以先上传，也可以下载；需要的连接器见[插件市场](../packages-plugins/plugin-marketplace)。
 
 典型流程：
 

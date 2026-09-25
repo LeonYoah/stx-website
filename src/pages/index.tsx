@@ -20,12 +20,12 @@ export default function Home(): React.JSX.Element {
       ? {
           title: `${siteConfig.title} - All-in-one Apache SeaTunnel ops`,
           description:
-            'Make SeaTunnel ops clearly visible. All-in-one ops and job management for Apache SeaTunnel, with a native AI Agent entry (CLI + Skill).',
+            'Make SeaTunnel ops clearly visible. All-in-one ops and job management for Apache SeaTunnel, with native AI Agent (CLI + Skill).',
         }
       : {
           title: `${siteConfig.title} - Apache SeaTunnel 一站式运维平台`,
           description:
-            '让 SeaTunnel 运维清晰可见。面向 Apache SeaTunnel 的一站式运维与任务管理；并原生提供 AI Agent 智能运维入口（CLI + Skill）。',
+            '让 SeaTunnel 运维清晰可见。Apache SeaTunnel 一站式运维与任务管理，原生 AI Agent 入口（CLI + Skill）。',
         };
 
   return (

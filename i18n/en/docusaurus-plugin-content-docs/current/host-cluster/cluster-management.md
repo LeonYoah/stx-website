@@ -40,7 +40,7 @@ When multiple processes run on one machine, verify role and ports carefully to a
 
 ## One-click install
 
-**Package management** in the Web UI must have an install package for the target version. You can upload or download first.
+[Package management](../packages-plugins/package-management) in the Web UI must have an install package for the target version. You can upload or download first; connectors are handled in the [Plugin marketplace](../packages-plugins/plugin-marketplace).
 
 Typical flow:
 

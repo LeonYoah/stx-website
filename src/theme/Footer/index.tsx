@@ -39,7 +39,7 @@ export default function Footer(): React.JSX.Element {
           <Link to="/" aria-label={isEnglish ? 'STX home' : 'STX 首页'}>
             <ThemedImage className="stx-footer-logo" sources={{light: logoLight, dark: logoDark}} alt="STX" />
           </Link>
-          <p>{isEnglish ? 'All-in-one ops for Apache SeaTunnel, with a native AI Agent entry (CLI + Skill).' : '面向 Apache SeaTunnel 的一站式运维平台；并原生提供 AI Agent 智能运维入口（CLI + Skill）。'}</p>
+          <p>{isEnglish ? 'All-in-one ops for Apache SeaTunnel, with native AI Agent (CLI + Skill).' : 'Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（CLI + Skill）。'}</p>
           <button type="button" onClick={backToTop}>{isEnglish ? 'Back to top' : '返回顶部'} <span aria-hidden="true">↑</span></button>
         </div>
         <nav className="stx-footer-group" aria-label={isEnglish ? 'Documentation' : '文档'}>

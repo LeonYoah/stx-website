@@ -9,7 +9,7 @@ gsap.registerPlugin(useGSAP);
 
 const paths = [
   {number: '01', title: '快速部署', detail: '在 Linux 上安装 STX，打开 Web UI 并完成首次登录。', to: '/docs/get-started/quick-start', icon: 'terminal'},
-  {number: '02', title: '系统架构', detail: '认识 STX 安装机、被纳管主机和各进程的连接方式。', to: '/docs/architecture/overview', icon: 'nodes'},
+  {number: '02', title: '系统架构', detail: '认识 STX Server、被纳管主机和各进程如何连起来。', to: '/docs/architecture/overview', icon: 'nodes'},
   {number: '03', title: '主机与集群', detail: '登记主机，安装 stx-agent，管理 SeaTunnel 集群。', to: '/docs/host-cluster/host-management', icon: 'server'},
   {number: '04', title: '调试工作台', detail: '查看连接器参数，编写和调试同步作业。', to: '/docs/workbench/overview', icon: 'code'},
 ];
@@ -18,13 +18,14 @@ const groups = [
   {title: '安装与连接', description: '准备安装环境，确认 Web UI、API 和 gRPC 的访问地址。', links: [{label: '快速部署', to: '/docs/get-started/quick-start'}, {label: '系统架构与默认端口', to: '/docs/architecture/overview'}]},
   {title: '管理运行环境', description: '从登记主机开始，再纳管已有集群或安装新集群。', links: [{label: '主机管理', to: '/docs/host-cluster/host-management'}, {label: '集群管理', to: '/docs/host-cluster/cluster-management'}]},
   {title: '编写与调试作业', description: '在 Web UI 中查看连接器说明，调试作业并检查运行结果。', links: [{label: '调试工作台', to: '/docs/workbench/overview'}]},
+  {title: '安装包与插件', description: '准备 SeaTunnel 安装包，下载连接器与附属依赖并安装到集群。', links: [{label: '安装包管理', to: '/docs/packages-plugins/package-management'}, {label: '插件市场', to: '/docs/packages-plugins/plugin-marketplace'}]},
   {title: '告警与诊断', description: '从告警或错误进入巡检，查看报告和已有处理方法。', links: [{label: '告警中心', to: '/docs/alerts-diagnostics/alert-center'}, {label: '错误', to: '/docs/alerts-diagnostics/error-center'}, {label: '巡检与报告', to: '/docs/alerts-diagnostics/diagnostic-report'}, {label: '经验库', to: '/docs/alerts-diagnostics/troubleshooting-memory'}]},
   {title: '使用命令行', description: '了解 CLI 命令的用法，以及它和 Web UI 的关系。', links: [{label: 'CLI 设计', to: '/docs/architecture/cli'}]},
 ];
 
 const pathsEn = [
   {number: '01', title: 'Quick deploy', detail: 'Install STX on Linux, open the Web UI, and complete first login.', to: '/docs/get-started/quick-start', icon: 'terminal'},
-  {number: '02', title: 'System architecture', detail: 'Learn how the STX install machine, managed hosts, and processes connect.', to: '/docs/architecture/overview', icon: 'nodes'},
+  {number: '02', title: 'System architecture', detail: 'Learn how STX Server, managed hosts, and processes connect.', to: '/docs/architecture/overview', icon: 'nodes'},
   {number: '03', title: 'Hosts & clusters', detail: 'Register hosts, install stx-agent, and manage SeaTunnel clusters.', to: '/docs/host-cluster/host-management', icon: 'server'},
   {number: '04', title: 'Debug workbench', detail: 'Review connector parameters, then write and debug sync jobs.', to: '/docs/workbench/overview', icon: 'code'},
 ];
@@ -33,6 +34,7 @@ const groupsEn = [
   {title: 'Install and connect', description: 'Prepare the install environment and confirm Web UI, API, and gRPC addresses.', links: [{label: 'Quick deploy', to: '/docs/get-started/quick-start'}, {label: 'Architecture and default ports', to: '/docs/architecture/overview'}]},
   {title: 'Manage the runtime', description: 'Start by registering hosts, then attach an existing cluster or install a new one.', links: [{label: 'Host management', to: '/docs/host-cluster/host-management'}, {label: 'Cluster management', to: '/docs/host-cluster/cluster-management'}]},
   {title: 'Edit and debug jobs', description: 'In the Web UI, review connector docs, debug jobs, and check run results.', links: [{label: 'Debug workbench', to: '/docs/workbench/overview'}]},
+  {title: 'Packages & Plugins', description: 'Prepare SeaTunnel install archives, download connectors with dependencies, and install them onto clusters.', links: [{label: 'Package Management', to: '/docs/packages-plugins/package-management'}, {label: 'Plugin Marketplace', to: '/docs/packages-plugins/plugin-marketplace'}]},
   {title: 'Alerts & diagnostics', description: 'Start from alerts or errors, run inspections, then read reports and known fixes.', links: [{label: 'Alert center', to: '/docs/alerts-diagnostics/alert-center'}, {label: 'Errors', to: '/docs/alerts-diagnostics/error-center'}, {label: 'Inspection & report', to: '/docs/alerts-diagnostics/diagnostic-report'}, {label: 'Experience library', to: '/docs/alerts-diagnostics/troubleshooting-memory'}]},
   {title: 'Use the CLI', description: 'Learn CLI usage, the command risk model, and how to install Skill for AI Agents.', links: [{label: 'STX CLI', to: '/docs/architecture/cli'}]},
 ];
