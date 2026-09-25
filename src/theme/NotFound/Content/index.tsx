@@ -13,15 +13,18 @@ function isLocalHost(): boolean {
 }
 
 /**
- * 本地 `docusaurus start` 一次只跑一种语言；切到 /en/* 会 404。
- * 在本地给出可执行的预览方式。
+ * 仅本地 `docusaurus start`（中文 SPA）误开 /en/* 时提示。
+ * 生产 nginx / 正式构建不会进入这段文案。
  */
 export default function NotFoundContent(props: Props): React.JSX.Element {
   const {pathname} = useLocation();
   const {i18n, siteConfig} = useDocusaurusContext();
   const wantsEnglish = pathname === '/en' || pathname.startsWith('/en/');
   const showEnDevHint =
-    isLocalHost() && wantsEnglish && i18n.currentLocale === i18n.defaultLocale;
+    process.env.NODE_ENV === 'development' &&
+    isLocalHost() &&
+    wantsEnglish &&
+    i18n.currentLocale === i18n.defaultLocale;
 
   if (!showEnDevHint) {
     return <OriginalNotFoundContent {...props} />;
