@@ -562,9 +562,6 @@ export function AgentChatDemo({
         <div className="stx-agent-demo__intro">
           <p className="stx-agent-demo__eyebrow">STX CLI + Skill · {locale === 'en' ? 'Interactive example' : '交互演示'}</p>
           <p className="stx-agent-demo__sub">
-            {locale === 'en'
-              ? 'The scenarios use example data and real STX CLI commands; no live environment is connected.'
-              : '场景使用示例数据和真实的 STX CLI 命令，不连接实际环境。'}{' '}
             <Link to="/docs/architecture/cli" className="stx-agent-demo__guide-link">
               {locale === 'en' ? 'CLI & Skill\u00A0↗' : '查看 CLI 用法\u00A0↗'}
             </Link>
@@ -763,7 +760,7 @@ export function AgentChatDemo({
                   <StxBrandMark height={28} />
                 </div>
                 <h3>{scenario.welcomeTitle}</h3>
-                <p>{scenario.welcomeSub}</p>
+                {scenario.welcomeSub ? <p>{scenario.welcomeSub}</p> : null}
               </div>
             ) : (
               <div className="stx-mimo__conversation" role="log" aria-live="polite">

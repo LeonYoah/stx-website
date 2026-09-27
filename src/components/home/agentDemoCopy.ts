@@ -75,8 +75,8 @@ const SCENARIOS_ZH: Scenario[] = [
     label: '集群与失败任务',
     chatTitle: '查集群与失败任务',
     projectName: '生产环境示例',
-    welcomeTitle: '一句话开始排查，过程能看清',
-    welcomeSub: 'AI Agent 通过 STX Skill 使用真实 CLI 命令；这里展示的是示例数据。',
+    welcomeTitle: '交给 AI，解放双手',
+    welcomeSub: '',
     prompt: '帮我看看 6 号集群有没有失败的同步作业，先查状态和日志，不要改动环境。',
     reply: '先查集群和节点，再列出失败作业、读取日志。全程只查询，不执行重启或恢复。',
     midUsers: [],
@@ -281,8 +281,8 @@ stx upgrade precheck 8 --target-version 2.3.13 --target-install-dir /tmp/seatunn
 const SCENARIOS_EN: Scenario[] = [
   {
     id: 'diagnose', label: 'Clusters and failed jobs', chatTitle: 'Inspect failed jobs', projectName: 'Production example',
-    welcomeTitle: 'Start troubleshooting in one sentence',
-    welcomeSub: 'An AI Agent uses the real STX CLI through its Skill. Results here are sample data.',
+    welcomeTitle: 'Hand it to AI—free your hands',
+    welcomeSub: '',
     prompt: 'Check cluster 6 and its failed sync jobs. Read logs, but do not change anything.',
     reply: 'I will inspect the cluster, nodes, failed jobs, and logs. No restart or recovery.',
     midUsers: [],
