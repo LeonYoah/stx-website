@@ -142,6 +142,8 @@ cd stx-offline-bundle-*-linux-*
 sudo ./install.sh --install-dir /opt/stx --offline
 ```
 
+这只装好 STX 控制面。无网环境还要装 SeaTunnel 集群时，须另备 [SeaTunnel 离线资产包](../packages-plugins/package-management#离线导出资产包)（安装包 ± 插件），在有网侧的 STX 里导出后拷过来导入。
+
 ### Docker Compose
 
 ```bash

@@ -142,6 +142,8 @@ cd stx-offline-bundle-*-linux-*
 sudo ./install.sh --install-dir /opt/stx --offline
 ```
 
+This installs the STX control plane only. To install SeaTunnel clusters offline, also prepare a [SeaTunnel offline asset bundle](../packages-plugins/package-management#offline-export-asset-bundle) (package ± plugins) on a networked STX, then copy and import it.
+
 ### Docker Compose
 
 ```bash

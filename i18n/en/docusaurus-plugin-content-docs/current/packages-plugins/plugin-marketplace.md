@@ -10,6 +10,8 @@ Web UI **Packages & Plugins** → **Plugin Marketplace** (`/plugins`). Browse co
 
 Use the top tabs to switch back to [Package Management](./package-management). Workbench connector templates come from **plugins already installed on the cluster**; if a JAR is missing, download and install it here first.
 
+Browsing the catalog and downloading connectors need outbound access to mirrors; an offline STX install machine cannot download here. For offline sites, download connectors on a networked STX first, then use [Offline Import / Export](./package-management#why-offline-import--export-exists) on Package Management to carry them with the SeaTunnel package.
+
 ## Available Plugins and Local Plugins
 
 | Tab | What it does |
