@@ -598,7 +598,8 @@ html[lang^='en'].docs-wrapper .stx-sidebar-section [lang='en'] {display: inline}
 }
 .docs-wrapper main .container {max-width: 1410px; padding-left: clamp(1.25rem, 3.8vw, 4.25rem); padding-right: clamp(1.25rem, 3.8vw, 4.25rem)}
 .docs-wrapper article {padding-top: 2.3rem}
-.docs-wrapper .theme-doc-markdown {max-width: 790px; margin-inline: auto; font-size: .97rem; line-height: 1.85}
+/* 左对齐正文，避免宽屏下侧栏与内容之间出现大块空白。 */
+.docs-wrapper .theme-doc-markdown {max-width: 790px; margin-inline: 0; font-size: .97rem; line-height: 1.85}
 .docs-wrapper .theme-doc-breadcrumbs {margin-bottom: 2.6rem}
 .docs-wrapper .breadcrumbs__item {font-size: .79rem}
 .docs-wrapper .breadcrumbs__item a, .docs-wrapper .breadcrumbs__item--active .breadcrumbs__link {color: var(--stx-doc-muted)}
@@ -674,7 +675,7 @@ html[lang^='en'].docs-wrapper .stx-sidebar-section [lang='en'] {display: inline}
 
 /* 官网顶栏只放站点级入口；文档搜索只在文档路由出现。 */
 .navbar {box-shadow: none; border-bottom: 1px solid var(--ifm-toc-border-color)}
-.navbar__inner {width: 100%; max-width: 1536px; margin-inline: auto; padding-inline: clamp(.35rem, 1.3vw, 1.3rem)}
+.navbar__inner {position: relative; width: 100%; max-width: 1536px; margin-inline: auto; padding-inline: clamp(.35rem, 1.3vw, 1.3rem)}
 .navbar__items > .navbar__link:not(.header-demo-link) {font-size: .86rem; font-weight: 540; letter-spacing: -.01em; padding: .47rem .75rem; border-radius: 5px; transition: color .2s, background-color .2s}
 .navbar__items > .navbar__link:not(.header-demo-link):hover {background: var(--stx-sidebar-active-bg)}
 .navbar .header-demo-link,
@@ -698,6 +699,23 @@ html[class*='docs-doc-id-'] .navbar__link--active {background: transparent; colo
 .stx-navbar-search .stx-doc-search-trigger {width: 100%; height: 2.6rem; justify-content: flex-start; padding: .5rem .75rem; border-radius: 5px; background: var(--stx-doc-panel); color: var(--stx-doc-faint)}
 .stx-navbar-search .stx-doc-search-trigger:hover {background: var(--stx-doc-panel-hover); color: var(--stx-doc-text); border-color: var(--stx-doc-faint)}
 .stx-navbar-search .stx-doc-search-trigger kbd {margin-left: auto}
+/* 超宽屏：文档区与顶栏同宽居中，避免侧栏贴左、正文飘中间。 */
+@media (min-width: 1600px) {
+  html.docs-wrapper .navbar__inner,
+  html[class*='docs-doc-id-'] .navbar__inner {
+    max-width: 1440px;
+  }
+  html.docs-wrapper .main-wrapper,
+  html[class*='docs-doc-id-'] .main-wrapper {
+    max-width: 1440px;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .docs-wrapper .stx-navbar-search,
+  html[class*='docs-doc-id-'] .stx-navbar-search {
+    width: min(24rem, 28%);
+  }
+}
 @media (max-width: 996px) {
   .stx-navbar-search {width: min(15rem, 35vw)}
   .stx-navbar-search .stx-doc-search-trigger kbd {display: none}

@@ -16,7 +16,7 @@ const paths = [
 
 const groups = [
   {title: '安装与连接', description: '准备安装环境，确认 Web UI、API 和 gRPC 的访问地址。', links: [{label: '快速部署', to: '/docs/get-started/quick-start'}, {label: '系统架构与默认端口', to: '/docs/architecture/overview'}]},
-  {title: '管理运行环境', description: '从登记主机开始，再纳管已有集群或安装新集群。', links: [{label: '主机管理', to: '/docs/host-cluster/host-management'}, {label: '集群管理', to: '/docs/host-cluster/cluster-management'}]},
+  {title: '管理运行环境', description: '从登记主机开始，再纳管已有集群、安装或升级。', links: [{label: '主机管理', to: '/docs/host-cluster/host-management'}, {label: '集群管理', to: '/docs/host-cluster/cluster-management'}]},
   {title: '编写与调试作业', description: '在 Web UI 中查看连接器说明，调试作业并检查运行结果。', links: [{label: '调试工作台', to: '/docs/workbench/overview'}]},
   {title: '安装包与插件', description: '准备 SeaTunnel 安装包，下载连接器与附属依赖并安装到集群。', links: [{label: '安装包管理', to: '/docs/packages-plugins/package-management'}, {label: '插件市场', to: '/docs/packages-plugins/plugin-marketplace'}]},
   {title: '告警与诊断', description: '从告警或错误进入巡检，查看报告和已有处理方法。', links: [{label: '告警中心', to: '/docs/alerts-diagnostics/alert-center'}, {label: '错误', to: '/docs/alerts-diagnostics/error-center'}, {label: '巡检与报告', to: '/docs/alerts-diagnostics/diagnostic-report'}, {label: '经验库', to: '/docs/alerts-diagnostics/troubleshooting-memory'}]},
@@ -32,7 +32,7 @@ const pathsEn = [
 
 const groupsEn = [
   {title: 'Install and connect', description: 'Prepare the install environment and confirm Web UI, API, and gRPC addresses.', links: [{label: 'Quick deploy', to: '/docs/get-started/quick-start'}, {label: 'Architecture and default ports', to: '/docs/architecture/overview'}]},
-  {title: 'Manage the runtime', description: 'Start by registering hosts, then attach an existing cluster or install a new one.', links: [{label: 'Host management', to: '/docs/host-cluster/host-management'}, {label: 'Cluster management', to: '/docs/host-cluster/cluster-management'}]},
+  {title: 'Manage the runtime', description: 'Start by registering hosts, then attach, install, or upgrade a cluster.', links: [{label: 'Host management', to: '/docs/host-cluster/host-management'}, {label: 'Cluster management', to: '/docs/host-cluster/cluster-management'}]},
   {title: 'Edit and debug jobs', description: 'In the Web UI, review connector docs, debug jobs, and check run results.', links: [{label: 'Debug workbench', to: '/docs/workbench/overview'}]},
   {title: 'Packages & Plugins', description: 'Prepare SeaTunnel install archives, download connectors with dependencies, and install them onto clusters.', links: [{label: 'Package Management', to: '/docs/packages-plugins/package-management'}, {label: 'Plugin Marketplace', to: '/docs/packages-plugins/plugin-marketplace'}]},
   {title: 'Alerts & diagnostics', description: 'Start from alerts or errors, run inspections, then read reports and known fixes.', links: [{label: 'Alert center', to: '/docs/alerts-diagnostics/alert-center'}, {label: 'Errors', to: '/docs/alerts-diagnostics/error-center'}, {label: 'Inspection & report', to: '/docs/alerts-diagnostics/diagnostic-report'}, {label: 'Experience library', to: '/docs/alerts-diagnostics/troubleshooting-memory'}]},
