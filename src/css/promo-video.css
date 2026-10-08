@@ -1,0 +1,397 @@
+/**
+ * 首页产品视频区：浅色带承接首屏、过渡到 Agent 演示区；播放器沿用产品展示区的深色圆角画框。
+ * Homepage product video band: continues the hero and fades into the Agent demo; the player reuses the showcase's dark rounded frame.
+ */
+
+.stx-film {
+  --stx-film-ink: #142028;
+  --stx-film-soft: #4a5d68;
+  --stx-film-muted: #6b7f88;
+  --stx-film-line: rgba(20, 32, 40, 0.12);
+  --stx-film-accent: var(--stx-glacier-600, #298294);
+  --stx-film-wash: rgba(41, 130, 148, 0.07);
+  position: relative;
+  padding: clamp(2.8rem, 6vh, 4.5rem) clamp(1rem, 3.5vw, 2rem)
+    clamp(3rem, 7vh, 5rem);
+  box-sizing: border-box;
+  color: var(--stx-film-ink);
+  /* 底色收在 Agent 区起始色 #e8f1f3，两段之间不出现色阶断层。
+     The band ends on the Agent section's starting colour #e8f1f3, so there is no visible seam. */
+  background:
+    radial-gradient(ellipse 52% 40% at 50% 58%, rgba(142, 202, 214, 0.22), transparent 70%),
+    linear-gradient(180deg, var(--ifm-background-color) 0%, #f3f8f9 55%, #e8f1f3 100%);
+}
+
+[data-theme='dark'] .stx-film {
+  --stx-film-ink: #f2f6f8;
+  --stx-film-soft: rgba(242, 246, 248, 0.72);
+  --stx-film-muted: rgba(242, 246, 248, 0.48);
+  --stx-film-line: rgba(255, 255, 255, 0.1);
+  --stx-film-accent: #8ecad6;
+  --stx-film-wash: rgba(142, 202, 214, 0.08);
+  background:
+    radial-gradient(ellipse 50% 38% at 50% 58%, rgba(142, 202, 214, 0.09), transparent 70%),
+    linear-gradient(180deg, var(--ifm-background-color) 0%, #090b0d 60%, #07090b 100%);
+}
+
+.stx-film__intro {
+  max-width: min(680px, 100%);
+  margin: 0 auto clamp(1.6rem, 3.5vh, 2.4rem);
+  text-align: center;
+}
+
+.stx-film__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin: 0 0 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--stx-film-accent);
+}
+
+.stx-film__eyebrow-mark {
+  width: 18px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.stx-film__title {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.1vw, 2.45rem);
+  font-weight: 750;
+  letter-spacing: -0.038em;
+  line-height: 1.18;
+  text-wrap: balance;
+  color: var(--stx-film-ink);
+}
+
+.stx-film__sub {
+  margin: 1rem auto 0;
+  max-width: 36em;
+  font-size: clamp(0.98rem, 1.4vw, 1.08rem);
+  font-weight: 450;
+  line-height: 1.75;
+  color: var(--stx-film-soft);
+  text-wrap: pretty;
+}
+
+.stx-film__note {
+  margin: 0.5rem auto 0;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--stx-film-muted);
+}
+
+/* 宽度随视口高度收缩，标题、播放器与章节能在一屏内看全（约 380px 留给顶栏、标题与章节）。
+   Width shrinks with viewport height so the heading, player and chapters fit in one screen (about 380px for navbar, heading and chapters). */
+.stx-film__stage {
+  max-width: min(100%, clamp(640px, calc((100svh - 380px) * 16 / 9), 1120px));
+  margin: 0 auto;
+}
+
+/* —— 播放器 / Player —— */
+.stx-film__player {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #0b0d10;
+  box-shadow:
+    0 24px 64px rgba(15, 40, 48, 0.18),
+    0 0 0 1px rgba(15, 40, 48, 0.08);
+}
+
+[data-theme='dark'] .stx-film__player {
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.stx-film__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #0b0d10;
+}
+
+/* 英文字幕压在深色画面上，加半透明底保证可读。/ English subtitles sit on dark footage; a translucent box keeps them legible. */
+.stx-film__video::cue {
+  background: rgba(5, 8, 12, 0.72);
+  color: #f2f6f8;
+  font-family: var(--font-sans-en);
+  line-height: 1.4;
+}
+
+.stx-film__cover {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #0b0d10;
+  cursor: pointer;
+}
+
+.stx-film__cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(5, 8, 12, 0.08) 0%, rgba(5, 8, 12, 0.32) 100%);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.stx-film__cover:hover::after {
+  opacity: 0.6;
+}
+
+.stx-film__cover:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--stx-glacier-300, #8ecad6);
+}
+
+.stx-film__poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stx-film__cover:hover .stx-film__poster {
+  transform: scale(1.015);
+}
+
+.stx-film__play {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: clamp(60px, 6.4vw, 84px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: #071118;
+  background: linear-gradient(135deg, #b7e3eb 0%, #8ecad6 55%, #65b5c4 100%);
+  box-shadow:
+    0 0 0 10px rgba(142, 202, 214, 0.2),
+    0 14px 40px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stx-film__play svg {
+  width: 38%;
+  height: 38%;
+  /* 三角形视觉重心偏左，右移一点才显得居中。/ A triangle's visual centre sits left, so nudge it right. */
+  margin-left: 8%;
+  fill: currentColor;
+}
+
+.stx-film__cover:hover .stx-film__play {
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow:
+    0 0 0 14px rgba(142, 202, 214, 0.24),
+    0 18px 48px rgba(0, 0, 0, 0.5);
+}
+
+.stx-film__duration {
+  position: absolute;
+  z-index: 1;
+  right: 14px;
+  bottom: 14px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(10, 16, 24, 0.72);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  backdrop-filter: blur(8px);
+}
+
+/* —— 章节：一行排开，窄屏横向滑动，标签不换行 / Chapters: one row, swipe on narrow screens, labels never wrap —— */
+.stx-film__chapters {
+  display: flex;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.stx-film__chapters::-webkit-scrollbar {
+  display: none;
+}
+
+.stx-film__chapters > li {
+  flex: 1 0 auto;
+  scroll-snap-align: start;
+}
+
+.stx-film__chapter {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-between;
+  row-gap: 4px;
+  column-gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px 11px;
+  border: 0;
+  border-top: 2px solid var(--stx-film-line);
+  border-radius: 0 0 8px 8px;
+  background: transparent;
+  color: var(--stx-film-soft);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.stx-film__chapter:hover {
+  border-top-color: color-mix(in srgb, var(--stx-film-accent) 55%, transparent);
+  background: var(--stx-film-wash);
+}
+
+.stx-film__chapter.is-active {
+  border-top-color: var(--stx-film-accent);
+  background: var(--stx-film-wash);
+  color: var(--stx-film-ink);
+}
+
+.stx-film__chapter:focus-visible {
+  outline: 2px solid var(--stx-film-accent);
+  outline-offset: 2px;
+}
+
+.stx-film__chapter-num {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--stx-film-accent);
+}
+
+/* 时间用正文字体：等宽字体的点心 0 在小字号下容易被看成 8。/ Times use the body font: the mono dotted zero reads like an 8 at small sizes. */
+.stx-film__chapter-time {
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--stx-film-muted);
+}
+
+.stx-film__chapter-label {
+  grid-column: 1 / -1;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .stx-film__player {
+    border-radius: 12px;
+  }
+
+  .stx-film__duration {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  /* 手机上章节一定放不下，右缘渐隐提示可横向滑动。/ Chapters always overflow on phones; fade the right edge to hint at swiping. */
+  .stx-film__chapters {
+    mask-image: linear-gradient(90deg, #000 82%, transparent);
+  }
+
+  .stx-film__chapters > li {
+    flex: 0 0 auto;
+  }
+}
+
+/* —— 首屏「观看视频」按钮：与 Star 胶囊同为中性次级样式 / Hero "Watch video" button: neutral secondary style like the Star pill —— */
+.stx-brand-actions .stx-brand-watch {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--stx-cta-h);
+  margin: 0;
+  padding: 0 16px 0 10px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--stx-stage-fg, #111) 16%, transparent);
+  background: color-mix(in srgb, var(--stx-stage-fg, #111) 4%, transparent);
+  color: var(--stx-stage-fg, #111);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.stx-brand-actions .stx-brand-watch:hover {
+  background: color-mix(in srgb, var(--stx-stage-fg, #111) 8%, transparent);
+  border-color: color-mix(in srgb, var(--stx-stage-fg, #111) 28%, transparent);
+}
+
+.stx-brand-watch__icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: #071118;
+  background: linear-gradient(135deg, #8ecad6 0%, #3b9fb2 100%);
+}
+
+.stx-brand-watch__icon svg {
+  width: 10px;
+  height: 10px;
+  margin-left: 1px;
+  fill: currentColor;
+}
+
+.stx-brand-watch__time {
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+
+[data-theme='dark'] .stx-brand-actions .stx-brand-watch {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+[data-theme='dark'] .stx-brand-actions .stx-brand-watch:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.36);
+  color: #fff;
+}
+
+[data-theme='dark'] .stx-brand-watch__icon {
+  background: #ffffff;
+  color: #111111;
+}
+
+/* 手机上与同排 CTA 一样撑满整行（对齐 login-brand.css 的 640px 断点）。/ On phones, fill the row like the other CTAs (matches the 640px breakpoint in login-brand.css). */
+@media (max-width: 640px) {
+  .stx-brand-actions .stx-brand-watch {
+    width: 100%;
+    justify-content: center;
+  }
+}

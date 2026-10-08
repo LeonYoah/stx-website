@@ -159,6 +159,23 @@ node promo/render.mjs stx-45s --stills 9,20.5,33.6
 
 # 1 倍快速草稿
 node promo/render.mjs stx-45s --scale 1
+
+# 导出官网用的网页版（AV1 WebM + H.264 MP4 + 海报），写入 static/video/
+pnpm promo:web
+# 换海报帧：node promo/export-web.mjs stx-45s --poster 9.1
 ```
 
 调整镜头时长时，同时修改 `timeline.js` 顶部的时间码和本文的分镜表。
+
+## 官网首页
+
+首页第二屏「45 秒看懂 STX」播放的就是本片，首屏「观看视频」按钮会滚动过去并开始播放。
+
+| 文件 | 作用 |
+| :--- | :--- |
+| `static/video/stx-promo-45s.webm` / `.mp4` | 网页版视频，`pnpm promo:web` 生成 |
+| `static/video/stx-promo-45s-poster.webp` | 海报，点击播放前只加载这张图 |
+| `static/video/stx-promo-45s.en.vtt` | 英文字幕，英文首页默认打开；画面文案改动后手动同步 |
+| `src/components/home/promoVideo.ts` | 章节起点与上线日期；改了 `timeline.js` 的时间码要同步改这里 |
+
+重新出片后的顺序：`pnpm promo:45s` → `pnpm promo:web` → 核对章节时间与英文字幕 → 更新 `promoVideo.ts` 里的 `uploadDate`。

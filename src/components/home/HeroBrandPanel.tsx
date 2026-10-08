@@ -10,6 +10,7 @@ import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import {useHomeLocale, type HomeLocale} from './useHomeLocale';
 import {GitHubStarButton} from './GitHubStarButton';
+import {PROMO_VIDEO, formatClock, scrollToPromoVideoAndPlay} from './promoVideo';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -283,6 +284,7 @@ const COPY: Record<
     installCmd: string;
     deployCta: string;
     demoCta: string;
+    watchCta: string;
     githubCta: string;
     copy: string;
     copied: string;
@@ -315,6 +317,7 @@ const COPY: Record<
       'curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
     demoCta: '在线体验',
     deployCta: '快速部署',
+    watchCta: '观看视频',
     githubCta: 'Star',
     copy: '复制',
     copied: '已复制',
@@ -346,6 +349,7 @@ const COPY: Record<
       'curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
     demoCta: 'Try online',
     deployCta: 'Quick deploy',
+    watchCta: 'Watch video',
     githubCta: 'Star',
     copy: 'Copy',
     copied: 'Copied',
@@ -455,6 +459,20 @@ export function HeroBrandPanel(): React.JSX.Element {
             >
               {copy.deployCta}
             </Link>
+            {/* 在点击回调里同步开播，滚动到下方视频区时已带声音播放。/ Starts playback synchronously in the click so the video below plays with sound. */}
+            <button
+              type="button"
+              className="stx-brand-watch"
+              onClick={scrollToPromoVideoAndPlay}
+            >
+              <span className="stx-brand-watch__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.4-6.5a1 1 0 0 0 0-1.7L9.52 4.65A1 1 0 0 0 8 5.5z" />
+                </svg>
+              </span>
+              {copy.watchCta}
+              <span className="stx-brand-watch__time">{formatClock(PROMO_VIDEO.duration)}</span>
+            </button>
             <GitHubStarButton label={copy.githubCta} />
           </div>
           <div className="stx-install-command-bar stx-brand-install">

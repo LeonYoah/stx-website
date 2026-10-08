@@ -123,6 +123,12 @@ const config: Config = {
     },
   ],
 
+  // 首页产品视频默认随站点发布在 /video/；设置 PROMO_VIDEO_BASE_URL 可改从 CDN 加载视频文件。
+  // The homepage product video ships with the site under /video/ by default; set PROMO_VIDEO_BASE_URL to load the video files from a CDN.
+  customFields: {
+    promoVideoBaseUrl: process.env.PROMO_VIDEO_BASE_URL || '',
+  },
+
   // 经典主题预设配置（文档、博客、样式）
   // Classic theme preset options (docs, blog, styles)
   presets: [
