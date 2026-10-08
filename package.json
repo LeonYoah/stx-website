@@ -15,7 +15,9 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "promo:video": "node promo/stx-30s/render.mjs --cues-only && python3 promo/stx-30s/soundtrack.py && node promo/stx-30s/render.mjs --audio promo/stx-30s/out/soundtrack.wav"
+    "promo:capture": "node promo/capture.mjs",
+    "promo:30s": "node promo/render.mjs stx-30s --cues-only && python3 promo/soundtrack.py stx-30s && node promo/render.mjs stx-30s --audio --master",
+    "promo:45s": "node promo/render.mjs stx-45s --cues-only && python3 promo/soundtrack.py stx-45s && node promo/render.mjs stx-45s --audio --master"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

@@ -4,40 +4,17 @@
 <meta charset="utf-8" />
 <title>STX · 30s 宣传片</title>
 <!--
-  STX 30 秒宣传片合成页：所有动效都挂在同一条 GSAP 时间线上，可逐帧 seek，便于无头浏览器确定性渲染。
-  STX 30s promo composition: every motion lives on one GSAP timeline so frames can be seeked deterministically by a headless renderer.
+  STX 30 秒宣传片合成页：本文件只写功能镜头，痛点 / 品牌 / AI Agent / 收尾等共用场景由 ../shared/kit.js 生成。
+  STX 30s promo composition: this file only holds the feature shots; shared scenes (hook, brand, AI Agent, outro) come from ../shared/kit.js.
+  截图来自 ../assets（promo/capture.mjs 生成），窗口用 data-shot / data-crop 选图裁剪，高亮框用 data-mark 引用 marks.js。
+  Screenshots live in ../assets (from promo/capture.mjs); windows pick and crop via data-shot / data-crop, highlights reference marks.js via data-mark.
   预览 / Preview: 直接用浏览器打开本文件（自动播放，空格暂停，←/→ 逐帧）。Open in a browser (autoplay, Space to pause, ←/→ to step).
-  渲染 / Render: node promo/stx-30s/render.mjs
+  渲染 / Render: node promo/render.mjs stx-30s
 -->
-<link rel="stylesheet" href="./styles.css" />
+<link rel="stylesheet" href="../shared/promo.css" />
 </head>
 <body>
 <div id="stage">
-  <!-- 全局背景层 / Global background layers -->
-  <div class="bg-grid"></div>
-  <div class="bg-glow" id="glow"></div>
-  <div class="bg-vignette"></div>
-
-  <!-- S1 痛点：运维黑箱 / Hook: ops as a black box -->
-  <section class="scene" id="s1">
-    <div class="logs" id="logs"></div>
-    <div class="hook">
-      <div class="hook-l1 mask"><span>SeaTunnel 跑在生产</span></div>
-      <div class="hook-l2 mask"><span>运维却像个<em class="glitch" data-text="黑箱">黑箱</em>？</span></div>
-    </div>
-  </section>
-
-  <!-- 扫描线：品牌动效母题（对齐登录页 scanner）/ Scan line motif aligned with the login scanner -->
-  <div class="cline" id="clineTop"></div>
-  <div class="cline" id="clineBot"></div>
-  <div class="sweep" id="sweep"></div>
-
-  <!-- S2 品牌亮相 / Brand reveal -->
-  <section class="scene" id="s2">
-    <div class="tagline mask"><span>让 SeaTunnel 运维<b class="accent">清晰可见</b></span></div>
-    <div class="tagsub">Apache SeaTunnel 一站式运维平台 · 原生 AI Agent 入口</div>
-  </section>
-
   <!-- F1 主机与集群 / Hosts & clusters -->
   <section class="scene feat" id="f1">
     <div class="copy">
@@ -50,12 +27,12 @@
       <div class="chips"><span>物理机 / 虚拟机</span><span>混合 / 分离部署</span></div>
     </div>
     <div class="visual"><div class="stack">
-      <div class="win" id="f1-hosts" data-title="stx · 主机管理" data-src="../../static/img/screenshots/03-hosts.png" data-ar="1.6" data-crop="0 0 0 0.09" style="left:150px;top:-10px;width:840px">
-        <div class="hl" style="left:43.6%;top:27.6%;width:19%;height:9%"></div>
+      <div class="win" id="f1-cd" data-shot="cluster-detail" data-title="stx · 集群详情" data-crop="0 0 0 0.17" style="left:40px;top:150px;width:1040px">
+        <i class="hl" data-mark="health"></i>
       </div>
-      <div class="win" id="f1-clusters" data-title="stx · 集群管理" data-src="../../static/img/screenshots/04-clusters.png" data-ar="1.6" data-crop="0 0 0.3 0.3" style="left:0px;top:330px;width:700px">
-        <div class="hl" style="left:1.9%;top:22.6%;width:28.4%;height:42.4%"></div>
-        <div class="hl" style="left:24.4%;top:35.8%;width:4.6%;height:3.4%"></div>
+      <div class="win" id="f1-hosts" data-shot="hosts" data-title="stx · 主机管理" data-crop="0 0.16 0.318 0.6" style="left:200px;top:750px;width:820px">
+        <i class="hl" data-mark="status"></i>
+        <i class="hl" data-mark="usage"></i>
       </div>
     </div></div>
   </section>
@@ -72,14 +49,13 @@
       <div class="chips"><span>精选模板</span><span>Checkpoint 面板</span></div>
     </div>
     <div class="visual"><div class="stack">
-      <div class="win" id="f2-wb" data-title="stx · 作业工作台" data-src="../../static/img/screenshots/02-workbench.png" data-ar="1.6" data-crop="0 0 0 0" style="left:0px;top:40px;width:960px">
-        <div class="hl" style="left:18.6%;top:15.4%;width:54.4%;height:47%"></div>
-        <div class="cursor" style="left:50%;top:70%"><i class="ripple"></i><svg viewBox="0 0 24 24"><path d="M4 2.5 19.5 13l-7 1.2-3.6 6.5z"/></svg></div>
-        <div class="cursor-target" data-x="74.2%" data-y="5.6%"></div>
+      <div class="win" id="f2-wb" data-shot="workbench" data-title="stx · 作业工作台" data-crop="0.012 0 0.215 0.22" style="left:40px;top:170px;width:1000px">
+        <i class="hl" data-mark="source"></i>
       </div>
-      <div class="win" id="f2-dag" data-title="DAG 预览" data-src="../../static/img/screenshots/08-dag.png" data-ar="1.561" data-crop="0.055 0.09 0.025 0.05" style="left:210px;top:390px;width:760px">
-        <div class="hl" style="left:8.6%;top:29.6%;width:15%;height:17.4%"></div>
-        <div class="hl" style="left:29.4%;top:29.6%;width:15%;height:39%"></div>
+      <div class="win" id="f2-dag" data-shot="dag" data-title="DAG 预览" data-crop="0.03 0.07 0.27 0.22" style="left:200px;top:380px;width:860px">
+        <i class="hl" data-mark="source"></i>
+        <i class="hl" data-mark="sink1"></i>
+        <i class="hl" data-mark="sink2"></i>
       </div>
     </div></div>
   </section>
@@ -96,10 +72,11 @@
       <div class="chips"><span>CDC 增量</span><span>2PC 提交</span></div>
     </div>
     <div class="visual"><div class="stack">
-      <div class="win" id="f3-ck" data-title="stx · CK 文件详情" data-src="../../static/img/screenshots/14-checkpoint-detail.png" data-ar="1.6075" data-crop="0.03 0.04 0.03 0.05" style="left:0px;top:120px;width:1000px">
-        <div class="hl" style="left:7.6%;top:44.2%;width:19.6%;height:5.2%"></div>
-        <div class="hl" style="left:80.4%;top:32.6%;width:13.2%;height:3.8%"></div>
-        <div class="hl" style="left:81.4%;top:79.9%;width:12.2%;height:3.8%"></div>
+      <div class="win" id="f3-ck" data-shot="checkpoint-detail" data-title="stx · CK 文件详情" data-crop="0.08 0.075 0.08 0.08" style="left:20px;top:190px;width:1040px">
+        <i class="hl" data-mark="binlog"></i>
+        <!-- 「同步阶段」卡片 / "Sync phase" card -->
+        <i class="hl" data-box="0.3695 0.4841 0.2516 0.0983"></i>
+        <i class="hl" data-mark="sinkBadge"></i>
       </div>
     </div></div>
   </section>
@@ -112,20 +89,22 @@
         <span class="ln"><span>从告警到方案</span></span>
         <span class="ln"><span class="accent">一处闭环</span></span>
       </h2>
-      <p class="sub">告警中心 · 错误中心 · 排障经验库</p>
+      <p class="sub">告警中心 · 诊断中心 · 排障经验库</p>
       <div class="chips"><span>通知渠道</span><span>巡检报告</span></div>
     </div>
     <div class="visual"><div class="stack">
-      <div class="win" id="f4-alert" data-title="stx · 告警中心" data-src="../../static/img/screenshots/18-alert-events.png" data-ar="1.3368" data-crop="0 0 0 0.12" style="left:120px;top:-20px;width:880px">
-        <div class="hl" style="left:37.2%;top:43.4%;width:16.6%;height:35%"></div>
+      <div class="win" id="f4-alert" data-shot="alerts" data-title="stx · 告警中心" data-crop="0.02 0.315 0.44 0.18" style="left:160px;top:120px;width:900px">
+        <i class="hl" data-mark="severity"></i>
+        <i class="hl" data-mark="status"></i>
       </div>
-      <div class="win" id="f4-err" data-title="stx · 错误中心" data-src="../../static/img/screenshots/15-error-center-with-solutions.png" data-ar="2.3432" data-crop="0.03 0.065 0.03 0.065" style="left:0px;top:500px;width:900px">
-        <div class="hl" style="left:28.6%;top:57.6%;width:5.6%;height:22.6%"></div>
+      <div class="win" id="f4-diag" data-shot="diagnostics" data-title="stx · 诊断中心" data-crop="0.02 0.3 0.22 0.22" style="left:0px;top:560px;width:940px">
+        <i class="hl" data-mark="counts"></i>
+        <i class="hl" data-mark="solved"></i>
       </div>
     </div></div>
   </section>
 
-  <!-- F5 安装包与插件 / Packages & plugins -->
+  <!-- F5 插件与升级 / Plugins & upgrade -->
   <section class="scene feat" id="f5">
     <div class="copy">
       <div class="chapter"><span class="num">05</span><i></i><span>插件与升级</span></div>
@@ -137,70 +116,26 @@
       <div class="chips"><span>离线导入</span><span>版本升级</span></div>
     </div>
     <div class="visual"><div class="stack">
-      <div class="win" id="f5-plug" data-title="stx · 插件市场" data-src="../../static/img/screenshots/07-plugins.png" data-ar="1.6" data-crop="0 0 0 0.2" style="left:60px;top:-10px;width:940px">
-        <div class="hl" style="left:79.4%;top:3.2%;width:9.8%;height:4.4%"></div>
-        <div class="done-pill" style="left:5.1%;top:64.9%;width:19.1%;height:3.6%">✓ 已下载</div>
-        <div class="done-pill" style="left:28.7%;top:64.9%;width:19.1%;height:3.6%">✓ 已下载</div>
-        <div class="done-pill" style="left:75.8%;top:64.9%;width:19.1%;height:3.6%">✓ 已下载</div>
-        <div class="cursor" style="left:60%;top:40%"><i class="ripple"></i><svg viewBox="0 0 24 24"><path d="M4 2.5 19.5 13l-7 1.2-3.6 6.5z"/></svg></div>
-        <div class="cursor-target" data-x="84.4%" data-y="5.6%"></div>
+      <div class="win" id="f5-plug" data-shot="plugins" data-title="stx · 插件市场" data-crop="0.015 0 0.015 0.27" style="left:10px;top:100px;width:1060px">
+        <i class="hl" data-mark="downloadAll"></i>
+        <div class="done-pill" data-mark="dl0">✓ 已下载</div>
+        <div class="done-pill" data-mark="dl1">✓ 已下载</div>
+        <div class="done-pill" data-mark="dl2">✓ 已下载</div>
+        <div class="done-pill" data-mark="dl3">✓ 已下载</div>
       </div>
-      <div class="win" id="f5-diff" data-title="stx · 配置差异处理" data-src="../../static/img/screenshots/29-upgrade-diff-line.png" data-ar="2.4846" data-crop="0.08 0.078 0.07 0.078" style="left:0px;top:460px;width:880px">
-        <div class="hl" style="left:9%;top:74.6%;width:83.8%;height:8.6%"></div>
-      </div>
-    </div></div>
-  </section>
-
-  <!-- F6 AI Agent / AI Agent -->
-  <section class="scene feat" id="f6">
-    <div class="copy">
-      <div class="chapter"><span class="num">06</span><i></i><span>AI Agent</span></div>
-      <h2 class="headline">
-        <span class="ln"><span>交给 AI</span></span>
-        <span class="ln"><span class="accent">解放双手</span></span>
-      </h2>
-      <p class="sub">原生 AI Agent 入口 · CLI + Skill</p>
-      <div class="chips"><span>风险分级</span><span>写操作需确认</span></div>
-    </div>
-    <div class="visual"><div class="stack">
-      <div class="win chat" id="f6-chat" style="left:0px;top:110px;width:1000px">
-        <div class="win-bar"><i></i><i></i><i></i><span class="win-title">STX · AI Agent</span></div>
-        <div class="chat-body">
-          <div class="msg user"><span class="typed">帮我看看 6 号集群有没有失败的同步作业，先查状态和日志，不要改动环境。</span><span class="caret"></span></div>
-          <div class="msg ai"><img src="../../static/img/stx-mark.png" alt="" />先查集群和节点，再列出失败作业、读取日志，全程只查询。</div>
-          <div class="tools">
-            <div class="tool"><span class="st"><i class="spin"></i><b class="ok">✓</b></span><code>stx cluster list --output table</code><span class="res">集群 6 · zeta-prod · 2.3.13</span></div>
-            <div class="tool"><span class="st"><i class="spin"></i><b class="ok">✓</b></span><code>stx cluster node list 6</code><span class="res">节点在线</span></div>
-            <div class="tool"><span class="st"><i class="spin"></i><b class="ok">✓</b></span><code>stx sync job list --status FAILED</code><span class="res warn">作业 1842 · FAILED</span></div>
-            <div class="tool"><span class="st"><i class="spin"></i><b class="ok">✓</b></span><code>stx sync job logs 1842 --lines 40</code><span class="res">线索：Duplicate key</span></div>
-          </div>
-          <div class="done"><i></i><b>查询完成 · 等待你决定</b><span>未执行任何写操作</span></div>
-        </div>
+      <div class="win" id="f5-up" data-shot="upgrade-config" data-title="stx · 升级配置合并 · seatunnel.yaml" data-crop="0.03 0.23 0.03 0.2" style="left:40px;top:520px;width:1000px">
+        <!-- 截图滚动后列标题不在画面内，按产品文案补一条表头 / The column header scrolled out of the shot; re-add it with the product's labels -->
+        <div class="colhead" data-box="0.03 0.23 0.94 0.04"><span style="left:14.9%">旧版本配置</span><span style="left:50%">最终合并结果</span><span style="left:84.9%">新版本配置</span></div>
+        <i class="hl" data-mark="diff0"></i>
+        <i class="hl" data-mark="new0"></i>
       </div>
     </div></div>
   </section>
-
-  <!-- S9 收尾 / Outro -->
-  <section class="scene" id="s9">
-    <div class="tagline mask"><span>让 SeaTunnel 运维<b class="accent">清晰可见</b></span></div>
-    <div class="cmd"><span class="p">$</span><code>curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash</code><span class="caret"></span></div>
-    <div class="links">
-      <span><svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>github.com/LeonYoah/stx</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>在线体验 demo.stxcli.com</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 7v6c0 5 3.8 8.6 9 9 5.2-.4 9-4 9-9V7z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>Apache-2.0 开源</span>
-    </div>
-  </section>
-
-  <!-- 全局品牌锁定（S2 居中 → 角标 → S9 回到居中）/ Global brand lockup: center → corner → center -->
-  <div id="brand"><img src="../../static/img/stx-mark.png" alt="STX" /><span class="word"><b>S</b><b>T</b><b>X</b></span></div>
-
-  <!-- 章节进度 / Chapter progress -->
-  <div id="progress"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-
-  <div class="flash" id="flash"></div>
 </div>
 
 <script src="../../node_modules/gsap/dist/gsap.min.js"></script>
+<script src="../assets/marks.js"></script>
+<script src="../shared/kit.js"></script>
 <script src="./timeline.js"></script>
 </body>
 </html>

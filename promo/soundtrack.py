@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-STX 30 秒宣传片临时配乐（temp track）与音效生成器，仅依赖 numpy（响度标准化可选用 ffmpeg）。
-Temp score and sound design generator for the STX 30s promo; needs numpy only (ffmpeg optional for loudness).
+STX 宣传片临时配乐（temp track）与音效生成器，各版本（stx-30s、stx-45s …）共用，仅依赖 numpy（响度标准化可选用 ffmpeg）。
+Temp score and sound design generator shared by every promo cut (stx-30s, stx-45s, ...); needs numpy only (ffmpeg optional for loudness).
 
-读取渲染器导出的 out/cues.json，让音效与画面逐帧对齐；正式投放可替换为授权音乐，保留音效层即可。
-Reads out/cues.json exported by the renderer so SFX stay frame-aligned; swap the music for licensed audio before release.
+读取渲染器导出的 <cut>/out/cues.json（镜头时间码、配乐锚点、音效提示点），让音效与画面逐帧对齐；
+正式投放可替换为授权音乐，保留音效层即可。
+Reads <cut>/out/cues.json exported by the renderer (shot times, score anchors, SFX cues) so sound stays frame-aligned;
+swap the music for licensed audio before release and keep the SFX layer.
 
 用法 / Usage:
-  node promo/stx-30s/render.mjs --cues-only
-  python3 promo/stx-30s/soundtrack.py            # -> promo/stx-30s/out/soundtrack.wav
+  node promo/render.mjs stx-45s --cues-only
+  python3 promo/soundtrack.py stx-45s            # -> promo/stx-45s/out/soundtrack.wav
 """
 import json
 import math
@@ -21,7 +23,6 @@ import wave
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT_DIR = os.path.join(HERE, "out")
 SR = 48000
 BPM = 150
 BEAT = 60.0 / BPM  # 0.4s，与镜头时间码同一网格 / same grid as the shot timecodes
@@ -244,12 +245,21 @@ def build(cue_doc):
     duration = float(cue_doc["duration"])
     shots = cue_doc["shots"]
     cues = cue_doc["cues"]
+    music = cue_doc.get("music") or {}
     n = int(duration * SR)
 
     drums, bass, pad, arp, sfx, send = (Bus(n) for _ in range(6))
 
     s2, f1, s9 = shots["s2"], shots["f1"], shots["s9"]
-    cuts = [shots[k] for k in ("f2", "f3", "f4", "f5", "f6")]
+    # 除痛点 / 品牌 / 首个功能 / 收尾外，其余镜头起点都是切镜点。/ Every other shot start is a feature cut.
+    cuts = sorted(t for k, t in shots.items() if k not in ("s1", "s2", "f1", "s9"))
+    # 间奏段：只留铺底和弱化琶音，段尾上升噪声 + 军鼓滚奏，落拍处镲片。
+    # Breakdowns: pads and a softened arp only, a riser and snare roll into the end, a crash on the drop.
+    breakdowns = [(float(a), float(b)) for a, b in music.get("breakdowns", [])]
+
+    def in_breakdown(time):
+        return any(a - 1e-6 <= time < b - 1e-6 for a, b in breakdowns)
+
     bar = 4 * BEAT
 
     # 和弦进行：小节以品牌亮相 s2 为锚点，切镜都落在小节线上。
@@ -319,6 +329,8 @@ def build(cue_doc):
     kick_times = []
     for b_i in range(beat_i, last_beat):
         tb = b_i * BEAT
+        if in_breakdown(tb):
+            continue
         pos = (b_i - int(round(s2 / BEAT))) % 4
         drums.place(kick(), tb, 0.75)
         kick_times.append(tb)
@@ -340,9 +352,10 @@ def build(cue_doc):
     while te < s9 - 1e-6:
         notes = CHORDS[chord_at(te + 0.01)]["arp"]
         m = notes[ARP_STEPS[step % 8] % len(notes)]
-        v = pluck(midi_hz(m), 0.45, bright=1.2)
-        arp.place(v, te, 0.16, pan=-0.35 if step % 2 else 0.35)
-        send.place(v, te, 0.08)
+        soft = in_breakdown(te)
+        v = pluck(midi_hz(m), 0.45, bright=0.55 if soft else 1.2)
+        arp.place(v, te, 0.09 if soft else 0.16, pan=-0.35 if step % 2 else 0.35)
+        send.place(v, te, 0.12 if soft else 0.08)
         te += BEAT / 2
         step += 1
 
@@ -350,6 +363,17 @@ def build(cue_doc):
     for c in [f1] + cuts:
         drums.place(crash(), c, 0.28, pan=0.15)
         send.place(crash(), c, 0.1)
+
+    # 间奏收束：上升噪声 + 军鼓滚奏，落拍镲片。/ Breakdown exit: riser + snare roll, crash on the drop.
+    for a, b in breakdowns:
+        rise_dur = min(1.2, b - a)
+        r = sweep_noise(rise_dur, 400, 8000, bw_oct=0.6) * (secs(int(rise_dur * SR)) / rise_dur) ** 2.2
+        sfx.place(r, b - rise_dur, 0.32)
+        send.place(r, b - rise_dur, 0.12)
+        for j in range(8):
+            drums.place(clap(), b - BEAT + j * (BEAT / 8), 0.08 + 0.2 * j / 7, pan=0.05)
+        drums.place(crash(2.0), b, 0.32, pan=-0.1)
+        send.place(crash(2.0), b, 0.12)
 
     # s9 前的军鼓滚奏 / Snare roll into the outro
     roll_start = s9 - 2 * BEAT
@@ -396,6 +420,14 @@ def build(cue_doc):
             w = sweep_noise(d, 700, 5200, bw_oct=0.5) * np.sin(np.pi * np.linspace(0, 1, nn)) ** 1.6
             sfx.place(w, t0, 0.3, pan=np.linspace(-0.8, 0.8, nn))
             send.place(w, t0, 0.1)
+        elif typ == "zoom":
+            # 镜头推拉：短促柔和的气流声，推近上行、拉远下行。/ Camera move: a soft short air swish, rising on push-in, falling on pull-out.
+            d = 0.5
+            nn = int(d * SR)
+            f0, f1z = (500, 2600) if c.get("dir") == "in" else (2600, 500)
+            w = sweep_noise(d, f0, f1z, bw_oct=0.45) * np.sin(np.pi * np.linspace(0, 1, nn)) ** 2
+            sfx.place(w, t0, 0.12, pan=0.15)
+            send.place(w, t0, 0.05)
         elif typ == "hl":
             sfx.place(blip(2093, dec=0.045), t0, 0.07, pan=0.25)
             send.place(blip(2093, dec=0.045), t0, 0.05)
@@ -450,14 +482,17 @@ def write_wav(path, data):
 
 
 def main():
-    cues_path = os.path.join(OUT_DIR, "cues.json")
+    if len(sys.argv) != 2:
+        sys.exit("用法 / usage: python3 promo/soundtrack.py <cut>，例如 / e.g. stx-45s")
+    out_dir = os.path.join(HERE, sys.argv[1], "out")
+    cues_path = os.path.join(out_dir, "cues.json")
     if not os.path.exists(cues_path):
-        sys.exit("缺少 out/cues.json，请先运行 render.mjs --cues-only / missing out/cues.json, run render.mjs --cues-only first")
+        sys.exit(f"缺少 {cues_path}，请先运行 node promo/render.mjs {sys.argv[1]} --cues-only / missing cues.json, run the renderer with --cues-only first")
     with open(cues_path, encoding="utf-8") as f:
         cue_doc = json.load(f)
 
-    raw_path = os.path.join(OUT_DIR, "soundtrack.raw.wav")
-    out_path = os.path.join(OUT_DIR, "soundtrack.wav")
+    raw_path = os.path.join(out_dir, "soundtrack.raw.wav")
+    out_path = os.path.join(out_dir, "soundtrack.wav")
     write_wav(raw_path, build(cue_doc))
 
     # 有 ffmpeg 时做响度标准化（-16 LUFS，网络视频常用）。/ Loudness-normalise to -16 LUFS when ffmpeg exists.
