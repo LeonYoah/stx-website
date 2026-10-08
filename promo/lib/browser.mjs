@@ -33,7 +33,7 @@ function launchChrome(bin, userDir, extraArgs) {
     '--mute-audio',
     ...extraArgs,
     'about:blank',
-  ], { stdio: ['ignore', 'ignore', 'pipe'] });
+  ], { stdio: ['ignore', 'ignore', 'pipe'], detached: process.platform !== 'win32' });
 
   return new Promise((resolve, reject) => {
     let buf = '';
@@ -106,10 +106,21 @@ export async function openPage({ width, height, deviceScaleFactor = 1, chromeArg
   const close = async () => {
     cdp.close();
     if (proc.exitCode === null) {
-      proc.kill('SIGKILL');
-      await once(proc, 'exit');
+      const exited = once(proc, 'exit');
+      // 杀掉整个进程组：渲染 / GPU 子进程不随主进程退出，会继续写临时目录。
+      // Kill the whole process group: renderer / GPU children outlive the main process and keep writing the temp dir.
+      try { process.kill(-proc.pid, 'SIGKILL'); } catch { proc.kill('SIGKILL'); }
+      await exited;
     }
-    rmSync(userDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    for (let i = 0; ; i += 1) {
+      try {
+        rmSync(userDir, { recursive: true, force: true });
+        break;
+      } catch (err) {
+        if (i >= 10) { console.warn(`临时目录清理失败 / temp dir cleanup failed: ${userDir} (${err.code})`); break; }
+        await new Promise((r) => setTimeout(r, 300));
+      }
+    }
   };
   return { page, evaluate, on, close };
 }
