@@ -26,3 +26,7 @@ pnpm-debug.log*
 
 # website-rebuild 临时指纹产物 / Temporary fingerprint probe output
 probe/
+
+# 宣传片渲染产物 / Promo video render output
+promo/*/out/
+promo/assets/_explore/

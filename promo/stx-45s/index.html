@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>STX · 45s 宣传片</title>
+<!--
+  STX 45 秒宣传片合成页：本文件只写功能镜头，痛点 / 品牌 / AI Agent / 收尾等共用场景由 ../shared/kit.js 生成。
+  STX 45s promo composition: this file only holds the feature shots; shared scenes (hook, brand, AI Agent, outro) come from ../shared/kit.js.
+  截图来自 ../assets（promo/capture.mjs 生成），窗口用 data-shot / data-crop 选图裁剪，高亮框用 data-mark 引用 marks.js。
+  Screenshots live in ../assets (from promo/capture.mjs); windows pick and crop via data-shot / data-crop, highlights reference marks.js via data-mark.
+  预览 / Preview: 直接用浏览器打开本文件（自动播放，空格暂停，←/→ 逐帧）。Open in a browser (autoplay, Space to pause, ←/→ to step).
+  渲染 / Render: node promo/render.mjs stx-45s
+-->
+<link rel="stylesheet" href="../shared/promo.css" />
+</head>
+<body>
+<div id="stage">
+  <!-- F1 主机与集群 / Hosts & clusters -->
+  <section class="scene feat" id="f1">
+    <div class="copy">
+      <div class="chapter"><span class="num">01</span><i></i><span>主机与集群</span></div>
+      <h2 class="headline">
+        <span class="ln"><span>主机、集群</span></span>
+        <span class="ln"><span class="accent">一屏纳管</span></span>
+      </h2>
+      <p class="sub">主机接入 · 集群部署 · 节点拓扑 · 一键启停</p>
+      <div class="chips"><span>物理机 / 虚拟机</span><span>混合 / 分离部署</span></div>
+    </div>
+    <div class="visual"><div class="stack">
+      <div class="win" id="f1-cd" data-shot="cluster-detail" data-title="stx · 集群详情" data-crop="0 0 0 0.17" style="left:40px;top:150px;width:1040px">
+        <i class="hl" data-mark="health"></i>
+        <i class="hl" data-mark="node"></i>
+      </div>
+      <div class="win" id="f1-hosts" data-shot="hosts" data-title="stx · 主机管理" data-crop="0 0.16 0.318 0.6" style="left:200px;top:750px;width:820px">
+        <i class="hl" data-mark="status"></i>
+        <i class="hl" data-mark="usage"></i>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- F2 安装包与插件 / Packages & plugins -->
+  <section class="scene feat" id="f2">
+    <div class="copy">
+      <div class="chapter"><span class="num">02</span><i></i><span>安装包与插件</span></div>
+      <h2 class="headline">
+        <span class="ln"><span>版本与连接器</span></span>
+        <span class="ln"><span class="accent">一键就绪</span></span>
+      </h2>
+      <p class="sub">在线版本 · 插件市场 · 依赖自动补齐</p>
+      <div class="chips"><span>离线导入 / 导出</span><span>多镜像源</span></div>
+    </div>
+    <div class="visual"><div class="stack">
+      <div class="win" id="f2-pkg" data-shot="packages" data-title="stx · 安装包管理" data-crop="0.025 0.2 0.24 0.5" style="left:200px;top:110px;width:860px">
+        <!-- 3.0.0 行（推荐版本，源码与安装包已下载）/ The 3.0.0 row (recommended, source and package downloaded) -->
+        <i class="hl" data-box="0.036 0.2789 0.71 0.0433"></i>
+      </div>
+      <div class="win" id="f2-plug" data-shot="plugins" data-title="stx · 插件市场" data-crop="0.015 0 0.015 0.27" style="left:0px;top:400px;width:1060px">
+        <i class="hl" data-mark="downloadAll"></i>
+        <div class="done-pill" data-mark="dl0">✓ 已下载</div>
+        <div class="done-pill" data-mark="dl1">✓ 已下载</div>
+        <div class="done-pill" data-mark="dl2">✓ 已下载</div>
+        <div class="done-pill" data-mark="dl3">✓ 已下载</div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- F3 作业工作台 / Job workbench -->
+  <section class="scene feat" id="f3">
+    <div class="copy">
+      <div class="chapter"><span class="num">03</span><i></i><span>作业工作台</span></div>
+      <h2 class="headline">
+        <span class="ln"><span>写下 HOCON</span></span>
+        <span class="ln"><span class="accent">即见 DAG</span></span>
+      </h2>
+      <p class="sub">语法补全 · 约束校验 · DAG 预览 · 在线调试</p>
+      <div class="chips"><span>精选模板</span><span>共享协作</span></div>
+    </div>
+    <div class="visual"><div class="stack">
+      <div class="win" id="f3-wb" data-shot="workbench" data-title="stx · 作业工作台" data-crop="0.012 0 0.215 0.22" style="left:40px;top:170px;width:1000px">
+        <i class="hl" data-mark="source"></i>
+      </div>
+      <div class="win" id="f3-dag" data-shot="dag" data-title="DAG 预览" data-crop="0.03 0.07 0.27 0.22" style="left:200px;top:380px;width:860px">
+        <i class="hl" data-mark="source"></i>
+        <i class="hl" data-mark="sink1"></i>
+        <i class="hl" data-mark="sink2"></i>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- F4 Checkpoint 可视化 / Checkpoint visualization -->
+  <section class="scene feat" id="f4">
+    <div class="copy">
+      <div class="chapter"><span class="num">04</span><i></i><span>Checkpoint 可视化</span></div>
+      <h2 class="headline">
+        <span class="ln"><span>同步位点</span></span>
+        <span class="ln"><span class="accent">一目了然</span></span>
+      </h2>
+      <p class="sub">历史快照 · Binlog 位点 · 两阶段提交状态</p>
+      <div class="chips"><span>CDC 增量</span><span>2PC 提交</span></div>
+    </div>
+    <div class="visual"><div class="stack">
+      <div class="win" id="f4-ck" data-shot="checkpoint" data-title="stx · 作业工作台 · Checkpoint" data-crop="0.19 0.09 0.275 0.3" style="left:110px;top:150px;width:900px">
+        <i class="hl" data-mark="completed"></i>
+        <i class="hl" data-box="0.199 0.2011 0.518 0.0378"></i>
+      </div>
+      <div class="win" id="f4-ckd" data-shot="checkpoint-detail" data-title="stx · CK 文件详情" data-crop="0.08 0.075 0.08 0.08" style="left:40px;top:210px;width:1000px">
+        <i class="hl" data-mark="binlog"></i>
+        <!-- 「同步阶段」卡片 / "Sync phase" card -->
+        <i class="hl" data-box="0.3695 0.4841 0.2516 0.0983"></i>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- F5 告警与诊断 / Alerts & diagnostics -->
+  <section class="scene feat" id="f5">
+    <div class="copy">
+      <div class="chapter"><span class="num">05</span><i></i><span>告警与诊断</span></div>
+      <h2 class="headline">
+        <span class="ln"><span>从告警到方案</span></span>
+        <span class="ln"><span class="accent">一处闭环</span></span>
+      </h2>
+      <p class="sub">告警中心 · 诊断中心 · 排障经验库</p>
+      <div class="chips"><span>Alertmanager 接入</span><span>巡检报告</span></div>
+    </div>
+    <div class="visual"><div class="stack">
+      <div class="win" id="f5-alert" data-shot="alerts" data-title="stx · 告警中心" data-crop="0.02 0.315 0.44 0.18" style="left:180px;top:110px;width:880px">
+        <i class="hl" data-mark="severity"></i>
+        <i class="hl" data-mark="status"></i>
+      </div>
+      <div class="win" id="f5-diag" data-shot="diagnostics" data-title="stx · 诊断中心" data-crop="0.02 0.3 0.22 0.22" style="left:0px;top:540px;width:920px">
+        <i class="hl" data-mark="counts"></i>
+        <i class="hl" data-mark="solved"></i>
+      </div>
+      <div class="win" id="f5-detail" data-shot="diagnostics-detail" data-title="stx · 错误详情" data-crop="0.535 0 0 0.38" style="left:440px;top:200px;width:620px">
+        <i class="hl" data-mark="count"></i>
+        <!-- 经验库卡片 / Knowledge-base card -->
+        <i class="hl" data-box="0.5453 0.155 0.443 0.091"></i>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- F6 版本升级 / Version upgrade -->
+  <section class="scene feat" id="f6">
+    <div class="copy">
+      <div class="chapter"><span class="num">06</span><i></i><span>版本升级</span></div>
+      <h2 class="headline">
+        <span class="ln"><span>版本升级</span></span>
+        <span class="ln"><span class="accent">配置逐行合并</span></span>
+      </h2>
+      <p class="sub">升级预检查 · 配置差异 · 逐行取舍</p>
+      <div class="chips"><span>插件随版本切换</span><span>升级后自动验证</span></div>
+    </div>
+    <div class="visual"><div class="stack">
+      <div class="win" id="f6-cd" data-shot="cluster-detail" data-title="stx · 集群详情" data-crop="0 0 0 0.79" style="left:20px;top:130px;width:1040px">
+        <i class="hl" data-mark="upgrade"></i>
+      </div>
+      <div class="win" id="f6-up" data-shot="upgrade-config" data-title="stx · 升级配置合并 · seatunnel.yaml" data-crop="0.03 0.23 0.03 0.2" style="left:20px;top:360px;width:1040px">
+        <!-- 截图滚动后列标题不在画面内，按产品文案补一条表头 / The column header scrolled out of the shot; re-add it with the product's labels -->
+        <div class="colhead" data-box="0.03 0.23 0.94 0.04"><span style="left:14.9%">旧版本配置</span><span style="left:50%">最终合并结果</span><span style="left:84.9%">新版本配置</span></div>
+        <i class="hl" data-mark="diff0"></i>
+        <i class="hl" data-mark="old0"></i>
+        <i class="hl" data-mark="new0"></i>
+      </div>
+    </div></div>
+  </section>
+</div>
+
+<script src="../../node_modules/gsap/dist/gsap.min.js"></script>
+<script src="../assets/marks.js"></script>
+<script src="../shared/kit.js"></script>
+<script src="./timeline.js"></script>
+</body>
+</html>
