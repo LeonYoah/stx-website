@@ -15,7 +15,7 @@
  *   ... --only workbench,dag                                                     # 只截指定镜头 / only the named shots
  *   STX_UI_URL=https://demo.stxcli.com（默认 / default）
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { openPage } from './lib/browser.mjs';
@@ -27,6 +27,7 @@ const USER = process.env.STX_UI_USER;
 const PASSWORD = process.env.STX_UI_PASSWORD;
 const VIEW_W = 1440;
 const VIEW_H = 900;
+const MARKS_FILE = path.join(HERE, 'assets', 'marks.js');
 
 // 注入到每个步骤表达式里的小工具。/ Small helpers injected into every step expression.
 const HELPERS = `
@@ -36,7 +37,32 @@ const HELPERS = `
     const hits = [...root.querySelectorAll(sel)].filter((el) => visible(el) && rx.test((el.textContent || '').trim()));
     return hits.find((el) => !hits.some((o) => o !== el && el.contains(o))) || null;
   };
+  const allText = (re, sel = '*', root = document) => {
+    const rx = re instanceof RegExp ? re : new RegExp(re);
+    const hits = [...root.querySelectorAll(sel)].filter((el) => visible(el) && rx.test((el.textContent || '').trim()));
+    return hits.filter((el) => !hits.some((o) => o !== el && el.contains(o)));
+  };
   const closest = (el, sel) => (el ? el.closest(sel) : null);
+  const dlg = () => [...document.querySelectorAll('[role=dialog]')].filter(visible).pop() || document;
+  // 向上找到第一个不小于给定尺寸的祖先（用于取卡片 / 行容器）。/ Walk up to the first ancestor at least this big (cards / rows).
+  const upTo = (el, minW = 0, minH = 0) => {
+    while (el && el.parentElement) {
+      const r = el.getBoundingClientRect();
+      if (r.width >= minW && r.height >= minH) return el;
+      el = el.parentElement;
+    }
+    return el;
+  };
+  const box = (el) => (el && el.getBoundingClientRect ? el.getBoundingClientRect() : el);
+  // 多个元素的外接矩形。/ Bounding box of several elements.
+  const union = (...els) => {
+    const rs = els.flat().filter(Boolean).map(box);
+    if (!rs.length) return null;
+    const l = Math.min(...rs.map((r) => r.left));
+    const t = Math.min(...rs.map((r) => r.top));
+    return { left: l, top: t, width: Math.max(...rs.map((r) => r.left + r.width)) - l, height: Math.max(...rs.map((r) => r.top + r.height)) - t };
+  };
+  const editorLines = (re) => [...document.querySelectorAll('.monaco-editor .view-line')].filter((l) => re.test(l.textContent));
 `;
 const wrap = (expr) => `(() => { ${HELPERS}; return (${expr}); })()`;
 
@@ -63,6 +89,7 @@ async function main() {
   mkdirSync(path.join(HERE, 'assets', '_explore'), { recursive: true });
 
   const { page, evaluate, on, close } = await openPage({ width: VIEW_W, height: VIEW_H, deviceScaleFactor: dpr, chromeArgs: ['--lang=zh-CN'] });
+  const marks = {};
 
   const waitFor = async (expr, timeout = 20000) => {
     const start = Date.now();
@@ -138,6 +165,10 @@ async function main() {
     const list = explore
       ? EXPLORE_ROUTES.map((url) => ({ name: url.replace(/\W+/g, '_').replace(/^_|_$/g, '') || 'root', url }))
       : SHOTS;
+    // 只重拍部分镜头时保留其它镜头的标记。/ Keep other shots' marks when re-capturing a subset.
+    if (existsSync(MARKS_FILE)) {
+      try { Object.assign(marks, JSON.parse(readFileSync(MARKS_FILE, 'utf8').replace(/^[^{]*/, '').replace(/;\s*$/, ''))); } catch { /* 重新生成 / regenerate */ }
+    }
     for (const shot of list) {
       if (only && !only.includes(shot.name)) continue;
       activeMocks = shot.mocks || [];
@@ -165,6 +196,35 @@ async function main() {
         await evaluate('document.activeElement && document.activeElement.blur && document.activeElement.blur()');
         await page('Input.dispatchMouseEvent', { type: 'mouseMoved', x: shot.mouse?.[0] ?? VIEW_W - 2, y: shot.mouse?.[1] ?? 2 });
         await sleep(400);
+
+        // 记录关键元素位置（视口比例），宣传片据此放置高亮与推镜。
+        // Record key element boxes (viewport fractions) so the promo can place highlights and camera moves.
+        if (shot.marks) {
+          const entries = Object.entries(shot.marks).map(([k, expr]) => `${JSON.stringify(k)}: (() => { try { return box(${expr}); } catch (e) { return null; } })()`);
+          const rects = await evaluate(wrap(`(() => {
+            const raw = { ${entries.join(',\n')} };
+            const out = {};
+            for (const [k, r] of Object.entries(raw)) {
+              if (!r || !r.width || !r.height) { out[k] = null; continue; }
+              const f = (v) => Math.round(v * 10000) / 10000;
+              out[k] = [f(r.left / innerWidth), f(r.top / innerHeight), f(r.width / innerWidth), f(r.height / innerHeight)];
+            }
+            return out;
+          })()`));
+          for (const [k, v] of Object.entries(rects)) if (!v) console.warn(`  ! ${shot.name}: 找不到标记 / mark not found: ${k}`);
+          marks[shot.name] = Object.fromEntries(Object.entries(rects).filter(([, v]) => v));
+          if (preview) {
+            await evaluate(`(() => {
+              for (const [k, [x, y, w, h]] of Object.entries(${JSON.stringify(marks[shot.name])})) {
+                const d = document.createElement('div');
+                d.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;border:2px solid #ff2bd6;font:11px monospace;color:#ff2bd6;';
+                Object.assign(d.style, { left: x * innerWidth + 'px', top: y * innerHeight + 'px', width: w * innerWidth + 'px', height: h * innerHeight + 'px' });
+                d.textContent = k;
+                document.body.appendChild(d);
+              }
+            })()`);
+          }
+        }
         const format = preview ? 'jpeg' : 'webp';
         const { data } = await page('Page.captureScreenshot', { format, quality: preview ? 80 : 94, captureBeyondViewport: false });
         const file = path.join(outDir, `${shot.name}.${format === 'jpeg' ? 'jpg' : 'webp'}`);
@@ -175,6 +235,15 @@ async function main() {
         const { data } = await page('Page.captureScreenshot', { format: 'jpeg', quality: 70 });
         writeFileSync(path.join(HERE, 'assets', '_explore', `${shot.name}.failed.jpg`), Buffer.from(data, 'base64'));
       }
+    }
+    if (!explore) {
+      // 每个标记一行 [x, y, w, h]（视口比例）。/ One line per mark: [x, y, w, h] as viewport fractions.
+      const body = Object.keys(marks).sort().map((shotName) => {
+        const lines = Object.entries(marks[shotName]).map(([k, v]) => `    ${JSON.stringify(k)}: ${JSON.stringify(v)}`);
+        return `  ${JSON.stringify(shotName)}: {\n${lines.join(',\n')}\n  }`;
+      }).join(',\n');
+      writeFileSync(MARKS_FILE, `/* 由 promo/capture.mjs 生成，勿手改 / Generated by promo/capture.mjs, do not edit */\nwindow.STX_MARKS = {\n${body}\n};\n`);
+      console.log(`marks -> ${path.relative(process.cwd(), MARKS_FILE)}`);
     }
   } finally {
     await close();
