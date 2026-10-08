@@ -1,0 +1,49 @@
+WEBVTT
+
+00:00:00.400 --> 00:00:03.050
+SeaTunnel runs in production,
+but ops feel like a black box?
+
+00:00:04.400 --> 00:00:06.250
+Make SeaTunnel ops clearly visible
+All-in-one ops for Apache SeaTunnel · Native AI Agent
+
+00:00:07.100 --> 00:00:11.400
+01 Hosts & clusters: all on one screen
+Host onboarding · Cluster deployment · Node topology · One-click start/stop
+
+00:00:11.900 --> 00:00:16.200
+02 Packages & plugins: versions and connectors, ready in one click
+Online versions · Plugin marketplace · Auto-resolved dependencies
+
+00:00:16.700 --> 00:00:21.000
+03 Job workbench: write HOCON, see the DAG
+Autocomplete · Validation · DAG preview · Online debugging
+
+00:00:21.500 --> 00:00:25.800
+04 Checkpoint visualization: sync offsets at a glance
+Snapshot history · Binlog offsets · Two-phase commit status
+
+00:00:26.300 --> 00:00:30.600
+05 Alerts & diagnostics: from alert to fix in one place
+Alert center · Diagnostics center · Troubleshooting knowledge base
+
+00:00:31.100 --> 00:00:35.400
+06 Upgrades: merge configs line by line
+Pre-upgrade checks · Config diff · Keep or drop each line
+
+00:00:35.900 --> 00:00:37.100
+07 AI Agent: hand it off to AI
+Native AI Agent · CLI + Skill
+
+00:00:37.100 --> 00:00:38.700
+"Check cluster 6 for failed sync jobs.
+Look at status and logs first. Don't change anything."
+
+00:00:38.700 --> 00:00:40.300
+Query done, your call.
+No write operations were run.
+
+00:00:41.100 --> 00:00:45.000
+Make SeaTunnel ops clearly visible
+Try it online at demo.stxcli.com · Apache-2.0 open source

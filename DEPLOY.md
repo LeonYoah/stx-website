@@ -60,4 +60,31 @@ server {
 
 配置生效后，分别打开 `/`、`/docs/`、`/en/` 和 `/en/docs/`，并从语言菜单切换一次。若服务器已有反向代理，请让这四个路径都指向同一份 `build/` 文件。
 
+## 首页视频
+
+首页产品视频在 `build/video/` 里，英文页用 `build/en/video/` 里的同一份（WebM 约 6 MB、MP4 约 10 MB）。访客点击播放后才会下载。Nginx 默认支持断点续传，拖动进度条不用额外配置。
+
+Nginx 自带的类型表里没有字幕文件 `.vtt`，Firefox 会因此不显示英文字幕。把下面两段放进上面的 `server` 块，同时补上类型并加长缓存：
+
+```nginx
+    location ^~ /video/ {
+        types { video/webm webm; video/mp4 mp4; image/webp webp; text/vtt vtt; }
+        expires 30d;
+        add_header Cache-Control "public";
+    }
+
+    # 英文页的视频；路径比 /en/ 更长，会优先命中这里
+    location ^~ /en/video/ {
+        types { video/webm webm; video/mp4 mp4; image/webp webp; text/vtt vtt; }
+        expires 30d;
+        add_header Cache-Control "public";
+    }
+```
+
+想把视频放到 CDN 或对象存储：把 `static/video/` 里的 `stx-promo-45s.webm`、`stx-promo-45s.mp4` 上传到同一个目录，构建时带上这个目录的地址。海报和字幕仍随站点发布。
+
+```bash
+PROMO_VIDEO_BASE_URL=https://cdn.example.com/stx/video SITE_URL=https://docs.example.com pnpm build
+```
+
 GitHub Actions 目前只检查构建，不再发布到 GitHub Pages。
