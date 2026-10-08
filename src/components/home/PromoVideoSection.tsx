@@ -11,8 +11,6 @@ const COPY: Record<
   HomeLocale,
   {
     eyebrow: string;
-    title: string;
-    sub: string;
     note?: string;
     play: string;
     chapters: string;
@@ -20,15 +18,11 @@ const COPY: Record<
 > = {
   zh: {
     eyebrow: '产品视频',
-    title: '45 秒看懂 STX',
-    sub: '从接入主机、部署集群，到调试作业、处理告警、升级版本，再交给 AI Agent。',
     play: '播放 45 秒产品视频',
     chapters: '视频章节',
   },
   en: {
     eyebrow: 'Product video',
-    title: 'STX in 45 seconds',
-    sub: 'From onboarding hosts and deploying clusters to debugging jobs, handling alerts and upgrading, then handing off to the AI Agent.',
     note: 'The UI in the video is in Chinese. English subtitles are on by default.',
     play: 'Play the 45-second product video',
     chapters: 'Video chapters',
@@ -90,15 +84,13 @@ export function PromoVideoSection(): React.JSX.Element {
     <section
       id={PROMO_VIDEO_SECTION_ID}
       className="stx-film"
-      aria-label={copy.title}
+      aria-label={copy.eyebrow}
     >
       <div className="stx-film__intro">
         <p className="stx-film__eyebrow">
           <span className="stx-film__eyebrow-mark" aria-hidden="true" />
           {copy.eyebrow}
         </p>
-        <h2 className="stx-film__title">{copy.title}</h2>
-        <p className="stx-film__sub">{copy.sub}</p>
         {copy.note ? <p className="stx-film__note">{copy.note}</p> : null}
       </div>
 

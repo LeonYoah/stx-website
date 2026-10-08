@@ -36,7 +36,7 @@
 
 .stx-film__intro {
   max-width: min(680px, 100%);
-  margin: 0 auto clamp(1.6rem, 3.5vh, 2.4rem);
+  margin: 0 auto clamp(1rem, 2.2vh, 1.4rem);
   text-align: center;
 }
 
@@ -45,7 +45,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  margin: 0 0 0.9rem;
+  margin: 0;
   font-size: 0.7rem;
   font-weight: 650;
   letter-spacing: 0.18em;
@@ -60,37 +60,17 @@
   opacity: 0.7;
 }
 
-.stx-film__title {
-  margin: 0;
-  font-size: clamp(1.7rem, 3.1vw, 2.45rem);
-  font-weight: 750;
-  letter-spacing: -0.038em;
-  line-height: 1.18;
-  text-wrap: balance;
-  color: var(--stx-film-ink);
-}
-
-.stx-film__sub {
-  margin: 1rem auto 0;
-  max-width: 36em;
-  font-size: clamp(0.98rem, 1.4vw, 1.08rem);
-  font-weight: 450;
-  line-height: 1.75;
-  color: var(--stx-film-soft);
-  text-wrap: pretty;
-}
-
 .stx-film__note {
-  margin: 0.5rem auto 0;
+  margin: 0.45rem auto 0;
   font-size: 0.84rem;
   line-height: 1.6;
   color: var(--stx-film-muted);
 }
 
-/* 宽度随视口高度收缩，标题、播放器与章节能在一屏内看全（约 380px 留给顶栏、标题与章节）。
-   Width shrinks with viewport height so the heading, player and chapters fit in one screen (about 380px for navbar, heading and chapters). */
+/* 宽度随视口高度收缩，播放器与章节能在一屏内看全（约 300px 留给顶栏、栏目名与章节）。
+   Width shrinks with viewport height so the player and chapters fit in one screen (about 300px for navbar, section label and chapters). */
 .stx-film__stage {
-  max-width: min(100%, clamp(640px, calc((100svh - 380px) * 16 / 9), 1120px));
+  max-width: min(100%, clamp(640px, calc((100svh - 300px) * 16 / 9), 1120px));
   margin: 0 auto;
 }
 
