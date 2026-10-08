@@ -57,3 +57,9 @@
 - [ ] 侧栏有没有乱加 emoji？用语是否与上表一致？
 - [ ] 涉及 Web UI 的关键步骤有没有配截图？
 - [ ] 本文件是否仍只有约束，没有把某篇文档的定制正文搬进来？
+
+## Cursor Cloud specific instructions
+
+- 开发服务器用 `pnpm start --host 0.0.0.0 --port 3001`。不要占用 3000，那个端口是 STX Web UI。
+- 安装依赖：`pnpm install --frozen-lockfile`（pnpm 10.10.0）。
+- `pnpm typecheck` 会碰到仓库里已有的 TypeScript 报错。看文档站是否能跑，用 `pnpm start`；CI 构建命令是 `pnpm build`。
