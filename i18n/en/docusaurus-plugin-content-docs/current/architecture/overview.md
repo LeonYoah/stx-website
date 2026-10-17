@@ -105,7 +105,7 @@ Your browser opens the Web UI at `http://10.0.0.10:17880`; `external_url` contro
 | **Clusters and install** | Cluster definitions, process discovery, one-click install, node start/stop |
 | **Config / plugins / packages** | Config versions and push, connectors, SeaTunnel packages |
 | **Monitoring and diagnostics** | Monitoring config, events, diagnostic entry points |
-| **Auth and audit** | Sign-in, user management, audit logs |
+| **Auth and audit** | Sign-in, user management, [token management](./token-management), audit logs |
 
 ## stx-agent collaboration
 
@@ -130,7 +130,7 @@ sequenceDiagram
   Ag->>API: Heartbeat (resources and liveness)
 ```
 
-For host and cluster operations, see [Host management](../host-cluster/host-management) and [Cluster management](../host-cluster/cluster-management). For job config and debugging, see [Debug workbench](../workbench/overview). For CLI login and write confirmations, see [STX CLI](./cli).
+For host and cluster operations, see [Host management](../host-cluster/host-management) and [Cluster management](../host-cluster/cluster-management). For job config and debugging, see [Debug workbench](../workbench/overview). For CLI login and write confirmations, see [STX CLI](./cli). To issue script / worker tokens, see [Token management](./token-management).
 
 ## Deployment modes
 

@@ -56,8 +56,14 @@ Default local config path:
 One config file can hold multiple **namespaces**: each maps to a **Server address + login state**, so you can switch between test and production.
 
 ```bash
-# Login (prompts for username/password; flags and env vars also work)
+# Login (prompts for username/password; issues a 7-day token by default)
 stx login --server http://10.0.0.10:17800
+
+# Lifetime: 7d / 30d / 90d / never, or 60d
+stx login --server http://10.0.0.10:17800 --expires-in 30d
+
+# Bind an admin-issued token (do not combine with username/password)
+stx login --server http://10.0.0.10:17800 --token stx_...
 
 # Show current identity
 stx whoami
@@ -68,6 +74,8 @@ stx namespace use <name>
 
 stx logout
 ```
+
+Admins issue and revoke `stx_` tokens in [Token management](./token-management). A worker can also use only `STX_SERVER` and `STX_TOKEN`.
 
 ### Examples
 
@@ -152,7 +160,7 @@ stx skill status --output table
 
 Audit logging is optimized for CLI use (especially AI Agent calls): **every** remote `stx` invocation should be traceable. A model might stop a cluster or change config by mistake; without a clear source and request ID, it is hard to tell who—or which call—caused a problem later.
 
-In the Web UI audit list, **Source** shows **CLI** / **Web** / **System**, so you can tell command-line from page-initiated actions at a glance:
+In the Web UI audit list, **Source** shows **CLI** / **Web** / **System**, so you can tell command-line from page-initiated actions at a glance. The **Token** column shows the CLI token name and prefix, or **Session** for Web.
 
 ![Audit log: Source column shows CLI and Web](/img/screenshots/10-audit-log.png)
 

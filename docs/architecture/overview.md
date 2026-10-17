@@ -105,7 +105,7 @@ Web UI 可在集群维度查看其状态、日志，并执行启停 / 重启；�
 | **集群与安装** | 集群定义、进程发现、一键安装与节点启停 |
 | **配置 / 插件 / 安装包** | 配置版本与推送、连接器、SeaTunnel 安装包 |
 | **监控与诊断** | 监控配置、事件与诊断入口 |
-| **认证与审计** | 登录、用户管理、审计日志 |
+| **认证与审计** | 登录、用户管理、[令牌管理](./token-management)、审计日志 |
 
 ## Agent 协作
 
@@ -130,7 +130,7 @@ sequenceDiagram
   Ag->>API: 心跳（资源与存活）
 ```
 
-主机与集群操作见 [主机管理](../host-cluster/host-management) 与 [集群管理](../host-cluster/cluster-management)。作业配置与调试见 [调试工作台](../workbench/overview)。命令行如何登录、确认写操作见 [CLI 设计](./cli)。
+主机与集群操作见 [主机管理](../host-cluster/host-management) 与 [集群管理](../host-cluster/cluster-management)。作业配置与调试见 [调试工作台](../workbench/overview)。命令行如何登录、确认写操作见 [CLI 设计](./cli)。签发脚本 / Worker 令牌见 [令牌管理](./token-management)。
 
 ## 部署形态
 

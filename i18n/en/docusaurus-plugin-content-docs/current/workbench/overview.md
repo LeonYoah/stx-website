@@ -95,7 +95,7 @@ Use **Job variables** on the right to maintain custom variables for this job; pl
 
 The workbench includes simple **scheduling** (cron). After changing schedule settings, click **Save** for them to take effect; before **Enable scheduling**, the job must have at least one **published version**. When triggered, the latest published content runs—not unsaved drafts.
 
-This is **single-machine lightweight** periodic triggering, not validated for production-grade distributed scheduling. For complex workflows, high availability, and unified alerting, use a professional scheduler (such as Apache DolphinScheduler or Apache Airflow) and integrate with STX / SeaTunnel.
+This is **single-machine lightweight** periodic triggering. For complex workflows, dependencies, and unified alerting, [push the published job to DolphinScheduler](./dolphin-scheduler). Built-in and external schedule both run the published version only.
 
 ## Checkpoint and one-click recovery
 

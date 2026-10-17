@@ -56,8 +56,14 @@ CLI 只跟 **STX Server** 说话；要动被纳管主机上的 SeaTunnel，仍�
 一个配置文件里可以有多个 **命名空间**（namespace）：每个对应一套「Server 地址 + 登录态」，方便在测试 / 生产之间切换。
 
 ```bash
-# 登录（会提示用户名密码；也可用参数 / 环境变量）
+# 登录（会提示用户名密码；默认签发 7 天令牌）
 stx login --server http://10.0.0.10:17800
+
+# 指定有效期：7d / 30d / 90d / never，或 60d
+stx login --server http://10.0.0.10:17800 --expires-in 30d
+
+# 绑定管理员已签发的令牌（不要和用户名密码一起用）
+stx login --server http://10.0.0.10:17800 --token stx_...
 
 # 看当前身份
 stx whoami
@@ -68,6 +74,8 @@ stx namespace use <name>
 
 stx logout
 ```
+
+管理员签发、吊销 `stx_` 令牌见 [令牌管理](./token-management)。Worker 环境也可以只设 `STX_SERVER` 和 `STX_TOKEN`。
 
 ### 举例
 
@@ -152,7 +160,7 @@ stx skill status --output table
 
 专门为 CLI（尤其是 AI Agent 调用）做了审计侧优化：**每一次** `stx` 远端调用都要有迹可循。模型可能误停集群、误改配置；没有清晰的来源与请求编号，事后很难查清「是谁、哪一次调用」导致的问题。
 
-Web UI 的审计列表里，「来源」会标成 **CLI** / **Web** / **系统**，一眼能分出是命令行还是页面发起的：
+Web UI 的审计列表里，「来源」会标成 **CLI** / **Web** / **系统**，一眼能分出是命令行还是页面发起的。**令牌** 列：CLI 显示令牌名称和前缀，Web 显示 **会话**。
 
 ![审计日志：来源列可见 CLI 与 Web](/img/screenshots/10-audit-log.png)
 
