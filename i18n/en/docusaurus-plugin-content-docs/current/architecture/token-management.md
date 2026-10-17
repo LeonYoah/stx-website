@@ -10,6 +10,8 @@ An administrator issues a CLI token for an account on **User management**. Scrip
 
 Web UI dock **User management** → tab **Token management** (`/admin/users?tab=tokens`). The subtitle is "Issue tokens for CLI, scripts, and scheduler workers".
 
+![Token management: list, filters, and masked prefix](/img/screenshots/31-token-management.png)
+
 | Filter | Meaning |
 | :--- | :--- |
 | **All / Active / Expired / Revoked** | The counts at the top switch the list |
@@ -26,7 +28,9 @@ Web UI dock **User management** → tab **Token management** (`/admin/users?tab=
 
 ## Issue a token
 
-Click **Issue Token**. The default lifetime for an admin-issued token is **Never**.
+Click **Issue Token**. The default lifetime for an admin-issued token is **Never**. Fill the form, then click **Create**.
+
+![Issue token: name, owner, and expiration](/img/screenshots/32-token-issue.png)
 
 | Field | Meaning |
 | :--- | :--- |

@@ -12,9 +12,9 @@ Built-in **Schedule** stays a single-machine lightweight cron. Complex workflows
 
 In the Web UI dock, open **Workbench**, open the job, then switch the right pane to **Schedule**:
 
-![Debug workbench](/img/screenshots/02-workbench.png)
+![Workbench right pane: built-in schedule and external schedule](/img/screenshots/33-dolphin-schedule.png)
 
-Built-in **Schedule** is at the top; **External schedule** is below.
+Cron and **schedule preview** are at the top; **External schedule** is below. When unbound, the hint says you can copy the SHELL script to create a node by hand, or push it to DolphinScheduler.
 
 | State | UI |
 | :--- | :--- |
@@ -64,7 +64,9 @@ If there is no connection yet, **Push to Dolphin** asks for an Open API URL and 
 | **Dolphin Open API token** | Required, sent as the `token` header. This is **not** the worker `STX_TOKEN` |
 | **Dolphin version** | Optional; empty probes automatically. Only 3.x: 3.0 / 3.1 / 3.2 use `process-definition`; 3.3+ use `workflow-definition` |
 
-After save, the token is masked as "Open API token saved". Pick a **Scheduler connection** and **Project**, then create or reuse a workflow.
+After save, the token is masked as "Open API token saved (masked)". Pick a **Scheduler connection** and **Project**, then create or reuse a workflow.
+
+![Push to DolphinScheduler: connection, project, and new workflow](/img/screenshots/34-dolphin-push.png)
 
 ## New or reuse a workflow
 
@@ -118,7 +120,11 @@ stx sync scheduler connection create --name dolphin-prod \
   --token <dolphin-open-api-token> --confirm
 ```
 
-After Dolphin triggers, the job carries a `ds:` reference and the run mode shows **Dolphin schedule**, separate from manual runs and built-in cron. Cancel by reference:
+After Dolphin triggers, the job carries a `ds:` reference. The bottom job list **Mode** column shows **Dolphin schedule**, separate from manual runs and built-in cron:
+
+![Job list: Mode column shows Dolphin schedule](/img/screenshots/35-dolphin-jobs.png)
+
+Cancel by reference:
 
 ```bash
 stx sync job cancel-by-ref --external-ref 'ds:123:456' --confirm

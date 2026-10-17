@@ -12,9 +12,9 @@ description: 把已发布任务推成 DolphinScheduler SHELL 节点，由 Worker
 
 Web UI 底栏打开 **工作台**，打开要调度的任务，右侧切到 **定时**：
 
-![调试工作台](/img/screenshots/02-workbench.png)
+![工作台右侧：内置定时与外部调度](/img/screenshots/33-dolphin-schedule.png)
 
-右侧先是内置 **定时**，下面是 **外部调度**。
+右侧先是 cron 与 **定时预览**，下面是 **外部调度**。未绑定时提示：可复制 SHELL 脚本手工建节点，或推送到 DolphinScheduler。
 
 | 状态 | 界面 |
 | :--- | :--- |
@@ -64,7 +64,9 @@ exec stx sync task submit 12 --wait --confirm \
 | **Dolphin Open API Token** | 必填，走请求头 `token`。**不是** Worker 环境里的 `STX_TOKEN` |
 | **Dolphin 版本** | 可空，自动探测。只支持 3.x：3.0 / 3.1 / 3.2 走 `process-definition`，3.3+ 走 `workflow-definition` |
 
-保存后 Token 脱敏显示「Open API Token 已保存」。选好 **调度器连接** 和 **项目**，再选新建或复用工作流。
+保存后 Token 脱敏显示「Open API Token 已保存（脱敏）」。选好 **调度器连接** 和 **项目**，再选新建或复用工作流。
+
+![推送到 DolphinScheduler：连接、项目与新建工作流](/img/screenshots/34-dolphin-push.png)
 
 ## 新建或复用工作流
 
@@ -118,7 +120,11 @@ stx sync scheduler connection create --name dolphin-prod \
   --token <dolphin-open-api-token> --confirm
 ```
 
-Dolphin 触发后，作业会带上 `ds:` 引用，运行方式显示 **Dolphin 调度**，和手动运行、内置定时分开。按引用停作业：
+Dolphin 触发后，作业会带上 `ds:` 引用。底部任务列表的 **模式** 会显示 **Dolphin 调度**，和手动运行、内置定时分开：
+
+![任务列表：模式列为 Dolphin 调度](/img/screenshots/35-dolphin-jobs.png)
+
+按引用停作业：
 
 ```bash
 stx sync job cancel-by-ref --external-ref 'ds:123:456' --confirm
