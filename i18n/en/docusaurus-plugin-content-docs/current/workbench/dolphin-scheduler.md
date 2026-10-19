@@ -4,9 +4,9 @@ sidebar_label: DolphinScheduler
 description: Push a published job as a DolphinScheduler SHELL node. The worker submits with a CLI token.
 ---
 
-The workbench can push a published job to Apache DolphinScheduler. The Dolphin graph gets a SHELL node; when it fires, the worker runs `stx sync task submit`. Push writes that node only. It does not issue or write the worker login token.
+The workbench can push a published job to Apache DolphinScheduler. A SHELL node appears in the workflow; when it fires, the worker runs `stx sync task submit`. Push writes that node only. It does not issue or write the worker login token.
 
-Built-in **Schedule** stays a single-machine lightweight cron. Complex workflows, dependencies, and unified alerting live on the Dolphin graph; STX owns the script version and the submit.
+Built-in **Schedule** stays a single-machine lightweight cron. Complex dependencies and unified alerting live in the DolphinScheduler workflow; STX owns the script version and the submit.
 
 ## Open external schedule
 
@@ -35,10 +35,10 @@ Push is allowed after a publish. The same published version cannot be pushed aga
 | Button | What it does |
 | :--- | :--- |
 | **Copy node script** | Copies the SHELL body and worker reminder so you can create a node in Dolphin by hand |
-| **Push to Dolphin** | Opens the push dialog; STX writes the Dolphin graph |
+| **Push to Dolphin** | Opens the push dialog; STX writes the DolphinScheduler workflow |
 | **Update node** | After bind, overwrites this SHELL node only and leaves edges unchanged |
 | **Open Dolphin** | Opens the Dolphin page when a console URL exists |
-| **Unbind** | Removes the STX-side binding only. It does not change the Dolphin graph or revoke login tokens |
+| **Unbind** | Removes the STX-side binding only. It does not change the DolphinScheduler workflow or revoke login tokens |
 
 The copied script submits the current job and keeps Dolphin placeholders, for example:
 

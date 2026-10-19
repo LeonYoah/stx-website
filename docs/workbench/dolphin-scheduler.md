@@ -4,9 +4,9 @@ sidebar_label: DolphinScheduler
 description: 把已发布任务推成 DolphinScheduler SHELL 节点，由 Worker 用 CLI 令牌提交作业。
 ---
 
-工作台可以把已发布任务推到 Apache DolphinScheduler：Dolphin 图上出现一个 SHELL 节点，触发时在 Worker 上执行 `stx sync task submit`。推送只写这个节点，不签发、不写入 Worker 的登录令牌。
+工作台可以把已发布任务推到 Apache DolphinScheduler：工作流里会出现一个 SHELL 节点，触发时在 Worker 上执行 `stx sync task submit`。推送只写这个节点，不签发、不写入 Worker 的登录令牌。
 
-内置 **定时** 仍是单机轻量周期触发。复杂工作流、依赖和统一告警走 Dolphin 的图；STX 负责脚本版本和提交。
+内置 **定时** 仍是单机轻量周期触发。复杂依赖和统一告警放在 DolphinScheduler 工作流里编排；STX 负责脚本版本和提交。
 
 ## 打开外部调度
 
@@ -35,10 +35,10 @@ Web UI 底栏打开 **工作台**，打开要调度的任务，右侧切到 **�
 | 按钮 | 作用 |
 | :--- | :--- |
 | **复制节点脚本** | 复制 SHELL 正文和 Worker 提醒，去 Dolphin 里手工建节点 |
-| **推送到 Dolphin** | 打开推送弹窗，由 STX 写入 Dolphin 图 |
+| **推送到 Dolphin** | 打开推送弹窗，由 STX 写入 DolphinScheduler 工作流 |
 | **更新节点** | 已绑定后出现，覆盖该 SHELL 节点脚本，不改连线 |
 | **打开 Dolphin** | 已绑定且有控制台地址时，打开 Dolphin 页面 |
-| **解除绑定** | 只删 STX 侧绑定，不改 Dolphin 图，也不吊销登录令牌 |
+| **解除绑定** | 只删 STX 侧绑定，不改 DolphinScheduler 里的工作流，也不吊销登录令牌 |
 
 复制出的脚本会提交当前任务，并带上 Dolphin 的实例、节点占位符，例如：
 
