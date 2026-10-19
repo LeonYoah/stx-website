@@ -45,11 +45,10 @@ The copied script submits the current job and keeps Dolphin placeholders, for ex
 ```bash
 exec stx sync task submit 12 --wait --confirm \
   --external-ref "ds:${system.workflow.instance.id}:${system.task.definition.code}" \
-  --schedule-time "${system.datetime}" \
-  --timeout 6h
+  --schedule-time "${system.datetime}"
 ```
 
-Streaming jobs use `--wait --close-job=false --confirm` so the CLI exit does not stop the job. Default timeout is **6h**; default worker group is **default**.
+Streaming jobs use `--wait --close-job=false --confirm` so the CLI exit does not stop the job. The script does not write `--timeout`; job duration is owned by the engine terminal state and the Dolphin node timeout. Default worker group is **default**.
 
 The reminder says the worker environment (default name `stx-cli-prod`) must bind the STX login token itself; push does not write `STX_TOKEN`.
 
@@ -85,6 +84,8 @@ Use **Dry run** first ("Dry run passed; Dolphin was not changed"), then **Push**
 
 Push does not bind the login token. The Dolphin worker must reach the STX install host API (default **17800**).
 
+The STX client and server share the same binary. Copy it to the worker machine to use CLI features without starting a server there. See [Quick deploy → Install STX CLI](../get-started/quick-start#install-stx-cli).
+
 Example: STX on `10.0.0.10`, Dolphin worker on `10.0.0.30`. Issue the token on `10.0.0.10`, then bind it on the worker:
 
 ```bash
@@ -104,12 +105,6 @@ flowchart LR
 ## CLI
 
 ```bash
-# Binding status
-stx sync task dolphin status 12
-
-# Generate the SHELL script (does not write Dolphin)
-stx sync task dolphin script 12
-
 # Dry run / push (needs --confirm)
 stx sync task dolphin push 12 --dry-run --confirm
 stx sync task dolphin push 12 --new-workflow --workflow-name stx-orders --confirm

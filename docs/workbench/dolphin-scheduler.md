@@ -45,11 +45,10 @@ Web UI 底栏打开 **工作台**，打开要调度的任务，右侧切到 **�
 ```bash
 exec stx sync task submit 12 --wait --confirm \
   --external-ref "ds:${system.workflow.instance.id}:${system.task.definition.code}" \
-  --schedule-time "${system.datetime}" \
-  --timeout 6h
+  --schedule-time "${system.datetime}"
 ```
 
-实时任务会写成 `--wait --close-job=false --confirm`，避免 CLI 退出时把流作业停掉。脚本默认超时 **6h**，Worker 组默认 **default**。
+实时任务会写成 `--wait --close-job=false --confirm`，避免 CLI 退出时把流作业停掉。脚本不写入 `--timeout`；作业跑多久由引擎终态和 Dolphin 节点超时决定。Worker 组默认 **default**。
 
 附带的提醒是：Worker 环境（默认名 `stx-cli-prod`）要由你自己绑定 STX 登录令牌；推送不会写入 `STX_TOKEN`。
 
@@ -85,6 +84,8 @@ exec stx sync task submit 12 --wait --confirm \
 
 推送不负责绑定登录令牌。Dolphin Worker 要能访问 STX 安装机 API（默认 **17800**）。
 
+STX 客户端和服务端是同一个二进制文件，把它复制到 Worker 机器即可用 CLI 能力，不需要在那台机器上启动 STX Server。安装方式见[快速部署 → 安装 STX CLI](../get-started/quick-start#安装-stx-cli)。
+
 举例：STX 在 `10.0.0.10`，Dolphin Worker 在 `10.0.0.30`。管理员先在 `10.0.0.10` 签发令牌，再到 Worker 上绑定：
 
 ```bash
@@ -104,12 +105,6 @@ flowchart LR
 ## 命令行
 
 ```bash
-# 查看绑定
-stx sync task dolphin status 12
-
-# 生成 SHELL 脚本（不写 Dolphin）
-stx sync task dolphin script 12
-
 # 预演 / 推送（要 --confirm）
 stx sync task dolphin push 12 --dry-run --confirm
 stx sync task dolphin push 12 --new-workflow --workflow-name stx-orders --confirm
