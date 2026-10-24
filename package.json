@@ -14,7 +14,10 @@
     "preview": "docusaurus build && docusaurus serve --port 3002",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "promo:capture": "node promo/capture.mjs",
+    "promo:30s": "node promo/render.mjs stx-30s --cues-only && python3 promo/soundtrack.py stx-30s && node promo/render.mjs stx-30s --audio --master",
+    "promo:45s": "node promo/render.mjs stx-45s --cues-only && python3 promo/soundtrack.py stx-45s && node promo/render.mjs stx-45s --audio --master"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
