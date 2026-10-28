@@ -127,7 +127,7 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
   ...
 ```
 
-安装时改过密码的，这里只提示「已修改」，不会显示密码。
+安装时改过密码的，这里只提示「已修改」；重装沿用原密码时只提示「沿用」。只有密码仍是出厂默认的 `admin123` 时才会显示，你自己设置的密码不会出现在屏幕和安装日志里。
 
 ### 常用参数
 
@@ -294,7 +294,7 @@ cd stx-*-offline/
 sudo ./install.sh
 ```
 
-安装过程中的提问和结果与[一键安装](#回答几个问题)相同，[常用参数](#常用参数)也一样（如 `sudo ./install.sh -y`）；只有下载相关的 `--mirror`、`--variant`、`--version` 不适用，`install.sh` 安装的就是当前目录这个离线包。
+安装过程中的提问和结果与[一键安装](#回答几个问题)相同，[常用参数](#常用参数)也一样（如 `sudo ./install.sh -y`）；只有下载相关的 `--mirror`、`--variant`、`--version`、`--bundle-file` 不适用，`install.sh` 安装的就是当前目录这个离线包。
 
 这只装好 STX 控制面。无网环境还要装 SeaTunnel 集群时，须另备 [SeaTunnel 离线资产包](../packages-plugins/package-management#离线导出资产包)（安装包 ± 插件），在有网侧的 STX 里导出后拷过来导入。
 

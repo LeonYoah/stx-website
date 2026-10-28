@@ -127,7 +127,7 @@ The installer prints a summary:
   ...
 ```
 
-If you changed the password during install, the summary only says it was changed and never prints it.
+If you changed the password during install, the summary only says it was changed; on a reinstall that keeps the old password it only says it was kept. The password is shown only while it is still the factory default `admin123`; a password you set never appears on screen or in the install log.
 
 ### Common flags
 
@@ -294,7 +294,7 @@ cd stx-*-offline/
 sudo ./install.sh
 ```
 
-The questions, summary, and [common flags](#common-flags) are the same as the [one-click install](#answer-a-few-questions) (for example `sudo ./install.sh -y`), except the download flags `--mirror`, `--variant`, and `--version`: `install.sh` installs the bundle in the current directory.
+The questions, summary, and [common flags](#common-flags) are the same as the [one-click install](#answer-a-few-questions) (for example `sudo ./install.sh -y`), except the download flags `--mirror`, `--variant`, `--version`, and `--bundle-file`: `install.sh` installs the bundle in the current directory.
 
 This installs the STX control plane only. To install SeaTunnel clusters offline, also prepare a [SeaTunnel offline asset bundle](../packages-plugins/package-management#offline-export-asset-bundle) (package ± plugins) on a networked STX, then copy and import it.
 
