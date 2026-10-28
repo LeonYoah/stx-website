@@ -314,7 +314,7 @@ const COPY: Record<
       'HOCON DAG 解析',
     ],
     installCmd:
-      'curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
+      'curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash',
     demoCta: '在线体验',
     deployCta: '快速部署',
     watchCta: '观看视频',
@@ -346,7 +346,7 @@ const COPY: Record<
       'HOCON DAG parsing',
     ],
     installCmd:
-      'curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash',
+      'curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash',
     demoCta: 'Try online',
     deployCta: 'Quick deploy',
     watchCta: 'Watch video',

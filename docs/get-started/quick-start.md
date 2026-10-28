@@ -4,32 +4,85 @@ sidebar_label: 快速部署
 description: 在 Linux 上安装 STX、接入主机，并在本机或另一台机器上使用 STX CLI。
 ---
 
-在一台 Linux 机器上安装 STX 后，你会得到 Web UI、STX Server 和 Agent 所需的 gRPC 服务。本文用在线安装完成首次登录，再说明如何接入主机。
+在一台 Linux 机器上安装 STX 后，你会得到 Web UI、STX Server 和 Agent 所需的 gRPC 服务。本文介绍如何用安装脚本安装 STX。
 
 ## 安装前检查
 
 | 检查项 | 要求 |
 | :--- | :--- |
-| 系统 | 带 systemd 的 Linux，glibc ≥ 2.17；支持 Ubuntu / Debian、Rocky / Alma / RHEL 8+ 等 |
+| 系统 | 带 systemd 的 Linux，glibc ≥ 2.17；支持 Ubuntu / Debian、Rocky / Alma / RHEL 8+、CentOS 7 等 |
 | 架构 | amd64 或 arm64；CentOS 7 仅支持 amd64 |
-| 网络 | 浏览器能访问安装机的 `17880`；被纳管主机能访问安装机的 `17800` 和 `17890` |
-| Node.js | 本机有 Node ≥ 18.18 时可复用；没有时安装器会准备内置 Node |
+| 网络 | 浏览器能访问 STX 安装机的 `17880`；被纳管主机能访问 STX 安装机的 `17800` 和 `17890` |
+| 磁盘 | 安装目录所在分区约 700 MB；带本地监控组件约 2.2 GB |
+| 命令 | `bash`、`curl`、`tar`、`gzip`、`sha256sum`；不需要 Node.js 和 python3（离线包自带 Node） |
+| 权限 | root（用 `sudo` 执行安装脚本） |
 
 :::note
 一键安装面向 Linux。macOS 和 Windows 可用于本地开发，不是这套安装脚本的目标系统。
 :::
 
-## 1. 安装并检查服务
+## 1. 一键安装
 
-在准备作为 **STX 安装机** 的 Linux 机器上执行一条命令。安装器默认获取最新 Release，安装目录为 `/opt/stx`。
+在准备作为 **STX 安装机** 的 Linux 机器上执行一条命令。安装目录默认为 `/opt/stx`。
 
 ```bash
-# 直接访问 GitHub
-curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash
+# 中国网络（推荐）
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash
 
-# 中国网络可使用代理地址
-curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash
+# 直接访问 GitHub
+curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash
 ```
+
+脚本按 CPU 架构和 glibc 版本下载对应的[离线包](#离线安装)，校验 sha256 后安装；CentOS 7 等 glibc < 2.28 的系统自动使用 CentOS 7 专用包。不加 `-y` 时会提问端口、对外访问 IP、数据库和管理员密码，直接回车即使用默认值。
+
+### 选择下载线路
+
+脚本默认测速后使用最快的线路，失败时自动换下一条。可用 `--mirror` 固定线路（编号或名称，也可以是自己的代理前缀）：
+
+| 编号 | 名称 | 地址 |
+| :--- | :--- | :--- |
+| 1 | `gh-proxy` | `https://gh-proxy.org`（Cloudflare 主站加速） |
+| 2 | `v4` | `https://v4.gh-proxy.org`（Cloudflare 优选，推荐，仅 IPv4） |
+| 3 | `v6` | `https://v6.gh-proxy.org`（Cloudflare 优选，支持 IPv6） |
+| 4 | `cdn` | `https://cdn.gh-proxy.org`（Fastly CDN） |
+| 5 | `axisnow` | `https://axisnow.gh-proxy.org`（AxisNow 三网优选） |
+| 6 | `github` | GitHub 直连 |
+
+```bash
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash -s -- --mirror v4
+```
+
+### 常用参数
+
+参数加在命令后，例如 `curl -fsSL ... | sudo bash -s -- -y --install-dir /data/stx`：
+
+| 参数 | 作用 |
+| :--- | :--- |
+| `-y` | 不提问，全部使用默认值 / 参数值 |
+| `--install-dir /opt/stx` | 安装目录，默认 `/opt/stx` |
+| `--admin-password xxx` | admin 初始密码 |
+| `--frontend-port` / `--http-port` / `--grpc-port` | Web UI / HTTP API / gRPC 端口，默认 `17880` / `17800` / `17890` |
+| `--external-ip 10.0.0.10` | 对外访问 IP 或域名 |
+| `--db-type sqlite\|mysql\|postgres` | 数据库，默认 `sqlite`；`postgres` 也可写 `pg` |
+| `--db-host` / `--db-port` / `--db-user` / `--db-password` / `--db-name` | MySQL / PostgreSQL 连接参数；密码也可用环境变量 `STX_DB_PASSWORD` |
+| `--without-observability` | 不安装本地监控组件（Prometheus / Alertmanager / Grafana） |
+| `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | 本地监控组件端口，默认 `9090` / `9093` / `3000` |
+| `--mirror v4` | 固定下载线路（仅一键安装 / `download-bundle.sh`） |
+| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | 指定离线包类型 / 版本（仅一键安装 / `download-bundle.sh`） |
+| `--without-node` | 不用包内 Node，改用本机 Node ≥ 18.18 |
+| `--service-user stx` | 用指定用户运行服务（默认 root） |
+| `--no-autostart` / `--no-systemd` / `--no-start` | 不开机自启 / 不创建 systemd 服务 / 安装后不启动 |
+
+使用外部数据库的示例：
+
+```bash
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh \
+  | sudo bash -s -- --db-type postgres --db-host 10.0.0.5 --db-user stx --db-name stx
+```
+
+:::note sudo
+安装需要 root。不用 sudo 执行时，脚本会在任何检查和提问之前退出，并打印带 `sudo` 的完整命令。只有同时指定当前用户可写的 `--install-dir` 和 `--no-systemd` 时才可以不用 root。
+:::
 
 安装完成后检查状态：
 
@@ -39,31 +92,11 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 systemctl status stx
 ```
 
-需要调整安装方式时，可在安装脚本中使用这些参数：
-
-| 参数 | 作用 |
-| :--- | :--- |
-| `--install-dir /opt/stx` | 指定安装目录，默认 `/opt/stx` |
-| `--arch amd64\|arm64` | 指定 CPU 架构 |
-| `--without-node` | 不安装内置 Node |
-| `--without-observability` | 不安装本地监控组件 |
-| `--no-systemd` / `--no-start` | 不创建 systemd 服务 / 安装后不自动启动 |
-
-:::tip
-安装器会按 glibc 版本选择 Node 变体；本机已有 Node ≥ 18.18 时会跳过内置 Node。
-:::
-
 ## 2. 打开 Web UI
 
-假设 STX 安装机的 IP 是 `10.0.0.10`，在浏览器中打开 `http://10.0.0.10:17880`。把示例 IP 换成自己的机器地址。
+假设 STX 安装机的 IP 是 `10.0.0.10`，在浏览器中打开 `http://10.0.0.10:17880`，用 `admin` 和安装时设置的密码登录（直接回车的为 `admin123`，登录后请尽快修改）。
 
 ![STX 登录页](/img/screenshots/00-login.png)
-
-首次登录的默认用户名是 `admin`，密码是 `admin123`。如果安装时设置了 `auth.default_admin_password`，使用你设置的密码。
-
-登录后会进入概览页：
-
-![STX 概览页](/img/screenshots/01-dashboard.png)
 
 | 服务 | 默认端口 | 谁需要访问 |
 | :--- | :--- | :--- |
@@ -71,19 +104,7 @@ systemctl status stx
 | STX Server HTTP API | `17800` | Web UI、CLI 和被纳管主机上的安装脚本 |
 | stx-agent gRPC | `17890` | 被纳管主机上的 `stx-agent` |
 
-## 3. 接入一台主机
-
-1. 在 Web UI 打开 **主机管理**，点击 **创建主机**，填写名称和 IP，类型选 **物理机 / 虚拟机**。
-2. 打开该主机的安装引导，复制其中的命令，到**被纳管主机**上执行。
-3. 回到主机列表。状态显示在线后，就可以在这台机器上发现 SeaTunnel 进程或安装新集群。
-
-![主机管理列表](/img/screenshots/03-hosts.png)
-
-:::caution 安装地址
-安装引导里的地址来自 STX Server 的 `app.external_url`。它必须是被纳管主机能访问到的地址，例如 `http://10.0.0.10:17800`，不能填只在 STX 安装机上可用的 `localhost`。
-:::
-
-接下来看 [主机管理](../host-cluster/host-management) 和 [集群管理](../host-cluster/cluster-management)。
+安装结果末尾会打印后续步骤；接入主机和创建集群见 [主机管理](../host-cluster/host-management) 和 [集群管理](../host-cluster/cluster-management)。
 
 ## 安装 STX CLI
 
@@ -125,22 +146,45 @@ chmod +x ./stx
 
 ### 离线安装
 
-先在能访问 GitHub 的机器上下载离线包，再把压缩包复制到 STX 安装机。
+每个 Release 附带三个完整离线包，包含 STX Server、Web UI、stx-agent、Node、本地监控组件，各带一个 `.sha256` 校验文件。按 STX 安装机选择：
+
+| 离线包 | 适用系统 | 怎么判断 |
+| :--- | :--- | :--- |
+| `stx-offline-linux-amd64.tar.gz` | x86_64，glibc ≥ 2.28：Ubuntu 20.04+、Debian 10+、Rocky / Alma / RHEL 8+ 等 | `uname -m` 输出 `x86_64`，`ldd --version` 首行 ≥ 2.28 |
+| `stx-offline-linux-arm64.tar.gz` | aarch64，glibc ≥ 2.28 | `uname -m` 输出 `aarch64` |
+| `stx-offline-linux-amd64-centos7.tar.gz` | x86_64，glibc < 2.28：**CentOS 7**、RHEL 7 | `ldd --version` 首行是 2.17 等 |
+
+上表是最新版本的固定文件名。指定版本时，文件名形如 `stx-v1.3.0-linux-amd64-centos7-offline.tar.gz`，下载地址把 `latest/download` 换成 `download/v1.3.0`。
+
+在能联网的机器上下载，6 条线路任选一条（哪条快用哪条）。以 CentOS 7 为例：
 
 ```bash
-# 直接访问 GitHub
-curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/download-bundle.sh | bash
-# 中国网络
-curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/download-bundle.sh | bash
+F=stx-offline-linux-amd64-centos7.tar.gz   # 换成上表中你需要的文件名
+U=https://github.com/LeonYoah/stx/releases/latest/download/$F
+
+wget "https://gh-proxy.org/$U"          # 1) Cloudflare 主站加速
+wget "https://v4.gh-proxy.org/$U"       # 2) Cloudflare 优选（推荐，仅 IPv4）
+wget "https://v6.gh-proxy.org/$U"       # 3) Cloudflare 优选（支持 IPv6）
+wget "https://cdn.gh-proxy.org/$U"      # 4) Fastly CDN
+wget "https://axisnow.gh-proxy.org/$U"  # 5) AxisNow 三网优选
+wget "$U"                               # 6) GitHub 直连
+
+# 校验文件用同一条线路下载，例如：
+wget "https://v4.gh-proxy.org/$U.sha256"
 ```
 
-CentOS 7 下载时可传 `bash -s -- --node-variant glibc217 --arch amd64`。复制压缩包后安装：
+也可以让脚本测速下载：`curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/download-bundle.sh | bash -s -- --variant centos7`。
+
+把两个文件复制到 STX 安装机后安装：
 
 ```bash
-tar -xzf dist/offline/stx-offline-bundle-*-linux-*.tar.gz
-cd stx-offline-bundle-*-linux-*
-sudo ./install.sh --install-dir /opt/stx --offline
+sha256sum -c stx-offline-linux-amd64-centos7.tar.gz.sha256
+tar -xzf stx-offline-linux-amd64-centos7.tar.gz
+cd stx-*-offline/
+sudo ./install.sh
 ```
+
+[常用参数](#常用参数)与一键安装相同（如 `sudo ./install.sh -y --db-type postgres ...`）；下载相关的 `--mirror`、`--variant`、`--version`、`--bundle-file` 不适用于 `install.sh`，它安装的就是当前目录这个离线包。
 
 这只装好 STX 控制面。无网环境还要装 SeaTunnel 集群时，须另备 [SeaTunnel 离线资产包](../packages-plugins/package-management#离线导出资产包)（安装包 ± 插件），在有网侧的 STX 里导出后拷过来导入。
 
@@ -182,8 +226,10 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 
 | 现象 | 检查方法 |
 | :--- | :--- |
-| `17800`、`17880` 或 `17890` 被占用 | 执行 `ss -lntp \| grep -E '17800\|17880\|17890'`；释放端口或修改安装目录下的 `config.yaml` 后重启 |
+| 安装前检查提示端口被占用 | 交互安装时按提示换一个端口；用 `-y` 时加 `--http-port` 等参数。查看占用：`ss -lntp \| grep -E '17800\|17880\|17890'` |
+| 安装失败 | 按提示查看出错的步骤和日志 `/tmp/stx-install-*.log`（或 `/opt/stx/logs/install.log`） |
+| CentOS 7 上提示 glibc 版本过低 | 改用 `stx-offline-linux-amd64-centos7.tar.gz`；一键安装会自动选择 |
 | 主机一直不在线 | 从被纳管主机检查能否访问 STX 安装机的 `17800` 和 `17890`，再检查防火墙与安全组 |
-| 无法下载 Release | 使用上文带 `v4.gh-proxy.org` 的命令 |
+| 下载慢或失败 | 换一条[下载线路](#选择下载线路)，或加 `--mirror v4` 等固定线路 |
 
 如果你要在本机开发 STX，而不是安装 Release，请看[源码仓库的开发说明](https://github.com/LeonYoah/stx/blob/main/README_CN.md)。

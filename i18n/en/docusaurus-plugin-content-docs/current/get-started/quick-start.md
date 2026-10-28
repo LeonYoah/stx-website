@@ -4,34 +4,87 @@ sidebar_label: Quick deploy
 description: Install STX on Linux, connect a managed host, and use STX CLI on the same machine or another.
 ---
 
-After you install STX on a Linux machine, you get the Web UI, STX Server, and the gRPC service that `stx-agent` needs. This guide uses the online installer for first login, then explains how to connect a managed host.
+After you install STX on a Linux machine, you get the Web UI, STX Server, and the gRPC service that `stx-agent` needs. This guide shows how to install STX with the install scripts.
 
 ## Check before installing
 
 | Check | Requirement |
 | :--- | :--- |
-| System | Linux with systemd, glibc ≥ 2.17; Ubuntu / Debian, Rocky / Alma / RHEL 8+, and similar |
+| System | Linux with systemd, glibc ≥ 2.17; Ubuntu / Debian, Rocky / Alma / RHEL 8+, CentOS 7, and similar |
 | Architecture | amd64 or arm64; CentOS 7 supports amd64 only |
-| Network | Browsers can reach the install machine on `17880`; managed hosts can reach `17800` and `17890` on the install machine |
-| Node.js | Reuse local Node ≥ 18.18 if present; otherwise the installer provides a bundled Node |
+| Network | Browsers can reach the STX install machine on `17880`; managed hosts can reach `17800` and `17890` on it |
+| Disk | About 700 MB on the install-directory partition; about 2.2 GB with the local monitoring stack |
+| Commands | `bash`, `curl`, `tar`, `gzip`, `sha256sum`; no Node.js or python3 needed (the bundle ships Node) |
+| Privileges | root (run the install scripts with `sudo`) |
 
 :::note
 The one-click installer targets Linux. macOS and Windows are for local development—not what this install script is built for.
 :::
 
-## 1. Install and check the service
+## 1. One-click install
 
-Run one command on the Linux machine that will be your **STX install machine**. The installer fetches the latest Release by default; the install directory is `/opt/stx`.
+Run one command on the Linux machine that will be your **STX install machine**. The default install directory is `/opt/stx`.
 
 ```bash
-# Direct access to GitHub
-curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash
+# Networks in China (recommended)
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash
 
-# Proxy URL for networks in China
-curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | bash
+# Direct access to GitHub
+curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash
 ```
 
-Check status after install:
+The script downloads the [offline bundle](#offline-install) for your CPU architecture and glibc version, verifies its sha256, and installs it; systems with glibc < 2.28, such as CentOS 7, get the CentOS 7 bundle automatically. Without `-y` it asks for the ports, the advertised IP, the database, and the admin password; press Enter to accept each default.
+
+### Pick a download line
+
+By default the script probes the lines, uses the fastest one, and falls back to the next on failure. Pin a line with `--mirror` (number or name, or your own proxy prefix):
+
+| No. | Name | Address |
+| :--- | :--- | :--- |
+| 1 | `gh-proxy` | `https://gh-proxy.org` (Cloudflare main) |
+| 2 | `v4` | `https://v4.gh-proxy.org` (Cloudflare optimized, recommended, IPv4 only) |
+| 3 | `v6` | `https://v6.gh-proxy.org` (Cloudflare optimized, IPv6) |
+| 4 | `cdn` | `https://cdn.gh-proxy.org` (Fastly CDN) |
+| 5 | `axisnow` | `https://axisnow.gh-proxy.org` (AxisNow) |
+| 6 | `github` | Direct GitHub |
+
+```bash
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash -s -- --mirror v4
+```
+
+### Common flags
+
+Append flags to the command, for example `curl -fsSL ... | sudo bash -s -- -y --install-dir /data/stx`:
+
+| Flag | Effect |
+| :--- | :--- |
+| `-y` | No prompts; use defaults and flag values |
+| `--install-dir /opt/stx` | Install directory, default `/opt/stx` |
+| `--admin-password xxx` | Initial admin password |
+| `--frontend-port` / `--http-port` / `--grpc-port` | Web UI / HTTP API / gRPC ports, default `17880` / `17800` / `17890` |
+| `--external-ip 10.0.0.10` | Advertised IP or host name |
+| `--db-type sqlite\|mysql\|postgres` | Database, default `sqlite`; `postgres` can also be written `pg` |
+| `--db-host` / `--db-port` / `--db-user` / `--db-password` / `--db-name` | MySQL / PostgreSQL connection; the password can also come from `STX_DB_PASSWORD` |
+| `--without-observability` | Skip the local monitoring stack (Prometheus / Alertmanager / Grafana) |
+| `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | Monitoring ports, default `9090` / `9093` / `3000` |
+| `--mirror v4` | Pin a download line (one-click install / `download-bundle.sh` only) |
+| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | Bundle variant / version (one-click install / `download-bundle.sh` only) |
+| `--without-node` | Use the host Node ≥ 18.18 instead of the bundled one |
+| `--service-user stx` | Run the service as this user (default root) |
+| `--no-autostart` / `--no-systemd` / `--no-start` | No start on boot / no systemd unit / do not start after install |
+
+With an external database:
+
+```bash
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh \
+  | sudo bash -s -- --db-type postgres --db-host 10.0.0.5 --db-user stx --db-name stx
+```
+
+:::note sudo
+Installing needs root. Without sudo the scripts exit before any check or prompt and print the full command with `sudo`. Non-root works only with a writable `--install-dir` together with `--no-systemd`.
+:::
+
+Check the status after install:
 
 ```bash
 /opt/stx/bin/status.sh
@@ -39,31 +92,11 @@ Check status after install:
 systemctl status stx
 ```
 
-Installer flags when you need to customize:
-
-| Flag | Purpose |
-| :--- | :--- |
-| `--install-dir /opt/stx` | Install directory (default `/opt/stx`) |
-| `--arch amd64\|arm64` | CPU architecture |
-| `--without-node` | Do not install bundled Node |
-| `--without-observability` | Do not install local monitoring stack |
-| `--no-systemd` / `--no-start` | Skip systemd unit / do not start after install |
-
-:::tip
-The installer picks a Node build for your glibc version; if Node ≥ 18.18 is already on the machine, bundled Node is skipped.
-:::
-
 ## 2. Open the Web UI
 
-If the STX install machine is `10.0.0.10`, open `http://10.0.0.10:17880` in your browser. Replace the sample IP with your machine's address.
+If the STX install machine is `10.0.0.10`, open `http://10.0.0.10:17880` and sign in as `admin` with the password set during install (`admin123` if you pressed Enter; change it soon after signing in).
 
 ![STX sign-in page](/img/screenshots/00-login.png)
-
-Default first-login username is `admin`, password is `admin123`. If you set `auth.default_admin_password` during install, use that password.
-
-After login you land on the overview page:
-
-![STX overview](/img/screenshots/01-dashboard.png)
 
 | Service | Default port | Who needs access |
 | :--- | :--- | :--- |
@@ -71,19 +104,7 @@ After login you land on the overview page:
 | STX Server HTTP API | `17800` | Web UI, CLI, and install scripts on managed hosts |
 | stx-agent gRPC | `17890` | `stx-agent` on managed hosts |
 
-## 3. Connect a managed host
-
-1. In the Web UI, open **Host management**, click **Create host**, enter name and IP, and choose **Physical / virtual machine**.
-2. Open that host's install guide, copy the command, and run it **on the managed host**.
-3. Return to the host list. When status shows online, you can discover SeaTunnel processes or install a new cluster on that machine.
-
-![Host management list](/img/screenshots/03-hosts.png)
-
-:::caution Install address
-The address in the install guide comes from STX Server's `app.external_url`. It must be reachable **from the managed host**, e.g. `http://10.0.0.10:17800`—not `localhost`, which only works on the STX install machine.
-:::
-
-Next, see [Host management](../host-cluster/host-management) and [Cluster management](../host-cluster/cluster-management).
+The install summary ends with the next steps; for connecting hosts and creating clusters see [Host management](../host-cluster/host-management) and [Cluster management](../host-cluster/cluster-management).
 
 ## Install STX CLI
 
@@ -125,22 +146,45 @@ Next, see [STX CLI](../architecture/cli). For AI Agents, run `stx skill install`
 
 ### Offline install
 
-Download the offline bundle on a machine that can reach GitHub, then copy the archive to the STX install machine.
+Each Release ships three complete offline bundles containing STX Server, the Web UI, stx-agent, Node, and the local monitoring stack, each with a `.sha256` file. Pick by STX install machine:
+
+| Bundle | Target system | How to tell |
+| :--- | :--- | :--- |
+| `stx-offline-linux-amd64.tar.gz` | x86_64, glibc ≥ 2.28: Ubuntu 20.04+, Debian 10+, Rocky / Alma / RHEL 8+, and similar | `uname -m` prints `x86_64`; first line of `ldd --version` ≥ 2.28 |
+| `stx-offline-linux-arm64.tar.gz` | aarch64, glibc ≥ 2.28 | `uname -m` prints `aarch64` |
+| `stx-offline-linux-amd64-centos7.tar.gz` | x86_64, glibc < 2.28: **CentOS 7**, RHEL 7 | first line of `ldd --version` shows 2.17 or similar |
+
+These are the fixed names of the latest release. For a specific version the file is named like `stx-v1.3.0-linux-amd64-centos7-offline.tar.gz`, and `latest/download` in the URL becomes `download/v1.3.0`.
+
+Download on a machine with Internet access, using any of the 6 lines (whichever is fastest). CentOS 7 example:
 
 ```bash
-# Direct access to GitHub
-curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/download-bundle.sh | bash
-# Networks in China
-curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/download-bundle.sh | bash
+F=stx-offline-linux-amd64-centos7.tar.gz   # replace with the file you need from the table
+U=https://github.com/LeonYoah/stx/releases/latest/download/$F
+
+wget "https://gh-proxy.org/$U"          # 1) Cloudflare main
+wget "https://v4.gh-proxy.org/$U"       # 2) Cloudflare optimized (recommended, IPv4 only)
+wget "https://v6.gh-proxy.org/$U"       # 3) Cloudflare optimized (IPv6)
+wget "https://cdn.gh-proxy.org/$U"      # 4) Fastly CDN
+wget "https://axisnow.gh-proxy.org/$U"  # 5) AxisNow
+wget "$U"                               # 6) GitHub direct
+
+# fetch the checksum over the same line, for example:
+wget "https://v4.gh-proxy.org/$U.sha256"
 ```
 
-For CentOS 7, pass `bash -s -- --node-variant glibc217 --arch amd64` when downloading. After copying the archive, install:
+Or let the script probe and download: `curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/download-bundle.sh | bash -s -- --variant centos7`.
+
+Copy both files to the STX install machine and install:
 
 ```bash
-tar -xzf dist/offline/stx-offline-bundle-*-linux-*.tar.gz
-cd stx-offline-bundle-*-linux-*
-sudo ./install.sh --install-dir /opt/stx --offline
+sha256sum -c stx-offline-linux-amd64-centos7.tar.gz.sha256
+tar -xzf stx-offline-linux-amd64-centos7.tar.gz
+cd stx-*-offline/
+sudo ./install.sh
 ```
+
+The [common flags](#common-flags) are the same as for the one-click install (for example `sudo ./install.sh -y --db-type postgres ...`); the download flags `--mirror`, `--variant`, `--version`, and `--bundle-file` do not apply to `install.sh`, which installs the bundle in the current directory.
 
 This installs the STX control plane only. To install SeaTunnel clusters offline, also prepare a [SeaTunnel offline asset bundle](../packages-plugins/package-management#offline-export-asset-bundle) (package ± plugins) on a networked STX, then copy and import it.
 
@@ -182,8 +226,10 @@ By default, `start.sh` starts monitoring based on `observability.enabled` and wh
 
 | Symptom | What to check |
 | :--- | :--- |
-| Ports `17800`, `17880`, or `17890` in use | Run `ss -lntp \| grep -E '17800\|17880\|17890'`; free the ports or change `config.yaml` under the install directory and restart |
+| Pre-flight check reports a port in use | In interactive mode, enter another port when asked; with `-y`, add `--http-port` and similar flags. Find the owner: `ss -lntp \| grep -E '17800\|17880\|17890'` |
+| Install failed | Check the failed step and the log `/tmp/stx-install-*.log` (or `/opt/stx/logs/install.log`) shown by the installer |
+| glibc too old on CentOS 7 | Use `stx-offline-linux-amd64-centos7.tar.gz`; the one-click install picks it automatically |
 | Host stays offline | From the managed host, verify reachability to `17800` and `17890` on the install machine; check firewall and security groups |
-| Cannot download Release | Use the `v4.gh-proxy.org` commands above |
+| Download slow or failing | Try another [download line](#pick-a-download-line), or pin one with `--mirror v4` |
 
 To develop STX locally instead of installing a Release, see the [development notes in the source repository](https://github.com/LeonYoah/stx/blob/main/README_CN.md).
