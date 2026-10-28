@@ -52,7 +52,7 @@ Before downloading, the script probes 6 download lines and uses the fastest one:
 
 - Press Enter for the fastest line, or type another number.
 - If a line fails during download, the script moves on to the next one.
-- To pin a line, add `--mirror`: a number (such as `2`), a name (`gh-proxy`, `v4`, `v6`, `cdn`, `axisnow`, `github`), or your own proxy prefix. Example: `curl -fsSL ... | sudo bash -s -- --mirror v4`.
+- To pin a line, add `--mirror` to the one-click script (`install-online.sh`) or `download-bundle.sh`: a number (such as `2`), a name (`gh-proxy`, `v4`, `v6`, `cdn`, `axisnow`, `github`), or your own proxy prefix. Example: `curl -fsSL ... | sudo bash -s -- --mirror v4`.
 
 ### Answer a few questions
 
@@ -73,22 +73,22 @@ Then it asks a few questions. **Press Enter to accept the default in `[ ]`**; mo
 
 ```text
 [2/7] 安装配置 / settings...
-  ? 管理员 admin 的初始密码 [回车保持默认 admin123]:
   ? Web 控制台端口 / web console port [默认 17880]:
   ? 后端 API 端口 / backend API port：17800 不可用，请输入新端口 [默认 17801]:
   ? Agent gRPC 端口（Agent 回连）/ agent gRPC port [默认 17890]:
   ? 对外访问 IP / 域名（Agent 回连与浏览器访问用）[默认 10.0.0.10]:
   ? 数据库 / database：1) SQLite（内置，无需安装） 2) MySQL [默认 1]:
+  ? 管理员 admin 的初始密码 [回车保持默认 admin123]:
 ```
 
 | Question | Default | Notes |
 | :--- | :--- | :--- |
-| Initial `admin` password | `admin123` | Hidden while typing, asked twice; at least 6 characters |
 | Web UI port | `17880` | Port browsers use |
 | STX Server HTTP API port | `17800` | Used by the Web UI, CLI, and install scripts on managed hosts |
 | stx-agent gRPC port | `17890` | `stx-agent` on managed hosts connects back here |
 | Advertised IP / host | Auto-detected local IP | Written to `app.external_url`; must be reachable from managed hosts |
 | Database | SQLite | Choosing MySQL then asks for host, port, user, password, and database name |
+| Initial `admin` password | `admin123` | Hidden while typing, asked twice; at least 6 characters |
 
 - A port that failed the pre-flight check **must** be changed; for the others, just press Enter.
 - With MySQL, create the database first; STX creates the tables on first start:
@@ -98,7 +98,7 @@ Then it asks a few questions. **Press Enter to accept the default in `[ ]`**; mo
   ```
 
 - With `-y`, or without a terminal (for example in CI), nothing is asked and defaults / flags are used; a port conflict then fails with the flag to change.
-- The admin password applies only on the first install (empty database). Reinstalling over an existing database does not ask for it.
+- The admin password applies only while the database has no admin account yet (STX creates the admin on first start). Reinstalling over an existing SQLite database does not ask for it; with MySQL, the installer logs in after starting STX to confirm whether the new password applied, and says so in the summary.
 
 The remaining steps run on their own: unpack, copy files, write config, register the systemd service, start, and wait until ready. Each step shows `[i/7]` with ✔ / ✘; on failure the installer names the failed step and the log (`/tmp/stx-install-*.log`, also copied to `/opt/stx/logs/install.log`).
 
@@ -143,8 +143,8 @@ Append flags to customize the install, for example `curl -fsSL ... | sudo bash -
 | `--db-type mysql --db-host ... --db-port ... --db-user ... --db-password ... --db-name ...` | Use MySQL |
 | `--without-observability` | Skip the local monitoring stack (Prometheus / Alertmanager / Grafana) |
 | `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | Monitoring ports, default `9090` / `9093` / `3000` |
-| `--mirror v4` | Pin a download line |
-| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | Bundle type / version |
+| `--mirror v4` | Pin a download line (one-click install / `download-bundle.sh` only) |
+| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | Bundle type / version (one-click install / `download-bundle.sh` only) |
 | `--without-node` | Use the machine's Node ≥ 18.18 instead of the bundled one |
 | `--service-user stx` | Run the service as this user (default root) |
 | `--no-autostart` / `--no-systemd` / `--no-start` | No start on boot / no systemd unit / do not start after install |
@@ -294,7 +294,7 @@ cd stx-*-offline/
 sudo ./install.sh
 ```
 
-The questions, flags, and summary are the same as the [one-click install](#answer-a-few-questions) (for example `sudo ./install.sh -y`).
+The questions, summary, and [common flags](#common-flags) are the same as the [one-click install](#answer-a-few-questions) (for example `sudo ./install.sh -y`), except the download flags `--mirror`, `--variant`, and `--version`: `install.sh` installs the bundle in the current directory.
 
 This installs the STX control plane only. To install SeaTunnel clusters offline, also prepare a [SeaTunnel offline asset bundle](../packages-plugins/package-management#offline-export-asset-bundle) (package ± plugins) on a networked STX, then copy and import it.
 

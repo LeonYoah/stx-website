@@ -52,7 +52,7 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 
 - 直接回车使用最快的线路，也可以输入编号改选。
 - 某条线路下载失败时，脚本会自动换下一条。
-- 要固定线路，加 `--mirror`：编号（如 `2`）、名称（`gh-proxy`、`v4`、`v6`、`cdn`、`axisnow`、`github`），或自己的代理前缀。例如 `curl -fsSL ... | sudo bash -s -- --mirror v4`。
+- 要固定线路，给一键安装脚本（`install-online.sh`）或 `download-bundle.sh` 加 `--mirror`：编号（如 `2`）、名称（`gh-proxy`、`v4`、`v6`、`cdn`、`axisnow`、`github`），或自己的代理前缀。例如 `curl -fsSL ... | sudo bash -s -- --mirror v4`。
 
 ### 回答几个问题
 
@@ -73,22 +73,22 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 
 ```text
 [2/7] 安装配置 / settings...
-  ? 管理员 admin 的初始密码 [回车保持默认 admin123]:
   ? Web 控制台端口 / web console port [默认 17880]:
   ? 后端 API 端口 / backend API port：17800 不可用，请输入新端口 [默认 17801]:
   ? Agent gRPC 端口（Agent 回连）/ agent gRPC port [默认 17890]:
   ? 对外访问 IP / 域名（Agent 回连与浏览器访问用）[默认 10.0.0.10]:
   ? 数据库 / database：1) SQLite（内置，无需安装） 2) MySQL [默认 1]:
+  ? 管理员 admin 的初始密码 [回车保持默认 admin123]:
 ```
 
 | 问题 | 默认值 | 说明 |
 | :--- | :--- | :--- |
-| admin 初始密码 | `admin123` | 输入时不显示，需输入两次；至少 6 位 |
 | Web UI 端口 | `17880` | 浏览器访问的端口 |
 | STX Server HTTP API 端口 | `17800` | Web UI、CLI 和被纳管主机上的安装脚本访问 |
 | stx-agent gRPC 端口 | `17890` | 被纳管主机上的 `stx-agent` 回连 |
 | 对外访问 IP / 域名 | 自动探测的本机 IP | 写入 `app.external_url`，必须是被纳管主机能访问的地址 |
 | 数据库 | SQLite | 选 MySQL 时再问地址、端口、用户、密码、库名 |
+| admin 初始密码 | `admin123` | 输入时不显示，需输入两次；至少 6 位 |
 
 - 安装前检查发现被占用的端口会**强制**要求换一个，其余端口回车即可。
 - 选 MySQL 时，数据库需要事先创建，表结构由 STX 首次启动自动创建：
@@ -98,7 +98,7 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
   ```
 
 - 加 `-y`，或在没有终端的环境（如 CI）中运行时，不提问，全部使用默认值和参数值；此时有端口冲突会直接报错，并提示用哪个参数换端口。
-- 管理员密码只在首次安装（数据库为空）时生效。重装且沿用已有数据库时不会再问密码。
+- 管理员密码只在数据库里还没有管理员账号时生效（STX 首次启动时创建管理员）。重装且沿用已有 SQLite 数据库时不会再问密码；使用 MySQL 时，安装器启动 STX 后会用登录结果确认新密码是否生效，并在安装结果中说明。
 
 之后的步骤自动完成：解压安装包、复制文件、写入配置、注册 systemd 服务、启动并等待服务就绪。每一步都显示 `[i/7]` 和 ✔ / ✘；失败时会指出出错的步骤和日志位置（`/tmp/stx-install-*.log`，安装后也会复制到 `/opt/stx/logs/install.log`）。
 
@@ -143,8 +143,8 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 | `--db-type mysql --db-host ... --db-port ... --db-user ... --db-password ... --db-name ...` | 使用 MySQL |
 | `--without-observability` | 不安装本地监控组件（Prometheus / Alertmanager / Grafana） |
 | `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | 本地监控组件端口，默认 `9090` / `9093` / `3000` |
-| `--mirror v4` | 固定下载线路 |
-| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | 指定离线包类型 / 版本 |
+| `--mirror v4` | 固定下载线路（仅一键安装 / `download-bundle.sh`） |
+| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | 指定离线包类型 / 版本（仅一键安装 / `download-bundle.sh`） |
 | `--without-node` | 不用包内 Node，改用本机 Node ≥ 18.18 |
 | `--service-user stx` | 用指定用户运行服务（默认 root） |
 | `--no-autostart` / `--no-systemd` / `--no-start` | 不开机自启 / 不创建 systemd 服务 / 安装后不启动 |
@@ -294,7 +294,7 @@ cd stx-*-offline/
 sudo ./install.sh
 ```
 
-安装过程中的提问和结果与[一键安装](#回答几个问题)相同，参数也一样（如 `sudo ./install.sh -y`）。
+安装过程中的提问和结果与[一键安装](#回答几个问题)相同，[常用参数](#常用参数)也一样（如 `sudo ./install.sh -y`）；只有下载相关的 `--mirror`、`--variant`、`--version` 不适用，`install.sh` 安装的就是当前目录这个离线包。
 
 这只装好 STX 控制面。无网环境还要装 SeaTunnel 集群时，须另备 [SeaTunnel 离线资产包](../packages-plugins/package-management#离线导出资产包)（安装包 ± 插件），在有网侧的 STX 里导出后拷过来导入。
 
