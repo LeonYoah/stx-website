@@ -4,7 +4,7 @@ sidebar_label: Quick deploy
 description: Install STX on Linux, connect a managed host, and use STX CLI on the same machine or another.
 ---
 
-After you install STX on a Linux machine, you get the Web UI, STX Server, and the gRPC service that `stx-agent` needs. This guide uses the one-click installer for first login, then covers next steps and how to connect a managed host.
+After you install STX on a Linux machine, you get the Web UI, STX Server, and the gRPC service that `stx-agent` needs. This guide shows how to install STX with the install scripts.
 
 ## Check before installing
 
@@ -15,6 +15,7 @@ After you install STX on a Linux machine, you get the Web UI, STX Server, and th
 | Network | Browsers can reach the STX install machine on `17880`; managed hosts can reach `17800` and `17890` on it |
 | Disk | About 700 MB on the install-directory partition; about 2.2 GB with the local monitoring stack |
 | Commands | `bash`, `curl`, `tar`, `gzip`, `sha256sum`; no Node.js or python3 needed (the bundle ships Node) |
+| Privileges | root (run the install scripts with `sudo`) |
 
 :::note
 The one-click installer targets Linux. macOS and Windows are for local development—not what this install script is built for.
@@ -32,128 +33,58 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash
 ```
 
-The script detects the CPU architecture and glibc version, downloads the matching [offline bundle](#offline-install), verifies its sha256, and installs it. Systems with glibc < 2.28, such as CentOS 7, get the CentOS 7 bundle automatically.
+The script downloads the [offline bundle](#offline-install) for your CPU architecture and glibc version, verifies its sha256, and installs it; systems with glibc < 2.28, such as CentOS 7, get the CentOS 7 bundle automatically. Without `-y` it asks for the ports, the advertised IP, the database, and the admin password; press Enter to accept each default.
 
 ### Pick a download line
 
-Before downloading, the script probes 6 download lines and uses the fastest one:
+By default the script probes the lines, uses the fastest one, and falls back to the next on failure. Pin a line with `--mirror` (number or name, or your own proxy prefix):
 
-```text
-下载 [2/5] 选择下载线路 / choosing a download line...
-  测速各下载线路（每条最多 6s）/ probing download lines:
-    1) https://gh-proxy.org           Cloudflare (v4) 主站加速              402 ms       800 KB/s
-    2) https://v4.gh-proxy.org        Cloudflare (v4) 优选，推荐，仅 IPv4   120 ms      3982 KB/s
-    3) https://v6.gh-proxy.org        Cloudflare (v4/v6) 优选，支持 IPv6     80 ms      5924 KB/s
-    4) https://cdn.gh-proxy.org       Fastly (v4) CDN                      1230 ms       272 KB/s
-    5) https://axisnow.gh-proxy.org   AxisNow (v4) 三网优选，仅 IPv4        2309 ms       174 KB/s
-    6) https://github.com             GitHub 直连                          1981 ms       257 KB/s
-  ? 选择下载线路编号 [回车=最快的 3]:
-```
-
-- Press Enter for the fastest line, or type another number.
-- If a line fails during download, the script moves on to the next one.
-- To pin a line, add `--mirror` to the one-click script (`install-online.sh`) or `download-bundle.sh`: a number (such as `2`), a name (`gh-proxy`, `v4`, `v6`, `cdn`, `axisnow`, `github`), or your own proxy prefix. Example: `curl -fsSL ... | sudo bash -s -- --mirror v4`.
-
-### Answer a few questions
-
-The installer first runs a **pre-flight check** and lists CPU / glibc, whether each port is in use, disk space, and systemd in one place:
-
-```text
-[1/7] 安装前检查 / pre-flight checks...
-  检查结果 / results:
-    ✔ CPU / glibc：amd64 / 2.17
-    ✔ Web 控制台端口 / web console port：17880 空闲 / free
-    ✘ 后端 API 端口 / backend API port：端口 17800 已被占用 / port 17800 is in use
-    ✔ Agent gRPC 端口（Agent 回连）/ agent gRPC port：17890 空闲 / free
-    ✔ 磁盘 / disk (/opt/stx)：可用 51200 MB（需要约 2200 MB）
-    ✔ systemd：可用，将注册 stx.service
-```
-
-Then it asks a few questions. **Press Enter to accept the default in `[ ]`**; most users just press Enter throughout:
-
-```text
-[2/7] 安装配置 / settings...
-  ? Web 控制台端口 / web console port [默认 17880]:
-  ? 后端 API 端口 / backend API port：17800 不可用，请输入新端口 [默认 17801]:
-  ? Agent gRPC 端口（Agent 回连）/ agent gRPC port [默认 17890]:
-  ? 对外访问 IP / 域名（Agent 回连与浏览器访问用）[默认 10.0.0.10]:
-  ? 数据库 / database：1) SQLite（内置，无需安装） 2) MySQL [默认 1]:
-  ? 管理员 admin 的初始密码 [回车保持默认 admin123]:
-```
-
-| Question | Default | Notes |
+| No. | Name | Address |
 | :--- | :--- | :--- |
-| Web UI port | `17880` | Port browsers use |
-| STX Server HTTP API port | `17800` | Used by the Web UI, CLI, and install scripts on managed hosts |
-| stx-agent gRPC port | `17890` | `stx-agent` on managed hosts connects back here |
-| Advertised IP / host | Auto-detected local IP | Written to `app.external_url`; must be reachable from managed hosts |
-| Database | SQLite | Choosing MySQL then asks for host, port, user, password, and database name |
-| Initial `admin` password | `admin123` | Hidden while typing, asked twice; at least 6 characters |
+| 1 | `gh-proxy` | `https://gh-proxy.org` (Cloudflare main) |
+| 2 | `v4` | `https://v4.gh-proxy.org` (Cloudflare optimized, recommended, IPv4 only) |
+| 3 | `v6` | `https://v6.gh-proxy.org` (Cloudflare optimized, IPv6) |
+| 4 | `cdn` | `https://cdn.gh-proxy.org` (Fastly CDN) |
+| 5 | `axisnow` | `https://axisnow.gh-proxy.org` (AxisNow) |
+| 6 | `github` | Direct GitHub |
 
-- A port that failed the pre-flight check **must** be changed; for the others, just press Enter.
-- With MySQL, create the database first; STX creates the tables on first start:
-
-  ```sql
-  CREATE DATABASE stx DEFAULT CHARACTER SET utf8mb4;
-  ```
-
-- With `-y`, or without a terminal (for example in CI), nothing is asked and defaults / flags are used; a port conflict then fails with the flag to change.
-- The admin password applies only while the database has no admin account yet (STX creates the admin on first start). Reinstalling over an existing SQLite database does not ask for it; with MySQL, the installer logs in after starting STX to confirm whether the new password applied, and says so in the summary.
-
-The remaining steps run on their own: unpack, copy files, write config, register the systemd service, start, and wait until ready. Each step shows `[i/7]` with ✔ / ✘; on failure the installer names the failed step and the log (`/tmp/stx-install-*.log`, also copied to `/opt/stx/logs/install.log`).
-
-### When the install finishes
-
-The installer prints a summary:
-
-```text
-==================== STX 安装完成 / installed ====================
-  访问地址 / URL : http://10.0.0.10:17880
-  登录账号 / user: admin
-  登录密码 / pass: admin123   ← 默认密码，请登录后尽快修改
-  后端 API       : http://10.0.0.10:17800    Agent gRPC 端口: 17890（Agent 回连 10.0.0.10）
-  数据库         : SQLite（/opt/stx/data/stx.db）
-  可观测性       : Prometheus :9090 / Alertmanager :9093 / Grafana :3000（仅本机监听，经控制台访问）
-                   占用磁盘 1.2G，Prometheus 数据在 /opt/stx/observability/prometheus/data 会随时间增长（默认保留 15 天）；不需要可重装时加 --without-observability
-  安装目录       : /opt/stx
-  配置文件       : /opt/stx/config.yaml   （修改后重启生效）
-  日志           : /opt/stx/logs/backend.log  /opt/stx/logs/frontend.log  /opt/stx/logs/install.log
-  启动 / start   : /opt/stx/bin/start.sh
-  停止 / stop    : /opt/stx/bin/stop.sh
-  状态 / status  : /opt/stx/bin/status.sh
-
-后续步骤 / next steps（浏览器打开上面的访问地址并登录）
-  A. 还没有 SeaTunnel 集群：
-  ...
+```bash
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash -s -- --mirror v4
 ```
-
-If you changed the password during install, the summary only says it was changed; on a reinstall that keeps the old password it only says it was kept. The password is shown only while it is still the factory default `admin123`; a password you set never appears on screen or in the install log.
 
 ### Common flags
 
-Append flags to customize the install, for example `curl -fsSL ... | sudo bash -s -- -y --install-dir /data/stx`:
+Append flags to the command, for example `curl -fsSL ... | sudo bash -s -- -y --install-dir /data/stx`:
 
-| Flag | Purpose |
+| Flag | Effect |
 | :--- | :--- |
-| `-y` | Ask nothing; use defaults / flag values |
-| `--install-dir /opt/stx` | Install directory (default `/opt/stx`) |
-| `--admin-password xxx` | Initial `admin` password |
-| `--frontend-port` / `--http-port` / `--grpc-port` | Web UI / HTTP API / gRPC ports |
+| `-y` | No prompts; use defaults and flag values |
+| `--install-dir /opt/stx` | Install directory, default `/opt/stx` |
+| `--admin-password xxx` | Initial admin password |
+| `--frontend-port` / `--http-port` / `--grpc-port` | Web UI / HTTP API / gRPC ports, default `17880` / `17800` / `17890` |
 | `--external-ip 10.0.0.10` | Advertised IP or host name |
-| `--db-type mysql --db-host ... --db-port ... --db-user ... --db-password ... --db-name ...` | Use MySQL |
+| `--db-type sqlite\|mysql\|postgres` | Database, default `sqlite`; `postgres` can also be written `pg` |
+| `--db-host` / `--db-port` / `--db-user` / `--db-password` / `--db-name` | MySQL / PostgreSQL connection; the password can also come from `STX_DB_PASSWORD` |
 | `--without-observability` | Skip the local monitoring stack (Prometheus / Alertmanager / Grafana) |
 | `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | Monitoring ports, default `9090` / `9093` / `3000` |
 | `--mirror v4` | Pin a download line (one-click install / `download-bundle.sh` only) |
-| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | Bundle type / version (one-click install / `download-bundle.sh` only) |
-| `--without-node` | Use the machine's Node ≥ 18.18 instead of the bundled one |
+| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | Bundle variant / version (one-click install / `download-bundle.sh` only) |
+| `--without-node` | Use the host Node ≥ 18.18 instead of the bundled one |
 | `--service-user stx` | Run the service as this user (default root) |
 | `--no-autostart` / `--no-systemd` / `--no-start` | No start on boot / no systemd unit / do not start after install |
 
-:::tip Monitoring disk usage
-The local monitoring stack takes about 1.2 GB after install, and Prometheus data grows with the number of managed hosts (15-day retention by default). Add `--without-observability` when disk is tight.
+With an external database:
+
+```bash
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh \
+  | sudo bash -s -- --db-type postgres --db-host 10.0.0.5 --db-user stx --db-name stx
+```
+
+:::note sudo
+Installing needs root. Without sudo the scripts exit before any check or prompt and print the full command with `sudo`. Non-root works only with a writable `--install-dir` together with `--no-systemd`.
 :::
 
-Check status after install:
+Check the status after install:
 
 ```bash
 /opt/stx/bin/status.sh
@@ -163,15 +94,9 @@ systemctl status stx
 
 ## 2. Open the Web UI
 
-If the STX install machine is `10.0.0.10`, open `http://10.0.0.10:17880` in your browser. Replace the sample IP with your machine's address.
+If the STX install machine is `10.0.0.10`, open `http://10.0.0.10:17880` and sign in as `admin` with the password set during install (`admin123` if you pressed Enter; change it soon after signing in).
 
 ![STX sign-in page](/img/screenshots/00-login.png)
-
-The username is `admin`. The password is the one you set during install; if you pressed Enter, it is `admin123`—change it soon after signing in.
-
-After login you land on the overview page:
-
-![STX overview](/img/screenshots/01-dashboard.png)
 
 | Service | Default port | Who needs access |
 | :--- | :--- | :--- |
@@ -179,42 +104,7 @@ After login you land on the overview page:
 | STX Server HTTP API | `17800` | Web UI, CLI, and install scripts on managed hosts |
 | stx-agent gRPC | `17890` | `stx-agent` on managed hosts |
 
-## 3. Next steps
-
-The end of the install summary lists next steps, depending on whether you already run a SeaTunnel cluster. Menu names below are the English Web UI labels; the installer prints the Chinese ones (shown in parentheses).
-
-### No SeaTunnel cluster yet
-
-1. **Packages & Plugins → Package Management** (安装包与插件 → 安装包管理): download the SeaTunnel version you need. See [Package management](../packages-plugins/package-management).
-2. **Packages & Plugins → Plugin Marketplace** (插件市场): download the connector plugins you need. See [Plugin marketplace](../packages-plugins/plugin-marketplace).
-3. **Hosts & Clusters → Host Management** (主机与集群 → 主机管理): add the machines for SeaTunnel and install `stx-agent` following the install guide.
-4. **Hosts & Clusters → Cluster Management** (集群管理): create the cluster, choosing version, hosts, and plugins.
-
-### Existing SeaTunnel cluster
-
-Skip steps 1 and 2 above:
-
-1. **Hosts & Clusters → Host Management**: add the machines running SeaTunnel and install `stx-agent`.
-2. Click **Auto-Discover** (自动发现) on the host row to import the SeaTunnel nodes running there.
-3. View and manage the imported cluster in **Cluster Management**.
-
-:::note JDK
-STX does not install a JDK. Install one on SeaTunnel machines first, as required by the chosen SeaTunnel version (2.3.x usually uses JDK 8 / 11).
-:::
-
-### Connect a managed host
-
-1. In the Web UI, open **Host management**, click **Create host**, enter name and IP, and choose **Physical / virtual machine**.
-2. Open that host's install guide, copy the command, and run it **on the managed host**.
-3. Return to the host list. When status shows online, you can discover SeaTunnel processes or install a new cluster on that machine.
-
-![Host management list](/img/screenshots/03-hosts.png)
-
-:::caution Install address
-The address in the install guide comes from STX Server's `app.external_url`—the advertised IP you entered during install. It must be reachable **from the managed host**, e.g. `http://10.0.0.10:17800`—not `localhost`, which only works on the STX install machine.
-:::
-
-Next, see [Host management](../host-cluster/host-management) and [Cluster management](../host-cluster/cluster-management).
+The install summary ends with the next steps; for connecting hosts and creating clusters see [Host management](../host-cluster/host-management) and [Cluster management](../host-cluster/cluster-management).
 
 ## Install STX CLI
 
@@ -294,7 +184,7 @@ cd stx-*-offline/
 sudo ./install.sh
 ```
 
-The questions, summary, and [common flags](#common-flags) are the same as the [one-click install](#answer-a-few-questions) (for example `sudo ./install.sh -y`), except the download flags `--mirror`, `--variant`, `--version`, and `--bundle-file`: `install.sh` installs the bundle in the current directory.
+The [common flags](#common-flags) are the same as for the one-click install (for example `sudo ./install.sh -y --db-type postgres ...`); the download flags `--mirror`, `--variant`, `--version`, and `--bundle-file` do not apply to `install.sh`, which installs the bundle in the current directory.
 
 This installs the STX control plane only. To install SeaTunnel clusters offline, also prepare a [SeaTunnel offline asset bundle](../packages-plugins/package-management#offline-export-asset-bundle) (package ± plugins) on a networked STX, then copy and import it.
 
