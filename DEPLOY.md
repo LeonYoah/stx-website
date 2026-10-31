@@ -41,6 +41,15 @@ server {
         rewrite ^/stx-website/(.*)$ /$1 permanent;
     }
 
+    # Old / mistaken install URLs → 快速部署
+    location = /docs/install { return 301 /docs/get-started/quick-start; }
+    location = /docs/getting-started { return 301 /docs/get-started/quick-start; }
+    location = /en/docs/install { return 301 /en/docs/get-started/quick-start; }
+    location = /en/docs/getting-started { return 301 /en/docs/get-started/quick-start; }
+    location = /zh/docs/install { return 301 /docs/get-started/quick-start; }
+    location = /zh/docs/getting-started { return 301 /docs/get-started/quick-start; }
+    location ^~ /zh/docs/get-started/quick-start { return 301 /docs/get-started/quick-start; }
+
     location / {
         # 静态站点：有文件就返回；不要一律回落到中文 index.html，否则 /en/* 会错页
         try_files $uri $uri/ =404;

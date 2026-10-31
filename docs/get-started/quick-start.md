@@ -10,7 +10,7 @@ description: 在 Linux 上安装 STX、接入主机，并在本机或另一台�
 
 | 检查项 | 要求 |
 | :--- | :--- |
-| 系统 | 带 systemd 的 Linux，glibc ≥ 2.17；支持 Ubuntu / Debian、Rocky / Alma / RHEL 8+、CentOS 7 等 |
+| 系统 | Linux，glibc ≥ 2.17；支持 Ubuntu / Debian、Rocky / Alma / RHEL 8+、CentOS 7 等。**推荐**带 systemd；容器 / CI 等无 systemd 环境加 `--no-systemd` |
 | 架构 | amd64 或 arm64；CentOS 7 仅支持 amd64 |
 | 网络 | 浏览器能访问 STX 安装机的 `17880`；被纳管主机能访问 STX 安装机的 `17800` 和 `17890` |
 | 磁盘 | 安装目录所在分区约 700 MB；带本地监控组件约 2.2 GB |
@@ -34,6 +34,17 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 ```
 
 脚本按 CPU 架构和 glibc 版本下载对应的[离线包](#离线安装)，校验 sha256 后安装；CentOS 7 等 glibc < 2.28 的系统自动使用 CentOS 7 专用包。不加 `-y` 时会提问端口、对外访问 IP、数据库和管理员密码，直接回车即使用默认值。
+
+### 指定版本（以 v1.3.0 为例）
+
+默认拉最新 Release。要固定版本，把下载地址里的 `latest/download` 换成 `download/v1.3.0`，并加上 `--version v1.3.0`：
+
+```bash
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/download/v1.3.0/install-online.sh \
+  | sudo bash -s -- --version v1.3.0
+```
+
+无 systemd 时（例如部分容器或 CI 环境）再加 `--no-systemd`；非 root 还需同时指定当前用户可写的 `--install-dir`。
 
 ### 选择下载线路
 
@@ -154,7 +165,7 @@ chmod +x ./stx
 | `stx-offline-linux-arm64.tar.gz` | aarch64，glibc ≥ 2.28 | `uname -m` 输出 `aarch64` |
 | `stx-offline-linux-amd64-centos7.tar.gz` | x86_64，glibc < 2.28：**CentOS 7**、RHEL 7 | `ldd --version` 首行是 2.17 等 |
 
-上表是最新版本的固定文件名。指定版本时，文件名形如 `stx-v1.3.0-linux-amd64-centos7-offline.tar.gz`，下载地址把 `latest/download` 换成 `download/v1.3.0`。
+上表是最新版本的固定文件名（与同架构的 `stx-v1.3.0-linux-*-offline.tar.gz` 内容相同）。指定版本时，文件名形如 `stx-v1.3.0-linux-amd64-offline.tar.gz` 或 `stx-v1.3.0-linux-amd64-centos7-offline.tar.gz`，下载地址把 `latest/download` 换成 `download/v1.3.0`。
 
 在能联网的机器上下载，6 条线路任选一条（哪条快用哪条）。以 CentOS 7 为例：
 
@@ -178,37 +189,64 @@ wget "https://v4.gh-proxy.org/$U.sha256"
 把两个文件复制到 STX 安装机后安装：
 
 ```bash
+# 离线包附带的 .sha256 是「哈希 + 文件名」格式，可用：
 sha256sum -c stx-offline-linux-amd64-centos7.tar.gz.sha256
 tar -xzf stx-offline-linux-amd64-centos7.tar.gz
 cd stx-*-offline/
 sudo ./install.sh
 ```
 
-[常用参数](#常用参数)与一键安装相同（如 `sudo ./install.sh -y --db-type postgres ...`）；下载相关的 `--mirror`、`--variant`、`--version`、`--bundle-file` 不适用于 `install.sh`，它安装的就是当前目录这个离线包。
+指定 v1.3.0 的 amd64 示例（CentOS 7 请改用带 `centos7` 的文件名）：
+
+```bash
+F=stx-v1.3.0-linux-amd64-offline.tar.gz
+U=https://github.com/LeonYoah/stx/releases/download/v1.3.0/$F
+wget "https://v4.gh-proxy.org/$U" "https://v4.gh-proxy.org/$U.sha256"
+sha256sum -c "$F.sha256"
+tar -xzf "$F"
+cd stx-v1.3.0-linux-amd64-offline
+sudo ./install.sh
+```
+
+[常用参数](#常用参数)与一键安装相同（如 `sudo ./install.sh -y --db-type postgres ...`，无 systemd 时加 `--no-systemd`）；下载相关的 `--mirror`、`--variant`、`--version`、`--bundle-file` 不适用于 `install.sh`，它安装的就是当前目录这个离线包。离线包默认按包内组件安装，一般**不必**再加 `--offline`。
 
 这只装好 STX 控制面。无网环境还要装 SeaTunnel 集群时，须另备 [SeaTunnel 离线资产包](../packages-plugins/package-management#离线导出资产包)（安装包 ± 插件），在有网侧的 STX 里导出后拷过来导入。
 
 ### Docker Compose
 
+v1.3.0 起 Release 已提供 `stx-docker-compose.tar.gz`（`latest/download` 与 `download/v1.3.0` 均可）。
+
 ```bash
 mkdir -p stx-docker && cd stx-docker
+# 固定版本时可改为 .../download/v1.3.0/stx-docker-compose.tar.gz
 curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
 cd docker
-cp config.example.yaml config.yaml   # 按数据库类型修改 database 和密码
-mkdir -p data
-docker compose up -d                 # 默认使用 MySQL
+cp config.example.yaml config.yaml   # 改 database.type 等时请保留 database.enabled: true
+mkdir -p data && chmod -R 777 data
+# 使用中国镜像：
+cp .env.cn.example .env
+# 可复现安装请固定镜像标签（当前 latest 与 v1.3.0 一致）：
+#   在 .env 中设置 STX_IMAGE_TAG=v1.3.0
+docker compose up -d                 # 默认使用 MySQL；sqlite 可用 docker-compose.sqlite.yml
 ```
 
-使用中国镜像时，启动前执行 `cp .env.cn.example .env`。本机浏览器打开 `http://127.0.0.1:17880`。
+:::note 校验和格式
+离线包的 `.sha256` 可用 `sha256sum -c`。部分资产（例如 `stx-docker-compose.tar.gz.sha256`）可能只有裸哈希、没有文件名列；此时用 `sha256sum stx-docker-compose.tar.gz` 与文件内容比对即可，不要对裸哈希文件直接跑 `sha256sum -c`。
+:::
+
+本机浏览器打开 **Web UI** `http://127.0.0.1:17880`（API 为 `17800`，不是 Web UI）。
+
+同一 STX 版本下，原生离线安装与 Docker 镜像里的安装包目录「推荐版本」可能不一致（例如原生侧推荐 SeaTunnel **3.0.0**，Docker 镜像侧仍显示 **2.3.12**）。以你实际要装的集群版本为准，可在 Web UI 安装包管理中选择。
 
 ### 单容器体验（不含监控）
 
 ```bash
+# 固定 v1.3.0（推荐可复现安装）；也可改用 :latest
 # GHCR
-docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-all-in-one:latest
+docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-all-in-one:v1.3.0
 
 # 华为云 SWR
-docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:latest
+docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:v1.3.0
 ```
 
 ### 启停服务
@@ -231,5 +269,7 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 | CentOS 7 上提示 glibc 版本过低 | 改用 `stx-offline-linux-amd64-centos7.tar.gz`；一键安装会自动选择 |
 | 主机一直不在线 | 从被纳管主机检查能否访问 STX 安装机的 `17800` 和 `17890`，再检查防火墙与安全组 |
 | 下载慢或失败 | 换一条[下载线路](#选择下载线路)，或加 `--mirror v4` 等固定线路 |
+| 无 systemd / 容器环境安装失败 | 加 `--no-systemd`；非 root 时再加可写的 `--install-dir` |
+| 打开 `17800` 看不到登录页 | Web UI 默认在 **`17880`**；`17800` 是 HTTP API |
 
 如果你要在本机开发 STX，而不是安装 Release，请看[源码仓库的开发说明](https://github.com/LeonYoah/stx/blob/main/README_CN.md)。
