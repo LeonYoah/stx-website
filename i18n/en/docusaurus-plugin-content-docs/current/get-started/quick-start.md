@@ -35,16 +35,7 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 
 The script downloads the [offline bundle](#offline-install) for your CPU architecture and glibc version, verifies its sha256, and installs it; systems with glibc < 2.28, such as CentOS 7, get the CentOS 7 bundle automatically. Without `-y` it asks for the ports, the advertised IP, the database, and the admin password; press Enter to accept each default.
 
-### Pin a version (v1.3.0 example)
-
-The default is the latest Release. To pin a version, replace `latest/download` with `download/v1.3.0` and pass `--version v1.3.0`:
-
-```bash
-curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/download/v1.3.0/install-online.sh \
-  | sudo bash -s -- --version v1.3.0
-```
-
-Without systemd (some containers or CI), also pass `--no-systemd`. Non-root additionally needs a writable `--install-dir`.
+Without systemd (some containers or CI), pass `--no-systemd`. Non-root additionally needs a writable `--install-dir`.
 
 ### Pick a download line
 
@@ -79,7 +70,7 @@ Append flags to the command, for example `curl -fsSL ... | sudo bash -s -- -y --
 | `--without-observability` | Skip the local monitoring stack (Prometheus / Alertmanager / Grafana) |
 | `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | Monitoring ports, default `9090` / `9093` / `3000` |
 | `--mirror v4` | Pin a download line (one-click install / `download-bundle.sh` only) |
-| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | Bundle variant / version (one-click install / `download-bundle.sh` only) |
+| `--variant amd64\|arm64\|centos7` / `--version <tag>` | Bundle variant / version (one-click install / `download-bundle.sh` only) |
 | `--without-node` | Use the host Node ≥ 18.18 instead of the bundled one |
 | `--service-user stx` | Run the service as this user (default root) |
 | `--no-autostart` / `--no-systemd` / `--no-start` | No start on boot / no systemd unit / do not start after install |
@@ -165,7 +156,7 @@ Each Release ships three complete offline bundles containing STX Server, the Web
 | `stx-offline-linux-arm64.tar.gz` | aarch64, glibc ≥ 2.28 | `uname -m` prints `aarch64` |
 | `stx-offline-linux-amd64-centos7.tar.gz` | x86_64, glibc < 2.28: **CentOS 7**, RHEL 7 | first line of `ldd --version` shows 2.17 or similar |
 
-These are the fixed names of the latest release (same content as the matching `stx-v1.3.0-linux-*-offline.tar.gz`). For a specific version the file is named like `stx-v1.3.0-linux-amd64-offline.tar.gz` or `stx-v1.3.0-linux-amd64-centos7-offline.tar.gz`, and `latest/download` in the URL becomes `download/v1.3.0`.
+These are the fixed names of the latest Release. For a specific version the file is named like `stx-vX.Y.Z-linux-amd64-offline.tar.gz`, and `latest/download` in the URL becomes `download/vX.Y.Z`.
 
 Download on a machine with Internet access, using any of the 6 lines (whichever is fastest). CentOS 7 example:
 
@@ -195,36 +186,20 @@ cd stx-*-offline/
 sudo ./install.sh
 ```
 
-Pinned v1.3.0 amd64 example (use the `centos7` name on CentOS 7):
-
-```bash
-F=stx-v1.3.0-linux-amd64-offline.tar.gz
-U=https://github.com/LeonYoah/stx/releases/download/v1.3.0/$F
-wget "https://v4.gh-proxy.org/$U" "https://v4.gh-proxy.org/$U.sha256"
-sha256sum -c "$F.sha256"
-tar -xzf "$F"
-cd stx-v1.3.0-linux-amd64-offline
-sudo ./install.sh
-```
-
 The [common flags](#common-flags) are the same as for the one-click install (for example `sudo ./install.sh -y --db-type postgres ...`; add `--no-systemd` when needed). The download flags `--mirror`, `--variant`, `--version`, and `--bundle-file` do not apply to `install.sh`, which installs the bundle in the current directory. Offline bundles default to installing from the package contents—you usually **do not** need an extra `--offline` flag.
 
 This installs the STX control plane only. To install SeaTunnel clusters offline, also prepare a [SeaTunnel offline asset bundle](../packages-plugins/package-management#offline-export-asset-bundle) (package ± plugins) on a networked STX, then copy and import it.
 
 ### Docker Compose
 
-From v1.3.0 onward the Release includes `stx-docker-compose.tar.gz` (`latest/download` and `download/v1.3.0` both work).
-
 ```bash
 mkdir -p stx-docker && cd stx-docker
-# To pin the asset: .../download/v1.3.0/stx-docker-compose.tar.gz
 curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
 cd docker
 cp config.example.yaml config.yaml   # keep database.enabled: true when changing database.type
 mkdir -p data && chmod -R 777 data
 # China mirrors:
 cp .env.cn.example .env
-# Pin image tag: set STX_IMAGE_TAG=v1.3.0 in .env
 docker compose up -d                 # MySQL by default; for sqlite use docker-compose.sqlite.yml
 ```
 
@@ -233,12 +208,11 @@ Open the **Web UI** at `http://127.0.0.1:17880` (API is `17800`). Use the SeaTun
 ### Single-container trial (no monitoring)
 
 ```bash
-# Pin v1.3.0 for reproducible installs; :latest also works
 # GHCR
-docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-all-in-one:v1.3.0
+docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-all-in-one:latest
 
 # Huawei Cloud SWR
-docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:v1.3.0
+docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:latest
 ```
 
 ### Start and stop

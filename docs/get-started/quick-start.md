@@ -35,16 +35,7 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 
 脚本按 CPU 架构和 glibc 版本下载对应的[离线包](#离线安装)，校验 sha256 后安装；CentOS 7 等 glibc < 2.28 的系统自动使用 CentOS 7 专用包。不加 `-y` 时会提问端口、对外访问 IP、数据库和管理员密码，直接回车即使用默认值。
 
-### 指定版本（以 v1.3.0 为例）
-
-默认拉最新 Release。要固定版本，把下载地址里的 `latest/download` 换成 `download/v1.3.0`，并加上 `--version v1.3.0`：
-
-```bash
-curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/download/v1.3.0/install-online.sh \
-  | sudo bash -s -- --version v1.3.0
-```
-
-无 systemd 时（例如部分容器或 CI 环境）再加 `--no-systemd`；非 root 还需同时指定当前用户可写的 `--install-dir`。
+无 systemd 时（例如部分容器或 CI 环境）加 `--no-systemd`；非 root 还需同时指定当前用户可写的 `--install-dir`。
 
 ### 选择下载线路
 
@@ -79,7 +70,7 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 | `--without-observability` | 不安装本地监控组件（Prometheus / Alertmanager / Grafana） |
 | `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | 本地监控组件端口，默认 `9090` / `9093` / `3000` |
 | `--mirror v4` | 固定下载线路（仅一键安装 / `download-bundle.sh`） |
-| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | 指定离线包类型 / 版本（仅一键安装 / `download-bundle.sh`） |
+| `--variant amd64\|arm64\|centos7` / `--version <tag>` | 指定离线包类型 / 版本（仅一键安装 / `download-bundle.sh`） |
 | `--without-node` | 不用包内 Node，改用本机 Node ≥ 18.18 |
 | `--service-user stx` | 用指定用户运行服务（默认 root） |
 | `--no-autostart` / `--no-systemd` / `--no-start` | 不开机自启 / 不创建 systemd 服务 / 安装后不启动 |
@@ -165,7 +156,7 @@ chmod +x ./stx
 | `stx-offline-linux-arm64.tar.gz` | aarch64，glibc ≥ 2.28 | `uname -m` 输出 `aarch64` |
 | `stx-offline-linux-amd64-centos7.tar.gz` | x86_64，glibc < 2.28：**CentOS 7**、RHEL 7 | `ldd --version` 首行是 2.17 等 |
 
-上表是最新版本的固定文件名（与同架构的 `stx-v1.3.0-linux-*-offline.tar.gz` 内容相同）。指定版本时，文件名形如 `stx-v1.3.0-linux-amd64-offline.tar.gz` 或 `stx-v1.3.0-linux-amd64-centos7-offline.tar.gz`，下载地址把 `latest/download` 换成 `download/v1.3.0`。
+上表是最新 Release 的固定文件名。指定版本时，文件名形如 `stx-vX.Y.Z-linux-amd64-offline.tar.gz`，下载地址把 `latest/download` 换成 `download/vX.Y.Z`。
 
 在能联网的机器上下载，6 条线路任选一条（哪条快用哪条）。以 CentOS 7 为例：
 
@@ -195,36 +186,20 @@ cd stx-*-offline/
 sudo ./install.sh
 ```
 
-指定 v1.3.0 的 amd64 示例（CentOS 7 请改用带 `centos7` 的文件名）：
-
-```bash
-F=stx-v1.3.0-linux-amd64-offline.tar.gz
-U=https://github.com/LeonYoah/stx/releases/download/v1.3.0/$F
-wget "https://v4.gh-proxy.org/$U" "https://v4.gh-proxy.org/$U.sha256"
-sha256sum -c "$F.sha256"
-tar -xzf "$F"
-cd stx-v1.3.0-linux-amd64-offline
-sudo ./install.sh
-```
-
 [常用参数](#常用参数)与一键安装相同（如 `sudo ./install.sh -y --db-type postgres ...`，无 systemd 时加 `--no-systemd`）；下载相关的 `--mirror`、`--variant`、`--version`、`--bundle-file` 不适用于 `install.sh`，它安装的就是当前目录这个离线包。离线包默认按包内组件安装，一般**不必**再加 `--offline`。
 
 这只装好 STX 控制面。无网环境还要装 SeaTunnel 集群时，须另备 [SeaTunnel 离线资产包](../packages-plugins/package-management#离线导出资产包)（安装包 ± 插件），在有网侧的 STX 里导出后拷过来导入。
 
 ### Docker Compose
 
-v1.3.0 起 Release 已提供 `stx-docker-compose.tar.gz`（`latest/download` 与 `download/v1.3.0` 均可）。
-
 ```bash
 mkdir -p stx-docker && cd stx-docker
-# 固定版本时可改为 .../download/v1.3.0/stx-docker-compose.tar.gz
 curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
 cd docker
 cp config.example.yaml config.yaml   # 改 database.type 等时请保留 database.enabled: true
 mkdir -p data && chmod -R 777 data
 # 使用中国镜像：
 cp .env.cn.example .env
-# 固定镜像标签：在 .env 中设置 STX_IMAGE_TAG=v1.3.0
 docker compose up -d                 # 默认使用 MySQL；sqlite 可用 docker-compose.sqlite.yml
 ```
 
@@ -233,12 +208,11 @@ docker compose up -d                 # 默认使用 MySQL；sqlite 可用 docker
 ### 单容器体验（不含监控）
 
 ```bash
-# 固定 v1.3.0（推荐可复现安装）；也可改用 :latest
 # GHCR
-docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-all-in-one:v1.3.0
+docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-all-in-one:latest
 
 # 华为云 SWR
-docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:v1.3.0
+docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:latest
 ```
 
 ### 启停服务
