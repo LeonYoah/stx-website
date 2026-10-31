@@ -10,7 +10,7 @@ description: 在 Linux 上安装 STX、接入主机，并在本机或另一台�
 
 | 检查项 | 要求 |
 | :--- | :--- |
-| 系统 | 带 systemd 的 Linux，glibc ≥ 2.17；支持 Ubuntu / Debian、Rocky / Alma / RHEL 8+、CentOS 7 等 |
+| 系统 | Linux，glibc ≥ 2.17；支持 Ubuntu / Debian、Rocky / Alma / RHEL 8+、CentOS 7 等。**推荐**带 systemd；容器 / CI 等无 systemd 环境加 `--no-systemd` |
 | 架构 | amd64 或 arm64；CentOS 7 仅支持 amd64 |
 | 网络 | 浏览器能访问 STX 安装机的 `17880`；被纳管主机能访问 STX 安装机的 `17800` 和 `17890` |
 | 磁盘 | 安装目录所在分区约 700 MB；带本地监控组件约 2.2 GB |
@@ -34,6 +34,8 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 ```
 
 脚本按 CPU 架构和 glibc 版本下载对应的[离线包](#离线安装)，校验 sha256 后安装；CentOS 7 等 glibc < 2.28 的系统自动使用 CentOS 7 专用包。不加 `-y` 时会提问端口、对外访问 IP、数据库和管理员密码，直接回车即使用默认值。
+
+无 systemd 时（例如部分容器或 CI 环境）加 `--no-systemd`；非 root 还需同时指定当前用户可写的 `--install-dir`。
 
 ### 选择下载线路
 
@@ -68,7 +70,7 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 | `--without-observability` | 不安装本地监控组件（Prometheus / Alertmanager / Grafana） |
 | `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | 本地监控组件端口，默认 `9090` / `9093` / `3000` |
 | `--mirror v4` | 固定下载线路（仅一键安装 / `download-bundle.sh`） |
-| `--variant amd64\|arm64\|centos7` / `--version v1.3.0` | 指定离线包类型 / 版本（仅一键安装 / `download-bundle.sh`） |
+| `--variant amd64\|arm64\|centos7` / `--version <tag>` | 指定离线包类型 / 版本（仅一键安装 / `download-bundle.sh`） |
 | `--without-node` | 不用包内 Node，改用本机 Node ≥ 18.18 |
 | `--service-user stx` | 用指定用户运行服务（默认 root） |
 | `--no-autostart` / `--no-systemd` / `--no-start` | 不开机自启 / 不创建 systemd 服务 / 安装后不启动 |
@@ -154,7 +156,7 @@ chmod +x ./stx
 | `stx-offline-linux-arm64.tar.gz` | aarch64，glibc ≥ 2.28 | `uname -m` 输出 `aarch64` |
 | `stx-offline-linux-amd64-centos7.tar.gz` | x86_64，glibc < 2.28：**CentOS 7**、RHEL 7 | `ldd --version` 首行是 2.17 等 |
 
-上表是最新版本的固定文件名。指定版本时，文件名形如 `stx-v1.3.0-linux-amd64-centos7-offline.tar.gz`，下载地址把 `latest/download` 换成 `download/v1.3.0`。
+上表是最新 Release 的固定文件名。指定版本时，文件名形如 `stx-vX.Y.Z-linux-amd64-offline.tar.gz`，下载地址把 `latest/download` 换成 `download/vX.Y.Z`。
 
 在能联网的机器上下载，6 条线路任选一条（哪条快用哪条）。以 CentOS 7 为例：
 
@@ -184,7 +186,7 @@ cd stx-*-offline/
 sudo ./install.sh
 ```
 
-[常用参数](#常用参数)与一键安装相同（如 `sudo ./install.sh -y --db-type postgres ...`）；下载相关的 `--mirror`、`--variant`、`--version`、`--bundle-file` 不适用于 `install.sh`，它安装的就是当前目录这个离线包。
+[常用参数](#常用参数)与一键安装相同（如 `sudo ./install.sh -y --db-type postgres ...`，无 systemd 时加 `--no-systemd`）；下载相关的 `--mirror`、`--variant`、`--version`、`--bundle-file` 不适用于 `install.sh`，它安装的就是当前目录这个离线包。离线包默认按包内组件安装，一般**不必**再加 `--offline`。
 
 这只装好 STX 控制面。无网环境还要装 SeaTunnel 集群时，须另备 [SeaTunnel 离线资产包](../packages-plugins/package-management#离线导出资产包)（安装包 ± 插件），在有网侧的 STX 里导出后拷过来导入。
 
@@ -194,12 +196,14 @@ sudo ./install.sh
 mkdir -p stx-docker && cd stx-docker
 curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
 cd docker
-cp config.example.yaml config.yaml   # 按数据库类型修改 database 和密码
-mkdir -p data
-docker compose up -d                 # 默认使用 MySQL
+cp config.example.yaml config.yaml   # 改 database.type 等时请保留 database.enabled: true
+mkdir -p data && chmod -R 777 data
+# 使用中国镜像：
+cp .env.cn.example .env
+docker compose up -d                 # 默认使用 MySQL；sqlite 可用 docker-compose.sqlite.yml
 ```
 
-使用中国镜像时，启动前执行 `cp .env.cn.example .env`。本机浏览器打开 `http://127.0.0.1:17880`。
+本机浏览器打开 **Web UI** `http://127.0.0.1:17880`（API 为 `17800`）。安装包目录中的 SeaTunnel 推荐版本以 Web UI 为准。
 
 ### 单容器体验（不含监控）
 
@@ -231,5 +235,7 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 | CentOS 7 上提示 glibc 版本过低 | 改用 `stx-offline-linux-amd64-centos7.tar.gz`；一键安装会自动选择 |
 | 主机一直不在线 | 从被纳管主机检查能否访问 STX 安装机的 `17800` 和 `17890`，再检查防火墙与安全组 |
 | 下载慢或失败 | 换一条[下载线路](#选择下载线路)，或加 `--mirror v4` 等固定线路 |
+| 无 systemd / 容器环境安装失败 | 加 `--no-systemd`；非 root 时再加可写的 `--install-dir` |
+| 打开 `17800` 看不到登录页 | Web UI 默认在 **`17880`**；`17800` 是 HTTP API |
 
 如果你要在本机开发 STX，而不是安装 Release，请看[源码仓库的开发说明](https://github.com/LeonYoah/stx/blob/main/README_CN.md)。
