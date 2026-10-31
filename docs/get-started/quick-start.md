@@ -189,7 +189,6 @@ wget "https://v4.gh-proxy.org/$U.sha256"
 把两个文件复制到 STX 安装机后安装：
 
 ```bash
-# 离线包附带的 .sha256 是「哈希 + 文件名」格式，可用：
 sha256sum -c stx-offline-linux-amd64-centos7.tar.gz.sha256
 tar -xzf stx-offline-linux-amd64-centos7.tar.gz
 cd stx-*-offline/
@@ -225,18 +224,11 @@ cp config.example.yaml config.yaml   # 改 database.type 等时请保留 databas
 mkdir -p data && chmod -R 777 data
 # 使用中国镜像：
 cp .env.cn.example .env
-# 可复现安装请固定镜像标签（当前 latest 与 v1.3.0 一致）：
-#   在 .env 中设置 STX_IMAGE_TAG=v1.3.0
+# 固定镜像标签：在 .env 中设置 STX_IMAGE_TAG=v1.3.0
 docker compose up -d                 # 默认使用 MySQL；sqlite 可用 docker-compose.sqlite.yml
 ```
 
-:::note 校验和格式
-离线包的 `.sha256` 可用 `sha256sum -c`。部分资产（例如 `stx-docker-compose.tar.gz.sha256`）可能只有裸哈希、没有文件名列；此时用 `sha256sum stx-docker-compose.tar.gz` 与文件内容比对即可，不要对裸哈希文件直接跑 `sha256sum -c`。
-:::
-
-本机浏览器打开 **Web UI** `http://127.0.0.1:17880`（API 为 `17800`，不是 Web UI）。
-
-同一 STX 版本下，原生离线安装与 Docker 镜像里的安装包目录「推荐版本」可能不一致（例如原生侧推荐 SeaTunnel **3.0.0**，Docker 镜像侧仍显示 **2.3.12**）。以你实际要装的集群版本为准，可在 Web UI 安装包管理中选择。
+本机浏览器打开 **Web UI** `http://127.0.0.1:17880`（API 为 `17800`）。安装包目录中的 SeaTunnel 推荐版本以 Web UI 为准。
 
 ### 单容器体验（不含监控）
 

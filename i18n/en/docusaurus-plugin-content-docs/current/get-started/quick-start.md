@@ -189,7 +189,6 @@ Or let the script probe and download: `curl -fsSL https://v4.gh-proxy.org/https:
 Copy both files to the STX install machine and install:
 
 ```bash
-# Per-bundle .sha256 files use "hash  filename" form, so this works:
 sha256sum -c stx-offline-linux-amd64-centos7.tar.gz.sha256
 tar -xzf stx-offline-linux-amd64-centos7.tar.gz
 cd stx-*-offline/
@@ -225,18 +224,11 @@ cp config.example.yaml config.yaml   # keep database.enabled: true when changing
 mkdir -p data && chmod -R 777 data
 # China mirrors:
 cp .env.cn.example .env
-# For reproducible installs pin the image tag (today latest == v1.3.0):
-#   set STX_IMAGE_TAG=v1.3.0 in .env
+# Pin image tag: set STX_IMAGE_TAG=v1.3.0 in .env
 docker compose up -d                 # MySQL by default; for sqlite use docker-compose.sqlite.yml
 ```
 
-:::note Checksum file format
-Offline-bundle `.sha256` files work with `sha256sum -c`. Some assets (for example `stx-docker-compose.tar.gz.sha256`) may be a bare hex digest with no filename column—compare with `sha256sum stx-docker-compose.tar.gz` instead of running `sha256sum -c` on that file.
-:::
-
-Open the **Web UI** at `http://127.0.0.1:17880` (API is `17800`, not the UI).
-
-For the same STX release, the package catalog “recommended” SeaTunnel version can differ between a native offline install and the Docker images (for example native **3.0.0** vs Docker **2.3.12**). Pick the SeaTunnel version your clusters need in Web UI package management.
+Open the **Web UI** at `http://127.0.0.1:17880` (API is `17800`). Use the SeaTunnel version shown in Web UI package management.
 
 ### Single-container trial (no monitoring)
 
