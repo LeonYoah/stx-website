@@ -17,7 +17,7 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
   zh: [
     {
       tag: 'RELEASE',
-      text: 'STX 1.0 社区预览版：一键纳管与图形化集群生命周期管理',
+      text: 'STX v1.3.0：实时可观测、作业告警、测试连接、一键升级与自升级',
       actionText: '快速部署 ➔',
       link: '/docs/get-started/quick-start',
     },

@@ -24,7 +24,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
   zh: {
     eyebrow: '产品能力',
     title: '主机、集群、任务与诊断同在一处',
-    sub: '在 Web UI 里查看状态，再去做安装、启停、调试或排查。',
+    sub: '对齐 v1.3.0：实时可观测、作业告警、测试连接、一键升级，以及版本发布与 Savepoint 提示，都在 Web UI 里完成。',
     mediaNote: '界面预览',
     cards: [
       {
@@ -42,34 +42,47 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       },
       {
         id: 'clusters',
-        image: '/img/screenshots/04-clusters.png',
+        image: '/img/screenshots/39-one-click-upgrade.gif',
         index: '02',
         title: '集群生命周期',
-        lead: '安装、启停、升级，不再散落在脚本里。',
+        lead: '安装、启停、一键升级，不再散落在脚本里。',
         points: [
           '创建到升级的完整链路同屏管理',
-          '节点状态与引擎类型始终可见',
-          '每次变更可追踪，操作不再黑箱',
+          '节点可配置自定义 JDK',
+          'STX 支持自升级，版本变更可追踪',
         ],
-        mediaAlt: 'STX 集群管理',
+        mediaAlt: 'STX 集群一键升级',
       },
       {
         id: 'workbench',
         image: '/img/screenshots/02-workbench.png',
         index: '03',
         title: '调试工作台',
-        lead: '配置、预览、提交，形成可回看的闭环。',
+        lead: '草稿保存、版本发布，形成可回看的闭环。',
         points: [
-          'HOCON 与 DAG 结构可视化编辑',
-          'Checkpoint 与运行态可逐层排查',
-          '从调试到运行，动作连贯可复现',
+          '保存只更新草稿；发布新版本后才能正式运行',
+          'Savepoint 恢复前会提示先发布版本',
+          'HOCON 与 Checkpoint 可逐层排查',
         ],
         mediaAlt: 'STX 调试工作台',
       },
       {
+        id: 'test-connection',
+        image: '/img/screenshots/38-test-connection.gif',
+        index: '04',
+        title: '测试连接',
+        lead: '改完地址与表名，先探活再跑作业。',
+        points: [
+          '工具栏一键测试连接，不必先发布',
+          '验证库能否连通、对象是否存在',
+          '失败先改配置，再继续 DAG 或预览',
+        ],
+        mediaAlt: 'STX 工作台测试连接',
+      },
+      {
         id: 'dag',
         image: '/img/screenshots/08-dag.png',
-        index: '04',
+        index: '05',
         title: 'DAG 预览',
         lead: '配置落成图，上下游一眼能对上。',
         points: [
@@ -81,16 +94,29 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       },
       {
         id: 'observe',
-        image: '/img/screenshots/05-monitoring.png',
-        index: '05',
-        title: '监控与诊断',
-        lead: '异常不是终点，证据链才是。',
+        image: '/img/screenshots/36-observe-realtime.gif',
+        index: '06',
+        title: '实时可观测',
+        lead: '运行水位实时可见，异常有据可查。',
         points: [
-          '监控承接运行水位与告警信号',
-          '诊断把线索、日志与根因串起来',
-          '确认后可继续走到恢复动作',
+          '作业吞吐与运行态同屏刷新',
+          '监控承接水位信号，便于下钻',
+          '确认后可继续走到诊断与恢复',
         ],
-        mediaAlt: 'STX 监控中心',
+        mediaAlt: 'STX 实时可观测',
+      },
+      {
+        id: 'alert',
+        image: '/img/screenshots/37-job-alert.gif',
+        index: '07',
+        title: '作业告警',
+        lead: '告警进入 AlertHub，处理路径清晰。',
+        points: [
+          '作业告警事件集中呈现',
+          '规则与通知通道可配置',
+          '确认、静默后可转入诊断',
+        ],
+        mediaAlt: 'STX 作业告警 AlertHub',
       },
     ],
   },
@@ -115,7 +141,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       },
       {
         id: 'clusters',
-        image: '/img/screenshots/04-clusters.png',
+        image: '/img/screenshots/39-one-click-upgrade.gif',
         index: '02',
         title: 'Cluster lifecycle',
         lead: 'Install, start/stop, and upgrade—without scattered scripts.',
@@ -124,7 +150,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
           'Node status and engine type stay visible',
           'Each change is trackable',
         ],
-        mediaAlt: 'STX cluster management',
+        mediaAlt: 'STX one-click cluster upgrade',
       },
       {
         id: 'workbench',
@@ -140,9 +166,22 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
         mediaAlt: 'STX debug workbench',
       },
       {
+        id: 'test-connection',
+        image: '/img/screenshots/38-test-connection.gif',
+        index: '04',
+        title: 'Test connection',
+        lead: 'Validate connectivity before running the job.',
+        points: [
+          'One-click test from the workbench toolbar',
+          'Check database reachability and objects',
+          'Fix config first, then continue to DAG or preview',
+        ],
+        mediaAlt: 'STX workbench test connection',
+      },
+      {
         id: 'dag',
         image: '/img/screenshots/08-dag.png',
-        index: '04',
+        index: '05',
         title: 'DAG preview',
         lead: 'Config becomes a graph; upstream and downstream line up.',
         points: [
@@ -154,24 +193,37 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       },
       {
         id: 'observe',
-        image: '/img/screenshots/05-monitoring.png',
-        index: '05',
-        title: 'Monitoring & diagnosis',
-        lead: 'Alerts are a start; evidence comes next.',
+        image: '/img/screenshots/36-observe-realtime.gif',
+        index: '06',
+        title: 'Realtime observability',
+        lead: 'See runtime levels live, then follow the evidence.',
         points: [
-          'Monitoring shows runtime levels and alerts',
-          'Diagnosis links clues, logs, and root cause',
-          'Then continue into recovery when ready',
+          'Job throughput and runtime state refresh on screen',
+          'Monitoring surfaces level signals for drill-down',
+          'Continue into diagnosis and recovery when ready',
         ],
-        mediaAlt: 'STX monitoring',
+        mediaAlt: 'STX realtime observability',
+      },
+      {
+        id: 'alert',
+        image: '/img/screenshots/37-job-alert.gif',
+        index: '07',
+        title: 'Job alerts',
+        lead: 'Alerts land in AlertHub with a clear handling path.',
+        points: [
+          'Job alert events in one place',
+          'Rules and notification channels are configurable',
+          'Acknowledge or silence, then move to diagnosis',
+        ],
+        mediaAlt: 'STX job alerts AlertHub',
       },
     ],
   },
 };
 
 /**
- * 第四屏：多组「描述 + 媒体窗」；暂用截图，后续可换视频。
- * Fourth band: multiple copy + media rows; screenshots now, video later.
+ * 第四屏：多组「描述 + 媒体窗」；截图与发版动图混用。
+ * Fourth band: multiple copy + media rows; stills and release GIFs.
  */
 export function ProductShowcase(): React.JSX.Element {
   const locale = useHomeLocale();

@@ -306,12 +306,12 @@ const COPY: Record<
     },
     capabilities: [
       'AI Agent 智能运维入口',
-      '集群感知',
-      '运行可观测',
-      '任务一键恢复',
-      'Connector 一键下载',
-      'Checkpoint 可视化',
-      'HOCON DAG 解析',
+      '实时可观测',
+      '作业告警 AlertHub',
+      '一键升级与自升级',
+      '版本与草稿发布',
+      '测试连接',
+      'Savepoint 恢复提示',
     ],
     installCmd:
       'curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash',
