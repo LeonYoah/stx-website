@@ -42,16 +42,16 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       },
       {
         id: 'clusters',
-        image: '/img/screenshots/39-one-click-upgrade.gif',
+        image: '/img/screenshots/40-cluster-install-config.png',
         index: '02',
         title: '集群生命周期',
         lead: '安装、启停、一键升级，不再散落在脚本里。',
         points: [
           '创建到升级的完整链路同屏管理',
           '节点可配置自定义 JDK',
-          'STX 支持自升级，版本变更可追踪',
+          '端口和 JVM 堆内存在安装配置里指定',
         ],
-        mediaAlt: 'STX 集群一键升级',
+        mediaAlt: 'STX 创建集群安装配置',
       },
       {
         id: 'workbench',
@@ -141,16 +141,16 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       },
       {
         id: 'clusters',
-        image: '/img/screenshots/39-one-click-upgrade.gif',
+        image: '/img/screenshots/40-cluster-install-config.png',
         index: '02',
         title: 'Cluster lifecycle',
         lead: 'Install, start/stop, and upgrade—without scattered scripts.',
         points: [
           'Create through upgrade managed on one screen',
-          'Node status and engine type stay visible',
-          'Each change is trackable',
+          'Set a custom JDK path on each node',
+          'Set ports and JVM heap on the install step',
         ],
-        mediaAlt: 'STX one-click cluster upgrade',
+        mediaAlt: 'STX cluster install configuration',
       },
       {
         id: 'workbench',
