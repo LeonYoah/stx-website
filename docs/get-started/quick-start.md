@@ -194,16 +194,18 @@ sudo ./install.sh
 
 ```bash
 mkdir -p stx-docker && cd stx-docker
-curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
+# 中国
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
+# GitHub 直连：去掉 https://v4.gh-proxy.org/
 cd docker
-cp config.example.yaml config.yaml   # 改 database.type 等时请保留 database.enabled: true
-mkdir -p data && chmod -R 777 data
-# 使用中国镜像：
-cp .env.cn.example .env
-docker compose up -d                 # 默认使用 MySQL；sqlite 可用 docker-compose.sqlite.yml
+# SeaTunnel 不在本机时，改 config.yaml 的 app.external_url / app.console_url 为其他机器能访问的安装机 IP（默认 127.0.0.1）
+mkdir -p data
+docker compose up -d
 ```
 
-本机浏览器打开 **Web UI** `http://127.0.0.1:17880`（API 为 `17800`）。安装包目录中的 SeaTunnel 推荐版本以 Web UI 为准。
+中国拉镜像再执行 `cp .env.cn.example .env` 后 `docker compose up -d`。SQLite：`docker compose -f docker-compose.sqlite.yml up -d`。
+
+打开 Web UI `http://127.0.0.1:17880`。宿主机只暴露 `17880` / `17800` / `17890`。
 
 ### 单容器体验（不含监控）
 
