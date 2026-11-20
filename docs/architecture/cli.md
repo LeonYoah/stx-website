@@ -202,6 +202,38 @@ stx audit list --client_type cli --size 50 --output table
 stx audit command list --request_id <request_id> --output table
 ```
 
+## 告警与监控
+
+```bash
+# 告警实例
+stx monitoring alert-instance list
+stx monitoring alert-instance ack <id> --confirm
+stx monitoring alert-instance silence <id> --confirm
+stx monitoring alert-instance close <id> --confirm
+
+# 检测规则目录
+stx monitoring alert-rule catalog
+
+# 通知通道与路由
+stx monitoring notification-channel list
+stx monitoring notification-route list
+```
+
+通知路由可按告警类别（`source_type`：`platform_health` / `metric` / `job`）匹配通道。通道与路由的创建、更新、删除等写操作需按提示传入请求文件并确认。
+
+## 诊断与调试
+
+```bash
+# 自动巡检策略（示例：告警触发时按规则键匹配）
+stx diagnostics auto-policy create --cluster-id <id> --name <name> --condition ALERT_FIRING --alert-rule-key <rule_key> --confirm
+stx diagnostics auto-policy update <id> --alert-rule-key <rule_key> --confirm
+
+# 进程剖析（管理员可用，默认关闭，需在配置中开启）
+stx debug pprof <name>
+```
+
+`stx debug pprof` 支持的 profile 类型与参数以 `stx debug pprof --help` 为准；该功能默认关闭，需在服务端配置中开启后使用。
+
 ## 最小上手路径
 
 ```bash

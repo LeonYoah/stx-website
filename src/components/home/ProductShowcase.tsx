@@ -24,21 +24,21 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
   zh: {
     eyebrow: '产品能力',
     title: '主机、集群、任务与诊断同在一处',
-    sub: '对齐 v1.3.0：实时可观测、作业告警、测试连接、一键升级，以及版本发布与 Savepoint 提示，都在 Web UI 里完成。',
+    sub: '在 Web UI 中查看首页大盘、管理集群与作业、处理告警并发起诊断，运维操作集中完成。',
     mediaNote: '界面预览',
     cards: [
       {
         id: 'dashboard',
         image: '/img/screenshots/01-dashboard.png',
         index: '01',
-        title: 'Web UI 总览',
+        title: '首页大盘',
         lead: '先看全局，再落到问题本身。',
         points: [
-          '主机、集群与任务健康同屏呈现',
-          '关键水位与异常入口就近可达',
-          '从概览一键进入处置路径',
+          '集群、作业与主机状态同屏呈现',
+          '关键指标与异常入口就近可达',
+          '从概览进入告警、巡检与作业详情',
         ],
-        mediaAlt: 'STX Web UI 总览',
+        mediaAlt: 'STX 首页大盘',
       },
       {
         id: 'clusters',
