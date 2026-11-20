@@ -193,16 +193,18 @@ This installs the STX control plane only. To install SeaTunnel clusters offline,
 
 ```bash
 mkdir -p stx-docker && cd stx-docker
-curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
+# China
+curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/stx-docker-compose.tar.gz | tar -xz
+# Direct GitHub: drop the https://v4.gh-proxy.org/ prefix
 cd docker
-cp config.example.yaml config.yaml   # keep database.enabled: true when changing database.type
-mkdir -p data && chmod -R 777 data
-# China mirrors:
-cp .env.cn.example .env
-docker compose up -d                 # MySQL by default; for sqlite use docker-compose.sqlite.yml
+# If SeaTunnel is not on this host, set app.external_url / app.console_url in config.yaml to a reachable install-host IP (default 127.0.0.1)
+mkdir -p data
+docker compose up -d
 ```
 
-Open the **Web UI** at `http://127.0.0.1:17880` (API is `17800`). Compose starts only the frontend, backend, and database containers; built-in monitoring runs inside STX Server and writes to `data/stx/tsdb` under the mounted directory (per your Compose mounts). When upgrading from an older version, run `docker compose up -d --remove-orphans` to remove the now-unused prometheus / alertmanager / grafana containers. Use the SeaTunnel version shown in Web UI package management.
+China images: `cp .env.cn.example .env` then `docker compose up -d`. SQLite: `docker compose -f docker-compose.sqlite.yml up -d`.
+
+Open the Web UI at `http://127.0.0.1:17880`. Host ports: `17880` / `17800` / `17890`. Built-in monitoring runs inside STX Server and writes to `data/stx/tsdb` under the mounted directory (per your Compose mounts). When upgrading from an older version, run `docker compose up -d --remove-orphans` to remove the now-unused prometheus / alertmanager / grafana containers.
 
 ### Single-container trial
 
