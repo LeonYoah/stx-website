@@ -202,6 +202,38 @@ stx audit list --client_type cli --size 50 --output table
 stx audit command list --request_id <request_id> --output table
 ```
 
+## Alerts and monitoring
+
+```bash
+# Alert instances
+stx monitoring alert-instance list
+stx monitoring alert-instance ack <id> --confirm
+stx monitoring alert-instance silence <id> --confirm
+stx monitoring alert-instance close <id> --confirm
+
+# Detection rule catalog
+stx monitoring alert-rule catalog
+
+# Notification channels and routes
+stx monitoring notification-channel list
+stx monitoring notification-route list
+```
+
+Notification routes can match channels by alert category (`source_type`: `platform_health` / `metric` / `job`). Write operations on channels and routes—create, update, delete—require passing the request file as prompted and confirming.
+
+## Diagnostics and debugging
+
+```bash
+# Auto-inspection policy (example: match by rule key when an alert fires)
+stx diagnostics auto-policy create --cluster-id <id> --name <name> --condition ALERT_FIRING --alert-rule-key <rule_key> --confirm
+stx diagnostics auto-policy update <id> --alert-rule-key <rule_key> --confirm
+
+# Process profiling (admin only, off by default; enable in config)
+stx debug pprof <name>
+```
+
+For `stx debug pprof` profile types and flags, see `stx debug pprof --help`; the feature is off by default and must be enabled in server config first.
+
 ## Minimal getting-started path
 
 ```bash
