@@ -27,6 +27,7 @@ const sidebars: SidebarsConfig = {
     'packages-plugins/plugin-marketplace',
     section('告警与诊断', 'Alerts & diagnostics'),
     'alerts-diagnostics/alert-center',
+    'alerts-diagnostics/embedded-monitoring-preview',
     'alerts-diagnostics/error-center',
     'alerts-diagnostics/diagnostic-report',
     'alerts-diagnostics/troubleshooting-memory',

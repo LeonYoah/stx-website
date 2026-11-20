@@ -6,6 +6,8 @@ description: 在 Linux 上安装 STX、接入主机，并在本机或另一台�
 
 在一台 Linux 机器上安装 STX 后，你会得到 Web UI、STX Server 和 Agent 所需的 gRPC 服务。本文介绍如何用安装脚本安装 STX。
 
+本文适用于[正式发布版](https://github.com/LeonYoah/stx/releases/latest)。如果你在试用开发构建，请同时查看[内置监控（未发布）](../alerts-diagnostics/embedded-monitoring-preview)中的安装与升级差异。
+
 ## 安装前检查
 
 | 检查项 | 要求 |
@@ -200,10 +202,15 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 cd docker
 # SeaTunnel 不在本机时，改 config.yaml 的 app.external_url / app.console_url 为其他机器能访问的安装机 IP（默认 127.0.0.1）
 mkdir -p data
-docker compose up -d
 ```
 
-中国拉镜像再执行 `cp .env.cn.example .env` 后 `docker compose up -d`。SQLite：`docker compose -f docker-compose.sqlite.yml up -d`。
+若要从华为云 SWR 拉取 STX 镜像，先执行 `cp .env.cn.example .env`。再按所用数据库执行一条启动命令：
+
+| 数据库 | 启动命令 |
+| :--- | :--- |
+| MySQL（默认） | `docker compose up -d` |
+| SQLite | `docker compose -f docker-compose.sqlite.yml up -d` |
+| PostgreSQL | `docker compose -f docker-compose.postgres.yml up -d` |
 
 打开 Web UI `http://127.0.0.1:17880`。宿主机只暴露 `17880` / `17800` / `17890`。
 

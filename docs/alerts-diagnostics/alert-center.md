@@ -6,6 +6,8 @@ description: 查看告警事件，处理触发中的告警，配置规则与通�
 
 Web UI **告警与诊断** → **告警中心**（`/monitoring`）。页面右上角可切换 **告警事件** 和 **规则与通知**；顶部也可进入[诊断中心](./error-center)。
 
+下文是正式发布版的流程。开发构建中的告警类别和迁移事项见[内置监控（未发布）](./embedded-monitoring-preview)。
+
 ## 告警事件
 
 ![告警事件列表、状态筛选和时间范围](/img/screenshots/18-alert-events.png)
@@ -40,6 +42,8 @@ Web UI **告警与诊断** → **告警中心**（`/monitoring`）。页面右�
 
 ![通知通道列表与新建入口](/img/screenshots/19-notification-channels.png)
 
-通知通道目前提供**邮件**和 **Webhook** 两种新建入口。企业微信、钉钉或飞书机器人可按目标平台要求填写 Webhook 地址；不要把它们当作独立的通道类型。需要继续查看现场时，转到[巡检与诊断报告](./diagnostic-report)。
+通知通道有 **新建邮件通道** 和 **新建 Webhook** 两个入口。在 **新建 Webhook** 中选择通用 Webhook 或对应的钉钉、企业微信、飞书机器人类型，再填写地址。钉钉和飞书启用了加签时，填写机器人的加签密钥；企业微信不需要加签密钥。保存后测试发送。
+
+需要继续查看现场时，转到[巡检与诊断报告](./diagnostic-report)。
 
 命令行操作见 [STX CLI](../architecture/cli)。

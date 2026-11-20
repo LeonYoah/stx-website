@@ -6,6 +6,8 @@ description: View alert events, handle firing alerts, and configure rules and no
 
 Web UI **Alerts & Diagnostics** → **Alert center** (`/monitoring`). Use the top-right toggle for **Alert events** and **Rules & notifications**; you can also open [Diagnostics](./error-center) from the top bar.
 
+This page describes the stable release. For alert categories and migration in development builds, see [Embedded monitoring (unreleased)](./embedded-monitoring-preview).
+
 ## Alert events
 
 ![Alert event list with status filter and time range](/img/screenshots/18-alert-events.png)
@@ -40,6 +42,8 @@ After switching to **Rules & notifications**, use **Alert rules**, **Notificatio
 
 ![Notification channel list and create entry](/img/screenshots/19-notification-channels.png)
 
-Notification channels currently offer **Email** and **Webhook** as create options. For WeCom, DingTalk, or Feishu bots, fill in the Webhook URL per the target platform; do not treat them as separate channel types. To continue investigating on-site, go to [Inspections & diagnostic reports](./diagnostic-report).
+Use **New Email Channel** for email, or **New Webhook** for a generic webhook or a DingTalk, WeCom, or Feishu bot. Select the matching type before entering the URL. If signing is enabled for a DingTalk or Feishu bot, enter its signing secret; WeCom does not need one. Save and send a test notification.
+
+To continue investigating, go to [Inspections & diagnostic reports](./diagnostic-report).
 
 For CLI operations, see [STX CLI](../architecture/cli).

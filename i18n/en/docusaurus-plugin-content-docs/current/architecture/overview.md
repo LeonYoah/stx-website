@@ -60,7 +60,7 @@ Browser and CLI reach STX Server; operations on managed hosts run over gRPC thro
 | **stx-java-proxy** | Managed start/stop on the node | Independent Java helper process; reuses installed SeaTunnel runtime for config parsing, storage probes, etc. |
 | **Metadata database** | SQLite (default) or MySQL / PostgreSQL | Hosts, clusters, nodes, config versions, audit, etc. |
 
-Monitoring can integrate with Prometheus / Grafana / Alertmanager: the one-click install may bundle a local trio, or you can point at an existing stack (config changes required).
+v1.4.0 integrates with Prometheus, Grafana, and Alertmanager. The one-click installer can install them locally, or you can configure STX to use an existing stack. Development builds use [embedded monitoring (unreleased)](../alerts-diagnostics/embedded-monitoring-preview) instead.
 
 ## stx-java-proxy
 
