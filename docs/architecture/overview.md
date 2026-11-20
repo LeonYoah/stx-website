@@ -60,7 +60,7 @@ flowchart LR
 | **stx-java-proxy** | 由平台在节点上托管启停 | 独立 Java 辅助进程，复用已安装的 SeaTunnel 运行时做配置解析与存储探测等 |
 | **元数据库** | SQLite（默认）或 MySQL / PostgreSQL | 主机、集群、节点、配置版本、审计等 |
 
-监控可对接 Prometheus / Grafana / Alertmanager：一键安装可附带本地三件套，也支持接入已有监控栈（需改配置）。
+v1.4.0 可对接 Prometheus / Grafana / Alertmanager：一键安装可附带本地三件套，也可通过配置接入已有监控栈。开发构建改用 [STX 内置监控（未发布）](../alerts-diagnostics/embedded-monitoring-preview)。
 
 ## stx-java-proxy
 

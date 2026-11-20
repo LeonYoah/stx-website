@@ -6,6 +6,8 @@ description: Install STX on Linux, connect a managed host, and use STX CLI on th
 
 After you install STX on a Linux machine, you get the Web UI, STX Server, and the gRPC service that `stx-agent` needs. This guide shows how to install STX with the install scripts.
 
+This guide applies to the [stable release](https://github.com/LeonYoah/stx/releases/latest). If you are testing a development build, see [Embedded monitoring (unreleased)](../alerts-diagnostics/embedded-monitoring-preview) for installation and upgrade differences.
+
 ## Check before installing
 
 | Check | Requirement |
@@ -200,10 +202,15 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 cd docker
 # If SeaTunnel is not on this host, set app.external_url / app.console_url in config.yaml to a reachable install-host IP (default 127.0.0.1)
 mkdir -p data
-docker compose up -d
 ```
 
-China images: `cp .env.cn.example .env` then `docker compose up -d`. SQLite: `docker compose -f docker-compose.sqlite.yml up -d`.
+To pull STX images from Huawei Cloud SWR, first run `cp .env.cn.example .env`. Then use the command for your database:
+
+| Database | Start command |
+| :--- | :--- |
+| MySQL (default) | `docker compose up -d` |
+| SQLite | `docker compose -f docker-compose.sqlite.yml up -d` |
+| PostgreSQL | `docker compose -f docker-compose.postgres.yml up -d` |
 
 Open the Web UI at `http://127.0.0.1:17880`. Host ports: `17880` / `17800` / `17890`.
 

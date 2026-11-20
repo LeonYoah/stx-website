@@ -4,7 +4,7 @@ sidebar_label: Debug workbench
 description: Write jobs with curated templates and raw default parameter templates, test connections, preview data, and view Checkpoints.
 ---
 
-Open **Workbench** from the Web UI bottom bar. Select a cluster first, then create a new job or open an existing one. You can insert connector templates, test connections, view the DAG and preview data; you must publish a version before a formal run.
+Open **Workbench** from the Web UI bottom bar. Select a cluster, then create or open a job. You can debug and run the current draft manually. Publish a version before enabling built-in scheduling or pushing to DolphinScheduler.
 
 ## Open the workbench
 
@@ -49,7 +49,7 @@ After writing configuration, use the current script to check connections, job st
 | **Preview** | See what real data looks like before writing Transform / Sink | Reads sample rows from Source with the current script, optionally through Transform; does not write to the configured Sink |
 
 :::tip
-DAG, test connection, and preview use the current script in the editor—you do not need to publish first. A formal run, Savepoint recovery, and enabling scheduling require at least one published version.
+DAG, connection tests, and preview use the current editor script without publishing. Save a new job once before using these tools.
 :::
 
 ### DAG
@@ -72,11 +72,12 @@ Use this to confirm Source samples and post-Transform fields before writing the 
 
 | Action | Effect |
 | :--- | :--- |
-| **Save** | Updates the draft only |
-| **Publish new version** | Creates a version that can run formally |
+| **Save** | Updates the draft without creating a version. Starting in v1.4.0, the workbench automatically saves the current draft shortly after you pause editing an existing job. |
+| **Publish** | Confirm in the **Publish Version** dialog to save the current contents as an immutable version for history, scheduling, and CLI submissions. |
 
-Before a **formal run, Savepoint recovery, or enabling scheduling**, publish at least once; saving alone does not remove the restriction (consistent with the UI message "Publish a version first").  
-**DAG / test connection / preview** use the current editor script and do not require publishing first.
+If you navigate away from the workbench within the site with unsaved edits, choose **Stay and keep editing**, **Save and leave**, or **Discard and leave**. Discarding affects only changes that have not been saved.
+
+**Run** in the workbench uses the current editor draft; CLI submissions and built-in schedules use a published version. **Savepoint Recover** in the toolbar uses the current draft and the selected savepoint, and requires at least one published version. **Recover** from a job history row uses the original submitted configuration when available.
 
 ## Variable management
 
@@ -126,7 +127,7 @@ Switch to **Checkpoint** at the bottom to open it. Streaming jobs usually need t
 2. Create or open a job → insert fragments such as `MySQL-CDC` / `Jdbc` from **Curated templates**, or choose a plugin under **Raw default parameter templates**.
 3. Edit parameters with hover docs and enum completion; put passwords in secret variables.  
 4. **Test connection** → **DAG** to verify topology and table creation → **Preview** sample rows (you can **Save** at any time).
-5. **Publish new version** → **Run**; for streaming jobs, view position and lag on the Checkpoint page; use **Recover** / Savepoint stop when needed.
+5. Click **Run** to execute the current draft. Publish it when you want to schedule it. For streaming jobs, view position and lag on the Checkpoint page.
 
 New jobs default to a `FakeSource` → `Console` skeleton so you can practice editing and preview. You can also [install a cluster in one click](../host-cluster/cluster-management) for integration testing. If a connector JAR is missing on the cluster, download and install it from the [Plugin Marketplace](../packages-plugins/plugin-marketplace).
 

@@ -44,10 +44,12 @@ When multiple processes run on one machine, verify role and ports carefully to a
 
 Typical flow:
 
-1. Select target host and role (separate mode requires at least Master / Worker).
-2. Click **Pre-check** to verify the install directory is writable and ports are free.
-3. Submit install: push package → extract to install directory → write cluster discovery config → start by role.
-4. View install progress in the Web UI; on failure, **Retry / Cancel**.
+1. **Select Hosts** and assign their roles. Separated mode requires at least one Master and one Worker.
+2. Under **Install Config**, confirm the directory and ports. For each node's **JDK path**, select a detected JDK, enter an absolute path such as `/usr/lib/jvm/java-11`, or leave it blank for auto-detection.
+3. **Precheck** automatically verifies that stx-agent is online, ports are free, the install directory is writable, and the JDK can run. The install directory does not need to exist yet, but its nearest existing parent must be writable. If the specified JDK cannot run, correct the path and rerun the checks.
+4. Choose any **Plugins** you need, then **Deploy**. Review progress and per-node results on the deployment page.
+
+![Install Config and JDK path in the cluster deployment wizard](/img/screenshots/40-cluster-install-config.png)
 
 ## Version upgrade
 
