@@ -105,7 +105,7 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 
 内置监控数据默认写在容器内 `/opt/stx/data/tsdb`，需要持久化请挂载该目录。
 
-### STX CLI（可选）
+### STX CLI（可选） {#安装-stx-cli}
 
 日常使用 Web UI 即可，不需要单独安装 CLI。仅在以下场景再考虑部署 STX CLI：
 

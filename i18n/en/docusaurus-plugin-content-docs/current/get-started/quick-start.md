@@ -105,7 +105,7 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 
 Built-in monitoring writes to `/opt/stx/data/tsdb` inside the container; mount that directory to persist data.
 
-### STX CLI (optional)
+### STX CLI (optional) {#install-stx-cli}
 
 Day-to-day operations only require the Web UI—no separate CLI install is needed. Deploy STX CLI only when you need:
 
