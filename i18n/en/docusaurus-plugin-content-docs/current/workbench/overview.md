@@ -8,7 +8,7 @@ Open **Workbench** from the Web UI bottom bar. Select a cluster, then create or 
 
 ## Open the workbench
 
-![Debug workbench](/img/screenshots/02-workbench.png)
+![Order sync draft and a completed SeaTunnel job in the workbench](/img/screenshots/02-workbench.png)
 
 ## Use templates
 
@@ -45,7 +45,7 @@ After writing configuration, use the current script to check connections, job st
 | Capability | What it solves | How to use |
 | :--- | :--- | :--- |
 | **DAG** | Hard to see script dependencies | Parses Source / Transform / Sink into nodes and edges; on the Sink side, also parses the **CREATE TABLE** statements that would run |
-| **Test connection** | Verify connectivity and object existence without viewing topology | Click **Test connection** in the toolbar: whether the database connects, whether tables exist, and so on |
+| **Test connection** | Verify connectivity and object existence without viewing topology | Click **Test** in the toolbar to see the result for each connection |
 | **Preview** | See what real data looks like before writing Transform / Sink | Reads sample rows from Source with the current script, optionally through Transform; does not write to the configured Sink |
 
 :::tip
@@ -56,17 +56,21 @@ DAG, connection tests, and preview use the current editor script without publish
 
 See what the script does: which upstream table data comes from, how it is transformed, and where it is written downstream. Click an operator to inspect table paths and fields; on Sink nodes, compare the actual CREATE TABLE DDL.
 
-![DAG preview and table structure](/img/screenshots/08-dag.png)
+![Order sync DAG: read from orders and write to orders_copy](/img/screenshots/08-dag.png)
 
 ### Test connection
 
-Does not run the full job. Useful after changing `url`, credentials, or table names: edit the script → **Test connection** → adjust based on the result.
+After changing an address, credentials, or a table name, click **Test**. The **Test Connections** dialog shows the result for each connection without running the full job.
+
+![Connection test passed for both the PostgreSQL source and sink](/img/screenshots/47-workbench-test.png)
 
 ### Preview
 
-After clicking **Preview**, view sample rows from Source and after Transform in the bottom panel. Preview does not write to the formal Sink in the configuration.
+Click **Preview**, confirm the row limit (default: **100**) and timeout (default: **10 minutes**), then click **Start Preview**. View sample rows from the Source or Transform in the **Preview** tab at the bottom. Preview does not write to the original Sink.
 
-Use this to confirm Source samples and post-Transform fields before writing the formal Sink. Preview defaults to about **100** rows; timeout is about **10** minutes.
+![Preview tab showing order rows read from PostgreSQL](/img/screenshots/48-workbench-preview.png)
+
+[Watch the preview steps](/img/screenshots/48-workbench-preview.webp)
 
 ## Save and publish
 
