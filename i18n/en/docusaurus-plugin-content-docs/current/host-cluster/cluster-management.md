@@ -4,11 +4,11 @@ sidebar_label: Cluster management
 description: Create cluster definitions, adopt existing processes or one-click install, manage node start/stop, and upgrade with config merge.
 ---
 
-Open **Cluster management** in the Web UI. The list can be filtered by running, deploying, or stopped; cards show deployment mode, node count, and version. You can open details or stop a cluster.
+Open **Cluster management** in the Web UI. Filter by status and deployment mode and switch between table and card views; selecting a cluster opens the right quick-detail rail with install path, nodes, and actions to open the console, stop, or restart.
 
 ![Cluster management list](/img/screenshots/04-clusters.png)
 
-Creating a cluster only registers name, version, and deployment mode—it does not start SeaTunnel processes. You also need to [connect an online host](./host-management), then choose to adopt existing processes or one-click install.
+[Connect a host](./host-management) and verify that stx-agent is online. Choose **Register Cluster** to manage existing SeaTunnel processes, or **Create Cluster** to install SeaTunnel on the host.
 
 ## Choose an onboarding path
 
@@ -29,7 +29,7 @@ Creating a cluster only registers name, version, and deployment mode—it does n
 
 ## Adopt existing processes
 
-1. **Cluster management** → Create cluster: name, hybrid or separate, SeaTunnel version.
+1. Go to **Cluster management** → **Register Cluster**. Enter the name and select the deployment mode and SeaTunnel version.
 2. Add nodes: specify online host, role, install directory, and ports (defaults per table above).
 3. Trigger discovery on the host or node (stx-agent scans local SeaTunnel processes).
 4. After confirming the bind, the node should show process PID and actual install directory.
@@ -42,12 +42,21 @@ When multiple processes run on one machine, verify role and ports carefully to a
 
 [Package management](../packages-plugins/package-management) in the Web UI must have an install package for the target version. You can upload or download first; connectors are handled in the [Plugin marketplace](../packages-plugins/plugin-marketplace).
 
-Typical flow:
+Click **Create Cluster**:
 
-1. Select target host and role (separate mode requires at least Master / Worker).
-2. Click **Pre-check** to verify the install directory is writable and ports are free.
-3. Submit install: push package → extract to install directory → write cluster discovery config → start by role.
-4. View install progress in the Web UI; on failure, **Retry / Cancel**.
+1. In **Basic Info**, enter the name, select the deployment mode and version, and confirm the install directory.
+2. **Select Hosts** and assign their roles. Separated mode requires at least one Master and one Worker.
+3. Under **Install Config**, confirm the ports and resource settings. For each node's **JDK path**, select a detected JDK, enter an absolute path such as `/usr/lib/jvm/java-11`, or leave it blank for auto-detection.
+
+![Install Config and JDK path in the cluster deployment wizard](/img/screenshots/40-cluster-install-config.png)
+
+4. In **Precheck**, review the stx-agent, port, install directory, and JDK checks. The install directory does not need to exist yet, but its nearest existing parent must be writable. If the specified JDK cannot run, correct its path and rerun the checks.
+
+![Precheck passed: stx-agent online, ports free, install directory can be created, Java 11 supported](/img/screenshots/46-cluster-precheck.png)
+
+5. Choose any **Plugins** you need and click **Start Deploy**. Review progress and per-node results in **Deploy**. Once deployment succeeds, verify that the cluster is **Running** in the cluster list.
+
+Precheck uses the target SeaTunnel version to determine JDK compatibility. For example, SeaTunnel 2.3.13 recommends JDK 8 or 11. SeaTunnel 3.1.0 requires at least JDK 11 and recommends JDK 11 or 17. Upgrades check against the target version.
 
 ## Version upgrade
 
@@ -57,7 +66,9 @@ In cluster details, open **Upgrade** (or review past runs under **Upgrade Record
 
 1. Choose the **Target Version** and confirm the **Target Install Directory** (defaults can follow the version).
 2. Prepare the target package in [Package management](../packages-plugins/package-management) and the required connectors in the [Plugin marketplace](../packages-plugins/plugin-marketplace). The UI prompts you to fill gaps when assets are missing.
-3. Click **Run Precheck**. After it passes, continue to **Config**. If you change the target version or directory, **Rerun Precheck** first.
+3. Click **Run Precheck**, confirm each node's **Target JDK** in the target node list, then click **Continue to Config Merge**. If you change the target version, directory, or JDK, **Rerun Precheck** first.
+
+![Upgrade prepare page: precheck summary, package info, and target node JDK selection](/img/screenshots/50-upgrade-prepare.png)
 
 During upgrade, the cluster switches to the target connector JARs and incrementally applies `lib` / `plugins` dependencies from the locally prepared target plugins. Same-named base JARs that ship with the install package are kept.
 
@@ -99,6 +110,10 @@ Savepoint or pause critical sync jobs first so you can recover positions if the 
 :::
 
 ## Day-to-day operations
+
+Open a cluster to access six top-level tabs: **Overview**, **Nodes**, **Configs**, **Plugins**, **Runtime**, and **Ops**:
+
+![Cluster detail overview with six management tabs](/img/screenshots/49-cluster-detail.png)
 
 In cluster details / node list, for the **whole cluster** or a **single node**:
 
