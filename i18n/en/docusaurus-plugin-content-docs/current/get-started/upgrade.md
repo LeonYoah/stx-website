@@ -4,7 +4,7 @@ sidebar_label: Upgrade guide
 description: Upgrade STX from older versions and understand changes after built-in monitoring replaced external components.
 ---
 
-Use this guide when upgrading to an STX development build that includes built-in monitoring. If your target is v1.4.0, follow its [release notes](https://github.com/LeonYoah/stx/releases/tag/v1.4.0) and do not use this guide to remove external monitoring components.
+This guide covers changes to consider when upgrading STX, especially after built-in monitoring replaced external Prometheus / Alertmanager / Grafana.
 
 ## Before you upgrade
 

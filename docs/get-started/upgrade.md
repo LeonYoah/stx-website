@@ -4,7 +4,7 @@ sidebar_label: 升级指南
 description: 从旧版本升级 STX，了解内置监控替代旧监控组件后的变化与注意事项。
 ---
 
-本页适用于升级到已包含内置监控的 STX 开发构建。若目标版本是 v1.4.0，请按其[发布说明](https://github.com/LeonYoah/stx/releases/tag/v1.4.0)升级，不要按本页移除外部监控组件。
+本文说明从旧版本升级 STX 时需要关注的变化，重点是内置监控替代外部 Prometheus / Alertmanager / Grafana 后的部署与配置差异。
 
 ## 升级前准备
 
