@@ -4,7 +4,7 @@ sidebar_label: 升级指南
 description: 从旧版本升级 STX，了解内置监控替代旧监控组件后的变化与注意事项。
 ---
 
-本文说明从旧版本升级 STX 时需要关注的变化，重点是内置监控替代外部 Prometheus / Alertmanager / Grafana 后的部署与配置差异。
+本页适用于升级到已包含内置监控的 STX 开发构建。若目标版本是 v1.4.0，请按其[发布说明](https://github.com/LeonYoah/stx/releases/tag/v1.4.0)升级，不要按本页移除外部监控组件。
 
 ## 升级前准备
 
@@ -33,7 +33,7 @@ description: 从旧版本升级 STX，了解内置监控替代旧监控组件后
 | 变化项 | 说明 |
 | :--- | :--- |
 | 监控组件 | 不再需要 Prometheus / Alertmanager / Grafana；采集、存储、查询与告警评估在 STX Server 内完成。 |
-| 数据目录 | 监控数据默认保存在 `data/tsdb`，默认保留 31 天、最多 30GiB。 |
+| 数据目录 | 监控数据默认保存在 `data/tsdb`。默认只按容量清理，详见[容量与保留策略](../alerts-diagnostics/builtin-monitoring#容量与保留策略)。 |
 | 历史数据 | 旧版监控历史数据不会自动迁移，升级后从零开始积累。 |
 | 旧配置 | `observability.prometheus` / `alertmanager` / `grafana` / `remote_ingest` 配置段会被忽略并提示清理。 |
 | 旧安装参数 | `--with-observability`、`--prometheus-port`、`--alertmanager-port`、`--grafana-port` 不再被接受，传入会报错，请从安装命令中移除。 |

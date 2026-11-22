@@ -4,7 +4,7 @@ sidebar_label: Upgrade guide
 description: Upgrade STX from older versions and understand changes after built-in monitoring replaced external components.
 ---
 
-This guide covers changes to consider when upgrading STX, especially after built-in monitoring replaced external Prometheus / Alertmanager / Grafana.
+Use this guide when upgrading to an STX development build that includes built-in monitoring. If your target is v1.4.0, follow its [release notes](https://github.com/LeonYoah/stx/releases/tag/v1.4.0) and do not use this guide to remove external monitoring components.
 
 ## Before you upgrade
 
@@ -33,7 +33,7 @@ The `--observability` flag for `bin/start.sh` / `bin/stop.sh` is kept for compat
 | Change | Description |
 | :--- | :--- |
 | Monitoring components | Prometheus / Alertmanager / Grafana are no longer required; collection, storage, query, and alert evaluation run inside STX Server. |
-| Data directory | Monitoring data defaults to `data/tsdb` with 31-day retention and 30GiB max size. |
+| Data directory | Monitoring data defaults to `data/tsdb` and is pruned by size only by default. See [capacity and retention](../alerts-diagnostics/builtin-monitoring#capacity-and-retention). |
 | Historical data | Historical monitoring data from older deployments is not migrated automatically. |
 | Legacy config | `observability.prometheus` / `alertmanager` / `grafana` / `remote_ingest` sections are ignored. |
 | Legacy install flags | `--with-observability`, `--prometheus-port`, `--alertmanager-port`, `--grafana-port` are no longer accepted and will cause an error if passed. |
