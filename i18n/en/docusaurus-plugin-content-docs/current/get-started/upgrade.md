@@ -1,54 +1,74 @@
 ---
 title: Upgrade STX
 sidebar_label: Upgrade guide
-description: Upgrade STX from older versions and understand changes after built-in monitoring replaced external components.
+description: Upgrade STX Server and stx-agent from the Web UI, Docker Compose, or install script, plus v1.5.0 upgrade notes.
 ---
 
-This guide covers changes to consider when upgrading STX, especially after built-in monitoring replaced external Prometheus / Alertmanager / Grafana.
+There are three ways to upgrade STX: **Web UI System Upgrade** (recommended for bare-metal/VM installs), **Docker Compose** for container installs, or re-running the install script.
 
-## Before you upgrade
+:::tip SeaTunnel workloads stay running
+STX self-upgrade only restarts STX control plane, frontend, `stx-agent`, and `stx-java-proxy`. **SeaTunnel clusters and running jobs are never stopped or restarted.** Back up `config.yaml` and `data/` before upgrading.
+:::
 
-- Back up configuration and data in the installation directory (especially `config.yaml` and database / `data`).
-- Review release notes for the target version and plan a maintenance window.
-- For Docker Compose deployments, be ready to remove obsolete monitoring containers.
+## Option 1: Web UI online / offline self-upgrade (recommended)
 
-## Upgrade (Linux package)
+For bare-metal / VM installs. Sign in to the Web UI with an **administrator** account.
 
-1. Stop STX: run `bin/stop.sh` or `systemctl stop stx`.
-2. Install the new package over the existing installation (or follow release instructions), keeping `config.yaml` and data directories.
-3. Review `config.yaml`: legacy `observability.prometheus` / `alertmanager` / `grafana` / `remote_ingest` sections are ignored and can be removed.
-4. Start STX: run `bin/start.sh` or `systemctl start stx`.
-5. Sign in to the Web UI and verify dashboards, alert center, and cluster status.
+### 1. Open System Upgrade
 
-The `--observability` flag for `bin/start.sh` / `bin/stop.sh` is kept for compatibility and ignored. To disable built-in monitoring, set `observability.enabled: false` in `config.yaml` and restart.
+Click the **Profile** icon on the right side of the bottom dock, scroll to the bottom of the dialog, and click **Check for updates** to open the **System Upgrade** page:
 
-## Upgrade (Docker Compose)
+![System Upgrade entry: click Profile on the bottom dock, scroll down, and click Check for updates](/img/screenshots/51-self-upgrade-entry.png)
 
-1. Update to the new Compose package/images and configuration.
-2. Run `docker compose up -d --remove-orphans` to start new services and remove obsolete prometheus / alertmanager / grafana containers.
-3. Monitoring data is stored under the mounted `data/stx/tsdb` directory (depending on volume mapping).
+### 2. Follow the four upgrade steps
 
-## Monitoring changes
+![System Upgrade four-step guide: check for updates, stage assets, dry run or start upgrade, verify node agent versions](/img/screenshots/52-self-upgrade-steps.png)
 
-| Change | Description |
+1. **Check version**: Click **Check for updates** in the top-right corner to view your current version and the latest available release.
+2. **Stage assets**:
+   - **Online**: Select **Online download** and click **Download to local cache**.
+   - **Offline / air-gapped**: Switch to **Offline import** and drop or select a `.tar.gz` / `.tgz` / `.zip` release bundle.
+   - Wait until control plane, `stx-agent`, `stx-java-proxy`, and frontend bundle all show **Ready**.
+3. **Run upgrade**:
+   - Optionally click **Dry run (no changes)** first to verify the workflow without touching binaries or processes.
+   - Click **Start upgrade**, review the target version and nodes in the confirmation dialog, and confirm.
+   - If the new version fails to start, STX rolls back automatically. Offline managed hosts upgrade automatically once they reconnect.
+4. **Verify**: The Web UI reconnects automatically after ~3–5 seconds. Check **Agent version per node** to confirm every managed host matches the control plane, and inspect **Upgrade history** at the bottom if needed.
+
+## Option 2: Docker Compose upgrade
+
+On Docker deployments, the **System Upgrade** page automatically detects container mode and displays the host upgrade command. Run on the STX install host:
+
+```bash
+docker compose pull
+docker compose up -d --remove-orphans
+```
+
+The new container image bundles updated `stx-agent` and `stx-java-proxy` assets for aligning managed hosts after restart.
+
+## Option 3: Install script in-place upgrade
+
+If the Web UI is unavailable or you are upgrading from an older release without self-upgrade, re-run the one-line installer (see [Quick Start](./quick-start)) or `install.sh` from the new offline bundle:
+
+- The script stops the existing service, preserves `config.yaml` and `data/`, and restarts STX.
+- Sign in to the Web UI afterward and verify dashboards, alerts, and `stx-agent` versions.
+
+## Version-specific upgrade notes
+
+### Upgrading to v1.5.0 (from v1.4.0 or earlier)
+
+Starting in `v1.5.0`, monitoring is built into STX Server and no longer requires external Prometheus / Alertmanager / Grafana:
+
+| Change | Details |
 | :--- | :--- |
-| Monitoring components | Prometheus / Alertmanager / Grafana are no longer required; collection, storage, query, and alert evaluation run inside STX Server. |
-| Data directory | Monitoring data defaults to `data/tsdb` and is pruned by size only by default. See [capacity and retention](../alerts-diagnostics/builtin-monitoring#capacity-and-retention). |
-| Historical data | Historical monitoring data from older deployments is not migrated automatically. |
-| Legacy config | `observability.prometheus` / `alertmanager` / `grafana` / `remote_ingest` sections are ignored. |
-| Legacy install flags | `--with-observability`, `--prometheus-port`, `--alertmanager-port`, `--grafana-port` are no longer accepted and will cause an error if passed. |
-| External alert ingest | `/api/v1/monitoring/alertmanager/webhook` was removed; requests to it return 404. Outbound webhook/email notifications from STX are unaffected. |
+| Monitoring stack | Prometheus, Alertmanager, and Grafana are no longer required; collection, storage, query, and alert evaluation run inside STX Server. Pass `--remove-orphans` with Docker Compose to clean up old monitoring containers. |
+| Data directory | Monitoring data is stored under `data/tsdb` (or mounted `data/stx/tsdb` in Docker) and pruned by size only by default. See [capacity and retention](../alerts-diagnostics/builtin-monitoring#capacity-and-retention). |
+| Historical data | Legacy external monitoring metrics are not migrated automatically. The old `observability/` directory is left untouched and can be deleted manually once confirmed unnecessary. |
+| Config & start flags | Legacy `observability.prometheus` / `alertmanager` / `grafana` / `remote_ingest` config sections are ignored. `--observability` on `bin/start.sh` / `bin/stop.sh` is kept as a no-op; use `observability.enabled` in `config.yaml`. |
+| Install script flags | `--with-observability`, `--prometheus-port`, `--alertmanager-port`, and `--grafana-port` were removed and now error if passed. Remove them from automation scripts. |
+| External alert ingest | `POST /api/v1/monitoring/alertmanager/webhook` was removed (returns 404). Outbound webhook/email notifications from STX are unaffected. |
 
-Old `observability/` directories from previous versions may remain and can be deleted manually when no longer needed.
-
-## Post-upgrade checks
-
-- Home dashboards for clusters, jobs, and hosts display correctly.
-- Alert center sources show platform health / metric / job alerts.
-- Notification channels and delivery records work as expected.
-- Update any scripts or integrations that called removed monitoring APIs.
-
-## API changes for integrations
+#### API changes for integrations (v1.5.0)
 
 Removed endpoints:
 
@@ -58,4 +78,4 @@ Removed endpoints:
 - `ANY /api/v1/monitoring/proxy/grafana`
 - `ANY /api/v1/monitoring/proxy/grafana/*proxyPath`
 
-Alert `source_type` values are now `platform_health` / `metric` / `job`; old values return 400. Webhook notification payload `source_type` values changed accordingly.
+Alert `source_type` values changed to `platform_health` / `metric` / `job` (legacy values return 400); webhook notification payloads use the same updated values.
