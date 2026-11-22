@@ -62,4 +62,4 @@ observability:
 
 STX Server 停止后，内置监控无法告警。要检测 STX Server 是否可用，可从外部定期探测其健康检查地址，例如 `http://10.0.0.10:17800/api/v1/health`。
 
-告警相关配置见[告警策略与检测规则](./alert-policies-rules)和[告警中心](./alert-center)。
+配置触发条件和通知方式，见[告警中心](./alert-center)。

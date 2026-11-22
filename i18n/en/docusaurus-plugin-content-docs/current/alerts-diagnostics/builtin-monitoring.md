@@ -62,4 +62,4 @@ Restart STX Server after changes. For Docker Compose, data is stored under the m
 
 Built-in monitoring cannot alert when STX Server stops. To detect a server outage, periodically check its health endpoint from outside STX, for example `http://10.0.0.10:17800/api/v1/health`.
 
-For alert configuration, see [Alert policies and rules](./alert-policies-rules) and [Alert center](./alert-center).
+To configure alert rules and notifications, see [Alert center](./alert-center).
