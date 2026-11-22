@@ -66,7 +66,9 @@ In cluster details, open **Upgrade** (or review past runs under **Upgrade Record
 
 1. Choose the **Target Version** and confirm the **Target Install Directory** (defaults can follow the version).
 2. Prepare the target package in [Package management](../packages-plugins/package-management) and the required connectors in the [Plugin marketplace](../packages-plugins/plugin-marketplace). The UI prompts you to fill gaps when assets are missing.
-3. Click **Run Precheck**. After it passes, continue to **Config**. If you change the target version or directory, **Rerun Precheck** first.
+3. Click **Run Precheck**, confirm each node's **Target JDK** in the target node list, then click **Continue to Config Merge**. If you change the target version, directory, or JDK, **Rerun Precheck** first.
+
+![Upgrade prepare page: precheck summary, package info, and target node JDK selection](/img/screenshots/50-upgrade-prepare.png)
 
 During upgrade, the cluster switches to the target connector JARs and incrementally applies `lib` / `plugins` dependencies from the locally prepared target plugins. Same-named base JARs that ship with the install package are kept.
 
