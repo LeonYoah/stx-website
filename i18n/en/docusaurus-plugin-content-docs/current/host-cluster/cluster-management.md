@@ -56,7 +56,7 @@ Click **Create Cluster**:
 
 5. Choose any **Plugins** you need and click **Start Deploy**. Review progress and per-node results in **Deploy**. Once deployment succeeds, verify that the cluster is **Running** in the cluster list.
 
-In development builds, the checks use the target SeaTunnel version to determine JDK compatibility. For example, SeaTunnel 2.3.13 recommends JDK 8 or 11. SeaTunnel 3.1.0 requires at least JDK 11 and recommends JDK 11 or 17. Upgrades check against the target version.
+Precheck uses the target SeaTunnel version to determine JDK compatibility. For example, SeaTunnel 2.3.13 recommends JDK 8 or 11. SeaTunnel 3.1.0 requires at least JDK 11 and recommends JDK 11 or 17. Upgrades check against the target version.
 
 ## Version upgrade
 
