@@ -54,13 +54,13 @@ Browser and CLI reach STX Server; operations on managed hosts run over gRPC thro
 
 | Process | How it starts | Responsibility |
 | :--- | :--- | :--- |
-| **STX Server (`stx server`)** | Starts with the one-click install service | HTTP API, auth, metadata; also provides gRPC for Agents |
+| **STX Server (`stx server`)** | Starts with the one-click install service | HTTP API, auth, metadata; also provides gRPC for Agents; built-in monitoring (collection / storage / query / alert evaluation) |
 | **Web UI** | Starts with the one-click install service | Web interface (hosts, clusters, packages, plugins, monitoring, etc.) |
 | **stx-agent** | Install command on the managed host | Registration and heartbeat; pre-checks, install, start/stop, config push, process discovery, etc. |
 | **stx-java-proxy** | Managed start/stop on the node | Independent Java helper process; reuses installed SeaTunnel runtime for config parsing, storage probes, etc. |
 | **Metadata database** | SQLite (default) or MySQL / PostgreSQL | Hosts, clusters, nodes, config versions, audit, etc. |
 
-Monitoring can integrate with Prometheus / Grafana / Alertmanager: the one-click install may bundle a local trio, or you can point at an existing stack (config changes required).
+Monitoring is built into STX Server (collection, storage, query, and alert evaluation). Data is stored in `data/tsdb` under the install directory, retained for 31 days up to 30GiB by default, with no external monitoring components required. See [Built-in monitoring](../alerts-diagnostics/builtin-monitoring).
 
 ## stx-java-proxy
 

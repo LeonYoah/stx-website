@@ -17,9 +17,9 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
   zh: [
     {
       tag: 'RELEASE',
-      text: 'STX v1.3.0：实时可观测、作业告警、测试连接、一键升级与自升级',
-      actionText: '快速部署 ➔',
-      link: '/docs/get-started/quick-start',
+      text: 'STX 内置监控与首页大盘：指标采集、趋势图和告警评估在 STX 内完成',
+      actionText: '了解内置监控 ➔',
+      link: '/docs/alerts-diagnostics/builtin-monitoring',
     },
     {
       tag: 'SUPPORT',
@@ -37,9 +37,9 @@ const TICKER_ITEMS: Record<HomeLocale, TickerItem[]> = {
   en: [
     {
       tag: 'RELEASE',
-      text: 'STX 1.0 community preview: one-click onboarding and visual cluster lifecycle management',
-      actionText: 'Quick deploy ➔',
-      link: '/docs/get-started/quick-start',
+      text: 'Built-in monitoring and dashboards: metrics, trends, and alert evaluation run inside STX',
+      actionText: 'Learn more ➔',
+      link: '/docs/alerts-diagnostics/builtin-monitoring',
     },
     {
       tag: 'SUPPORT',

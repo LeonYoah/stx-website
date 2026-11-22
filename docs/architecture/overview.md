@@ -54,13 +54,13 @@ flowchart LR
 
 | 进程 | 怎么起 | 职责 |
 | :--- | :--- | :--- |
-| **STX Server（`stx server`）** | 一键安装后随服务启动 | HTTP API、鉴权、元数据；同时提供 Agent 所需的 gRPC 服务 |
+| **STX Server（`stx server`）** | 一键安装后随服务启动 | HTTP API、鉴权、元数据；提供 Agent 所需的 gRPC 服务；内置监控（采集 / 存储 / 查询 / 告警评估） |
 | **Web UI** | 一键安装后随服务启动 | 网页界面（主机、集群、安装包、插件、监控等） |
 | **stx-agent** | 在被纳管主机上执行安装命令 | 注册与心跳；预检、安装、启停、配置推送、进程发现等 |
 | **stx-java-proxy** | 由平台在节点上托管启停 | 独立 Java 辅助进程，复用已安装的 SeaTunnel 运行时做配置解析与存储探测等 |
 | **元数据库** | SQLite（默认）或 MySQL / PostgreSQL | 主机、集群、节点、配置版本、审计等 |
 
-监控可对接 Prometheus / Grafana / Alertmanager：一键安装可附带本地三件套，也支持接入已有监控栈（需改配置）。
+监控内置在 STX Server 中（采集、存储、查询与告警评估），数据默认保存在安装目录 `data/tsdb`，默认保留 31 天、最多 30GiB；不再依赖外部监控组件。详见[内置监控](../alerts-diagnostics/builtin-monitoring)。
 
 ## stx-java-proxy
 

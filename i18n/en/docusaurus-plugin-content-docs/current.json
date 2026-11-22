@@ -26,5 +26,17 @@
   "sidebar.docsSidebar.category.告警与诊断": {
     "message": "Alerts & diagnostics",
     "description": "The label for category 告警与诊断 in sidebar docsSidebar"
+  },
+  "sidebar.docsSidebar.doc.get-started/upgrade": {
+    "message": "Upgrade guide",
+    "description": "The label for the doc item get-started/upgrade in sidebar docsSidebar"
+  },
+  "sidebar.docsSidebar.doc.alerts-diagnostics/builtin-monitoring": {
+    "message": "Built-in monitoring & dashboards",
+    "description": "The label for the doc item alerts-diagnostics/builtin-monitoring in sidebar docsSidebar"
+  },
+  "sidebar.docsSidebar.doc.alerts-diagnostics/alert-policies-rules": {
+    "message": "Alert policies & rules",
+    "description": "The label for the doc item alerts-diagnostics/alert-policies-rules in sidebar docsSidebar"
   }
 }

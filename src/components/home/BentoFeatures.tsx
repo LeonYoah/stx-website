@@ -194,7 +194,7 @@ export function BentoFeatures(): React.JSX.Element {
             实时作业吞吐与指标大屏
           </h3>
           <p style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '0.92rem', lineHeight: '1.6', marginBottom: '1.25rem' }}>
-            开箱即用集成 Prometheus 与 Grafana。同步作业每秒处理记录数（TPS）、延迟抖动、内存水位全景透视。
+            内置监控，无需额外组件。在首页大盘和趋势图中查看吞吐、延迟与资源水位，异常可按策略触发告警。
           </p>
 
           <div
