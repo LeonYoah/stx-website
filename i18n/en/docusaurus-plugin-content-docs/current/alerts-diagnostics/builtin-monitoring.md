@@ -4,7 +4,7 @@ sidebar_label: Built-in monitoring & dashboards
 description: Learn about STX built-in monitoring data sources, dashboards and trends, and capacity and retention.
 ---
 
-This page applies to development builds with built-in monitoring. Metric collection, storage, queries, and alert evaluation run inside STX Server, with no extra monitoring components. v1.4.0 still uses external monitoring components; see the [upgrade guide](../get-started/upgrade) before switching.
+STX includes monitoring: metric collection, storage, queries, trend charts, and metric-based alerting all run inside STX Server. No extra monitoring components are required.
 
 ## What is collected
 
