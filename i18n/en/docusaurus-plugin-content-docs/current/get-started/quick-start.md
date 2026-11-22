@@ -27,7 +27,7 @@ Without `-y`, the script prompts for ports, external IP, database, and admin pas
 
 ### 2. Sign in to the Web UI
 
-Open `http://<STX install host IP>:17880` (e.g. `http://10.0.0.10:17880`) and sign in as `admin` with your chosen password (default `admin123`; change it after first sign-in).
+Open `http://<STX install host IP>:17880` (e.g. `http://10.0.0.10:17880`) and sign in as `admin` with your chosen password (default `admin123`).
 
 ![STX sign-in page](/img/screenshots/00-login.png)
 
@@ -105,27 +105,14 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 
 Built-in monitoring writes to `/opt/stx/data/tsdb` inside the container; mount that directory to persist data.
 
-### Install STX CLI
+### STX CLI (optional)
 
-The STX client and server share the same `stx` binary:
+Day-to-day operations only require the Web UI—no separate CLI install is needed. Deploy STX CLI only when you need:
 
-- **Same machine as STX Server**: use `/opt/stx/stx` directly:
+- **AI Agent automation** against STX (with `stx skill install`)
+- **External scheduler or script integration** (pushing jobs and querying cluster or job status via `stx`)
 
-```bash
-/opt/stx/stx login --server http://127.0.0.1:17800
-/opt/stx/stx cluster list --output table
-```
-
-- **Separate client machine**: copy `/opt/stx/stx` when CPU architectures match (otherwise download `stx-linux-amd64` or `stx-linux-arm64` from Releases) and ensure reachability to port `17800`:
-
-```bash
-scp user@10.0.0.10:/opt/stx/stx ./stx
-chmod +x ./stx
-./stx login --server http://10.0.0.10:17800
-./stx cluster list --output table
-```
-
-See [STX CLI](../architecture/cli) for commands, and [Install Skill for AI Agents](../architecture/cli#install-skill-for-ai-agents) for `stx skill install`.
+The CLI shares the same `stx` binary as the server. See [STX CLI](../architecture/cli) for installation and usage details.
 
 ### Without systemd or non-root
 

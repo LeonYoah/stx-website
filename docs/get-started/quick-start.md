@@ -27,7 +27,7 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 
 ### 2. 登录 Web UI
 
-打开 `http://<STX 安装机 IP>:17880`（例如 `http://10.0.0.10:17880`），用 `admin` 与安装时设置的密码登录（默认 `admin123`，登录后请及时修改）。
+打开 `http://<STX 安装机 IP>:17880`（例如 `http://10.0.0.10:17880`），用 `admin` 与安装时设置的密码登录（默认 `admin123`）。
 
 ![STX 登录页](/img/screenshots/00-login.png)
 
@@ -105,27 +105,14 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 
 内置监控数据默认写在容器内 `/opt/stx/data/tsdb`，需要持久化请挂载该目录。
 
-### 安装 STX CLI
+### STX CLI（可选）
 
-STX 客户端与服务端共用同一个 `stx` 二进制：
+日常使用 Web UI 即可，不需要单独安装 CLI。仅在以下场景再考虑部署 STX CLI：
 
-- **与服务端同机**：直接使用 `/opt/stx/stx`，无需单独安装：
+- **AI Agent 自动操作 STX**（配合 `stx skill install`）
+- **接入外部调度平台或脚本自动化**（通过 `stx` 推送任务、查询集群与作业状态）
 
-```bash
-/opt/stx/stx login --server http://127.0.0.1:17800
-/opt/stx/stx cluster list --output table
-```
-
-- **独立客户端机器**：架构相同时直接拷贝 `/opt/stx/stx`（不同架构请从 Release 下载对应 `stx-linux-amd64` 或 `stx-linux-arm64`），放通服务端 `17800` 即可：
-
-```bash
-scp user@10.0.0.10:/opt/stx/stx ./stx
-chmod +x ./stx
-./stx login --server http://10.0.0.10:17800
-./stx cluster list --output table
-```
-
-CLI 用法见 [STX CLI](../architecture/cli)；给 AI Agent 接入可执行 `stx skill install`（见[安装 Skill](../architecture/cli#给-ai-agent-安装-skill)）。
+CLI 与服务端共用同一个 `stx` 二进制，具体安装与用法见 [STX CLI](../architecture/cli)。
 
 ### 无 systemd 或非 root 环境
 
