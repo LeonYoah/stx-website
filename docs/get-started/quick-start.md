@@ -4,7 +4,7 @@ sidebar_label: 快速部署
 description: 在 Linux 上安装 STX、接入主机，并在本机或另一台机器上使用 STX CLI。
 ---
 
-在一台 Linux 机器上安装 STX 后，你会得到 Web UI、STX Server 和 Agent 所需的 gRPC 服务。本文介绍如何用安装脚本安装 STX。
+本页以 [v1.4.0](https://github.com/LeonYoah/stx/releases/tag/v1.4.0) 正式发布包为例，在一台 Linux 机器上安装 STX Server、Web UI 和 stx-agent 所需的 gRPC 服务。开发构建中的监控行为见[内置监控与首页大盘](../alerts-diagnostics/builtin-monitoring)；迁移前请阅读[升级指南](./upgrade)。
 
 ## 安装前检查
 
@@ -13,7 +13,7 @@ description: 在 Linux 上安装 STX、接入主机，并在本机或另一台�
 | 系统 | Linux，glibc ≥ 2.17；支持 Ubuntu / Debian、Rocky / Alma / RHEL 8+、CentOS 7 等。**推荐**带 systemd；容器 / CI 等无 systemd 环境加 `--no-systemd` |
 | 架构 | amd64 或 arm64；CentOS 7 仅支持 amd64 |
 | 网络 | 浏览器能访问 STX 安装机的 `17880`；被纳管主机能访问 STX 安装机的 `17800` 和 `17890` |
-| 磁盘 | 安装目录所在分区约 700 MB 起步；启用内置监控后会在 `data/tsdb` 写入监控数据（默认保留 31 天、最多 30GiB） |
+| 磁盘 | 安装目录所在分区约 700 MB；带本地监控组件约 2.2 GB |
 | 命令 | `bash`、`curl`、`tar`、`gzip`、`sha256sum`；不需要 Node.js 和 python3（离线包自带 Node） |
 | 权限 | root（用 `sudo` 执行安装脚本） |
 
@@ -67,7 +67,8 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 | `--external-ip 10.0.0.10` | 对外访问 IP 或域名 |
 | `--db-type sqlite\|mysql\|postgres` | 数据库，默认 `sqlite`；`postgres` 也可写 `pg` |
 | `--db-host` / `--db-port` / `--db-user` / `--db-password` / `--db-name` | MySQL / PostgreSQL 连接参数；密码也可用环境变量 `STX_DB_PASSWORD` |
-| `--without-observability` | 关闭内置监控（指标采集、趋势图与指标告警） |
+| `--without-observability` | 不安装本地监控组件（Prometheus / Alertmanager / Grafana） |
+| `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | 本地监控组件端口，默认 `9090` / `9093` / `3000` |
 | `--mirror v4` | 固定下载线路（仅一键安装 / `download-bundle.sh`） |
 | `--variant amd64\|arm64\|centos7` / `--version <tag>` | 指定离线包类型 / 版本（仅一键安装 / `download-bundle.sh`） |
 | `--without-node` | 不用包内 Node，改用本机 Node ≥ 18.18 |
@@ -147,7 +148,7 @@ chmod +x ./stx
 
 ### 离线安装
 
-每个 Release 附带三个完整离线包，包含 STX Server（含内置监控）、Web UI、stx-agent 和 Node，各带一个 `.sha256` 校验文件。按 STX 安装机选择：
+每个 Release 附带三个完整离线包，包含 STX Server、Web UI、stx-agent、Node、本地监控组件，各带一个 `.sha256` 校验文件。按 STX 安装机选择：
 
 | 离线包 | 适用系统 | 怎么判断 |
 | :--- | :--- | :--- |
@@ -199,14 +200,19 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 cd docker
 # SeaTunnel 不在本机时，改 config.yaml 的 app.external_url / app.console_url 为其他机器能访问的安装机 IP（默认 127.0.0.1）
 mkdir -p data
-docker compose up -d
 ```
 
-中国拉镜像再执行 `cp .env.cn.example .env` 后 `docker compose up -d`。SQLite：`docker compose -f docker-compose.sqlite.yml up -d`。
+若要从华为云 SWR 拉取 STX 镜像，先执行 `cp .env.cn.example .env`。再按所用数据库执行一条启动命令：
 
-打开 Web UI `http://127.0.0.1:17880`。宿主机只暴露 `17880` / `17800` / `17890`。内置监控随 STX Server 运行，数据写在挂载目录下的 `data/stx/tsdb`（以实际 Compose 挂载为准）。从旧版升级时，执行 `docker compose up -d --remove-orphans` 清理不再使用的 prometheus / alertmanager / grafana 容器。
+| 数据库 | 启动命令 |
+| :--- | :--- |
+| MySQL（默认） | `docker compose up -d` |
+| SQLite | `docker compose -f docker-compose.sqlite.yml up -d` |
+| PostgreSQL | `docker compose -f docker-compose.postgres.yml up -d` |
 
-### 单容器体验
+打开 Web UI `http://127.0.0.1:17880`。宿主机只暴露 `17880` / `17800` / `17890`。
+
+### 单容器体验（不含监控）
 
 ```bash
 # GHCR
@@ -215,8 +221,6 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-
 # 华为云 SWR
 docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:latest
 ```
-
-内置监控随 STX Server 在容器内开启，监控数据写在容器内 `/opt/stx/data/tsdb`；不挂载数据卷时随容器删除，需要保留可挂载该目录。
 
 ### 启停服务
 
@@ -227,7 +231,7 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 # 使用 systemd 安装时也可执行 systemctl restart stx
 ```
 
-`start.sh` 只启动 STX 服务；内置监控运行在 STX Server 内，不再单独启动监控组件。`--observability` 参数仅为兼容旧版保留并会被忽略；要关闭内置监控，请在 `config.yaml` 中设置 `observability.enabled: false` 后重启服务。
+`start.sh` 默认按 `observability.enabled` 和本地监控组件的安装情况决定是否启动监控。要明确关闭，执行 `/opt/stx/bin/start.sh --observability off`。
 
 ## 安装遇到问题
 
