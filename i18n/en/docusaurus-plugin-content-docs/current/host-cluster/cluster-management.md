@@ -4,7 +4,7 @@ sidebar_label: Cluster management
 description: Create cluster definitions, adopt existing processes or one-click install, manage node start/stop, and upgrade with config merge.
 ---
 
-Open **Cluster management** in the Web UI. The list can be filtered by running, deploying, or stopped; cards show deployment mode, node count, and version. You can open details or stop a cluster.
+Open **Cluster management** in the Web UI. Filter by status and deployment mode and switch between table and card views; selecting a cluster opens the right quick-detail rail with install path, nodes, and actions to open the console, stop, or restart.
 
 ![Cluster management list](/img/screenshots/04-clusters.png)
 
@@ -108,6 +108,10 @@ Savepoint or pause critical sync jobs first so you can recover positions if the 
 :::
 
 ## Day-to-day operations
+
+Open a cluster to access six top-level tabs: **Overview**, **Nodes**, **Configs**, **Plugins**, **Runtime**, and **Ops**:
+
+![Cluster detail overview with six management tabs](/img/screenshots/49-cluster-detail.png)
 
 In cluster details / node list, for the **whole cluster** or a **single node**:
 
