@@ -76,7 +76,7 @@ Click **Preview**, confirm the row limit (default: **100**) and timeout (default
 
 | Action | Effect |
 | :--- | :--- |
-| **Save** | Updates the draft without creating a version. Starting in v1.4.0, the workbench automatically saves the current draft shortly after you pause editing an existing job. |
+| **Save** | Updates the draft without creating a version. The workbench automatically saves the current draft shortly after you pause editing an existing job. |
 | **Publish** | Confirm in the **Publish Version** dialog to save the current contents as an immutable version for history, scheduling, and CLI submissions. |
 
 If you navigate away from the workbench within the site with unsaved edits, choose **Stay and keep editing**, **Save and leave**, or **Discard and leave**. Discarding affects only changes that have not been saved.
