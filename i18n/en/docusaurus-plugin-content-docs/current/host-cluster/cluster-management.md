@@ -8,7 +8,7 @@ Open **Cluster management** in the Web UI. The list can be filtered by running, 
 
 ![Cluster management list](/img/screenshots/04-clusters.png)
 
-Creating a cluster only registers name, version, and deployment mode—it does not start SeaTunnel processes. You also need to [connect an online host](./host-management), then choose to adopt existing processes or one-click install.
+[Connect a host](./host-management) and verify that stx-agent is online. Choose **Register Cluster** to manage existing SeaTunnel processes, or **Create Cluster** to install SeaTunnel on the host.
 
 ## Choose an onboarding path
 
@@ -29,7 +29,7 @@ Creating a cluster only registers name, version, and deployment mode—it does n
 
 ## Adopt existing processes
 
-1. **Cluster management** → Create cluster: name, hybrid or separate, SeaTunnel version.
+1. Go to **Cluster management** → **Register Cluster**. Enter the name and select the deployment mode and SeaTunnel version.
 2. Add nodes: specify online host, role, install directory, and ports (defaults per table above).
 3. Trigger discovery on the host or node (stx-agent scans local SeaTunnel processes).
 4. After confirming the bind, the node should show process PID and actual install directory.
@@ -42,14 +42,21 @@ When multiple processes run on one machine, verify role and ports carefully to a
 
 [Package management](../packages-plugins/package-management) in the Web UI must have an install package for the target version. You can upload or download first; connectors are handled in the [Plugin marketplace](../packages-plugins/plugin-marketplace).
 
-Typical flow:
+Click **Create Cluster**:
 
-1. **Select Hosts** and assign their roles. Separated mode requires at least one Master and one Worker.
-2. Under **Install Config**, confirm the directory and ports. For each node's **JDK path**, select a detected JDK, enter an absolute path such as `/usr/lib/jvm/java-11`, or leave it blank for auto-detection.
-3. **Precheck** automatically verifies that stx-agent is online, ports are free, the install directory is writable, and the JDK can run. The install directory does not need to exist yet, but its nearest existing parent must be writable. If the specified JDK cannot run, correct the path and rerun the checks.
-4. Choose any **Plugins** you need, then **Deploy**. Review progress and per-node results on the deployment page.
+1. In **Basic Info**, enter the name, select the deployment mode and version, and confirm the install directory.
+2. **Select Hosts** and assign their roles. Separated mode requires at least one Master and one Worker.
+3. Under **Install Config**, confirm the ports and resource settings. For each node's **JDK path**, select a detected JDK, enter an absolute path such as `/usr/lib/jvm/java-11`, or leave it blank for auto-detection.
 
 ![Install Config and JDK path in the cluster deployment wizard](/img/screenshots/40-cluster-install-config.png)
+
+4. In **Precheck**, review the stx-agent, port, install directory, and JDK checks. The install directory does not need to exist yet, but its nearest existing parent must be writable. If the specified JDK cannot run, correct its path and rerun the checks.
+
+![Precheck passed: stx-agent online, ports free, install directory can be created, Java 11 supported](/img/screenshots/46-cluster-precheck.png)
+
+5. Choose any **Plugins** you need and click **Start Deploy**. Review progress and per-node results in **Deploy**. Once deployment succeeds, verify that the cluster is **Running** in the cluster list.
+
+In development builds, the checks use the target SeaTunnel version to determine JDK compatibility. For example, SeaTunnel 2.3.13 recommends JDK 8 or 11. SeaTunnel 3.1.0 requires at least JDK 11 and recommends JDK 11 or 17. Upgrades check against the target version.
 
 ## Version upgrade
 
