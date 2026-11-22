@@ -4,7 +4,7 @@ sidebar_label: 内置监控与大盘
 description: 了解 STX 内置监控的数据来源、首页大盘与趋势图，以及容量与保留策略。
 ---
 
-STX 自带监控能力：指标采集、存储、查询、趋势图和指标告警都在 STX Server 内完成，不需要额外部署监控组件。
+本页适用于已包含内置监控的 STX 开发构建。指标采集、存储、查询和告警评估都在 STX Server 内完成，不需要额外部署监控组件。v1.4.0 仍使用外部监控组件；切换前请查看[升级指南](../get-started/upgrade)。
 
 ## 采集内容
 
@@ -36,8 +36,8 @@ observability:
   enabled: true              # 总开关，默认开启
   storage:
     dir: "data/tsdb"         # 数据目录，相对安装目录
-    retention: "31d"         # 保留时长，支持 s/m/h/d/w/y
-    max_size: 32212254720    # 存储上限（字节），默认 30GiB；显式写 0 表示不限
+    retention: ""            # 默认不按时间清理；可填 31d 等时长
+    # max_size: 32212254720  # 可选，显式设置存储上限（字节）
   scrape_interval: "15s"     # 引擎指标采集间隔
   eval_interval: "15s"       # 指标告警评估间隔
   query_timeout: "8s"        # 单次查询超时
@@ -48,8 +48,8 @@ observability:
 
 ## 容量与保留策略
 
-- **保留时长**：超过 `storage.retention` 的历史数据会被清理（默认 31 天）。
-- **存储上限**：目录体积超过 `storage.max_size` 时，优先按最早数据做清理；`storage.max_size` 设为 `0` 表示不按体积限制。
+- **保留时长**：默认不按时间清理。设置 `storage.retention`（例如 `31d`）后，超出时长的历史数据会被清理。
+- **存储上限**：未设置 `storage.max_size` 时，取 30 GiB 和数据目录所在磁盘容量的 20% 中较小值。超出上限时优先清理最旧的数据块；设为 `0` 取消容量上限。
 - **采集间隔**：`scrape_interval` 越短，数据越细，但占用空间和查询压力越大。
 
 ## 常见问题
@@ -59,5 +59,7 @@ observability:
 | 趋势图显示监控数据暂不可用 | 数据目录权限或磁盘空间，或查询超时；查看 `logs/backend.log` 中 `[Observability]` 日志 |
 | 某个节点图表为空 | 节点是否在线、Hazelcast 端口是否可达，以及 `seatunnel_metrics.path` 是否正确 |
 | 作业趋势没有数据 | 作业需要处于运行中才持续写入；已结束作业可在作业详情按作业全程查看历史 |
+
+STX Server 停止后，内置监控无法告警。要检测 STX Server 是否可用，可从外部定期探测其健康检查地址，例如 `http://10.0.0.10:17800/api/v1/health`。
 
 告警相关配置见[告警策略与检测规则](./alert-policies-rules)和[告警中心](./alert-center)。
