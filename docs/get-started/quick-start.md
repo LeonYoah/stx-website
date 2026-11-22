@@ -164,7 +164,7 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 
 ```bash
 curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh \
-  | sudo bash -s -- -y --db-type postgres --db-host 10.0.0.5 --db-user stx --db-name stx
+  | sudo STX_DB_PASSWORD='<password>' bash -s -- -y --db-type postgres --db-host 10.0.0.5 --db-user stx --db-name stx
 ```
 
 ### 下载线路
