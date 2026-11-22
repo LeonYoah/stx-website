@@ -6,8 +6,6 @@ description: Install STX on Linux, connect a managed host, and use STX CLI on th
 
 After you install STX on a Linux machine, you get the Web UI, STX Server, and the gRPC service that `stx-agent` needs. This guide shows how to install STX with the install scripts.
 
-This guide applies to the [stable release](https://github.com/LeonYoah/stx/releases/latest). If you are testing a development build, see [Embedded monitoring (unreleased)](../alerts-diagnostics/embedded-monitoring-preview) for installation and upgrade differences.
-
 ## Check before installing
 
 | Check | Requirement |
@@ -15,7 +13,7 @@ This guide applies to the [stable release](https://github.com/LeonYoah/stx/relea
 | System | Linux, glibc ≥ 2.17; Ubuntu / Debian, Rocky / Alma / RHEL 8+, CentOS 7, and similar. **systemd recommended**; on containers / CI without systemd, pass `--no-systemd` |
 | Architecture | amd64 or arm64; CentOS 7 supports amd64 only |
 | Network | Browsers can reach the STX install machine on `17880`; managed hosts can reach `17800` and `17890` on it |
-| Disk | About 700 MB on the install-directory partition; about 2.2 GB with the local monitoring stack |
+| Disk | About 700 MB on the install-directory partition; with built-in monitoring enabled, metric data is written to `data/tsdb` (default retention 31 days, up to 30GiB) |
 | Commands | `bash`, `curl`, `tar`, `gzip`, `sha256sum`; no Node.js or python3 needed (the bundle ships Node) |
 | Privileges | root (run the install scripts with `sudo`) |
 
@@ -69,8 +67,7 @@ Append flags to the command, for example `curl -fsSL ... | sudo bash -s -- -y --
 | `--external-ip 10.0.0.10` | Advertised IP or host name |
 | `--db-type sqlite\|mysql\|postgres` | Database, default `sqlite`; `postgres` can also be written `pg` |
 | `--db-host` / `--db-port` / `--db-user` / `--db-password` / `--db-name` | MySQL / PostgreSQL connection; the password can also come from `STX_DB_PASSWORD` |
-| `--without-observability` | Skip the local monitoring stack (Prometheus / Alertmanager / Grafana) |
-| `--prometheus-port` / `--alertmanager-port` / `--grafana-port` | Monitoring ports, default `9090` / `9093` / `3000` |
+| `--without-observability` | Disable built-in monitoring (metrics collection, trend charts, and metric-based alerts) |
 | `--mirror v4` | Pin a download line (one-click install / `download-bundle.sh` only) |
 | `--variant amd64\|arm64\|centos7` / `--version <tag>` | Bundle variant / version (one-click install / `download-bundle.sh` only) |
 | `--without-node` | Use the host Node ≥ 18.18 instead of the bundled one |
@@ -150,7 +147,7 @@ Next, see [STX CLI](../architecture/cli). For AI Agents, run `stx skill install`
 
 ### Offline install
 
-Each Release ships three complete offline bundles containing STX Server, the Web UI, stx-agent, Node, and the local monitoring stack, each with a `.sha256` file. Pick by STX install machine:
+Each Release ships three complete offline bundles containing STX Server (with built-in monitoring), the Web UI, stx-agent, and Node, each with a `.sha256` file. Pick by STX install machine:
 
 | Bundle | Target system | How to tell |
 | :--- | :--- | :--- |
@@ -202,19 +199,14 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 cd docker
 # If SeaTunnel is not on this host, set app.external_url / app.console_url in config.yaml to a reachable install-host IP (default 127.0.0.1)
 mkdir -p data
+docker compose up -d
 ```
 
-To pull STX images from Huawei Cloud SWR, first run `cp .env.cn.example .env`. Then use the command for your database:
+China images: `cp .env.cn.example .env` then `docker compose up -d`. SQLite: `docker compose -f docker-compose.sqlite.yml up -d`.
 
-| Database | Start command |
-| :--- | :--- |
-| MySQL (default) | `docker compose up -d` |
-| SQLite | `docker compose -f docker-compose.sqlite.yml up -d` |
-| PostgreSQL | `docker compose -f docker-compose.postgres.yml up -d` |
+Open the Web UI at `http://127.0.0.1:17880`. Host ports: `17880` / `17800` / `17890`. Built-in monitoring runs inside STX Server and writes to `data/stx/tsdb` under the mounted directory (per your Compose mounts). When upgrading from an older version, run `docker compose up -d --remove-orphans` to remove the now-unused prometheus / alertmanager / grafana containers.
 
-Open the Web UI at `http://127.0.0.1:17880`. Host ports: `17880` / `17800` / `17890`.
-
-### Single-container trial (no monitoring)
+### Single-container trial
 
 ```bash
 # GHCR
@@ -223,6 +215,8 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 ghcr.io/leonyoah/stx-
 # Huawei Cloud SWR
 docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuaweicloud.com/stx/stx-all-in-one:latest
 ```
+
+Built-in monitoring runs inside STX Server in the container, writing metric data to `/opt/stx/data/tsdb`; without a mounted volume it is removed with the container—mount that directory to keep it.
 
 ### Start and stop
 
@@ -233,7 +227,7 @@ docker run -d -p 17800:17800 -p 17880:17880 -p 17890:17890 swr.cn-east-3.myhuawe
 # With systemd install: systemctl restart stx
 ```
 
-By default, `start.sh` starts monitoring based on `observability.enabled` and whether local monitoring components are installed. To disable explicitly: `/opt/stx/bin/start.sh --observability off`.
+`start.sh` only starts the STX service; built-in monitoring runs inside STX Server, with no separate monitoring components to launch. The `--observability` flag is kept only for backward compatibility and is ignored; to disable monitoring, set `observability.enabled: false` in `config.yaml` and restart the service.
 
 ## Install troubleshooting
 

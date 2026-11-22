@@ -37,4 +37,15 @@ The **Diagnostic package** section in inspection details shows collection status
 
 Use the bottom-left control to switch light or dark mode. For PDF, use **Print / Export PDF**. For logs, thread stacks, and other files outside HTML, download the **diagnostic package** from inspection details. Before sharing, review host addresses, logs, and configuration; masked credentials in config preview do not mean the entire package is safe to publish.
 
+## Auto-inspection policies
+
+You can configure auto-inspection policies that trigger an inspection when conditions are met. Trigger conditions include:
+
+| Trigger | Description |
+| :--- | :--- |
+| **Alert firing** | Pick a rule key from the alert rule catalog for exact matching. Optionally require "at least N objects firing together" or "lasting at least N minutes". |
+| **Java fatal error** | Fires when a Java fatal error is detected. |
+| **Error spike** | Fires when error count spikes within the window. |
+| **Scheduled** | Fires on a fixed interval. |
+
 To start from error clues, see [Errors](./error-center); for existing fixes, see [Troubleshooting library](./troubleshooting-memory).
