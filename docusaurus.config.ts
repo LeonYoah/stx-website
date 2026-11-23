@@ -166,7 +166,7 @@ const config: Config = {
     },
     // 社交分享卡片封面图
     // Social card image for OpenGraph / Twitter previews
-    image: 'img/stx-logo.png',
+    image: 'img/stx-og.png',
     navbar: {
       title: '',
       logo: {
