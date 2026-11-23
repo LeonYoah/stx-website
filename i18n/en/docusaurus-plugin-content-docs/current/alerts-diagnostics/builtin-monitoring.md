@@ -36,8 +36,8 @@ observability:
   enabled: true
   storage:
     dir: "data/tsdb"
-    retention: "31d"
-    max_size: 32212254720  # 30GiB; set to 0 to disable size limit
+    retention: ""            # No time limit by default; accepts durations such as 31d
+    # max_size: 32212254720  # Optional explicit limit in bytes
   scrape_interval: "15s"
   eval_interval: "15s"
   query_timeout: "8s"
@@ -48,8 +48,8 @@ Restart STX Server after changes. For Docker Compose, data is stored under the m
 
 ## Capacity and retention
 
-- **Retention**: Data older than `storage.retention` is cleaned up (default 31 days).
-- **Size limit**: When directory size exceeds `storage.max_size`, older data is removed first; `0` means no size limit.
+- **Retention**: By default, data is not pruned by age. Set `storage.retention` (for example, `31d`) to remove data older than that duration.
+- **Size limit**: If `storage.max_size` is unset, the limit is the smaller of 30 GiB and 20% of the disk capacity where the data directory resides. The oldest data blocks are removed first once the limit is exceeded. Set `storage.max_size` to `0` to remove the size limit.
 - **Scrape interval**: Shorter `scrape_interval` gives finer data but uses more space and query load.
 
 ## Common issues
@@ -60,4 +60,6 @@ Restart STX Server after changes. For Docker Compose, data is stored under the m
 | A node chart is empty | Node online, Hazelcast port reachable, and `seatunnel_metrics.path` correct |
 | No job trend data | Job must be running to produce continuous data; finished jobs can be viewed over their full duration in job details |
 
-For alert configuration, see [Alert policies and rules](./alert-policies-rules) and [Alert center](./alert-center).
+Built-in monitoring cannot alert when STX Server stops. To detect a server outage, periodically check its health endpoint from outside STX, for example `http://10.0.0.10:17800/api/v1/health`.
+
+To configure alert rules and notifications, see [Alert center](./alert-center).

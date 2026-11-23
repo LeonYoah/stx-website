@@ -29,7 +29,6 @@ const sidebars: SidebarsConfig = {
     section('告警与诊断', 'Alerts & diagnostics'),
     'alerts-diagnostics/builtin-monitoring',
     'alerts-diagnostics/alert-center',
-    'alerts-diagnostics/alert-policies-rules',
     'alerts-diagnostics/error-center',
     'alerts-diagnostics/diagnostic-report',
     'alerts-diagnostics/troubleshooting-memory',

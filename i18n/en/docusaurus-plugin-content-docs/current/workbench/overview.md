@@ -4,11 +4,11 @@ sidebar_label: Debug workbench
 description: Write jobs with curated templates and raw default parameter templates, test connections, preview data, and view Checkpoints.
 ---
 
-Open **Workbench** from the Web UI bottom bar. Select a cluster first, then create a new job or open an existing one. You can insert connector templates, test connections, view the DAG and preview data; you must publish a version before a formal run.
+Open **Workbench** from the Web UI bottom bar. Select a cluster, then create or open a job. You can debug and run the current draft manually. Publish a version before enabling built-in scheduling or pushing to DolphinScheduler.
 
 ## Open the workbench
 
-![Debug workbench](/img/screenshots/02-workbench.png)
+![Order sync draft and a completed SeaTunnel job in the workbench](/img/screenshots/02-workbench.png)
 
 ## Use templates
 
@@ -45,38 +45,43 @@ After writing configuration, use the current script to check connections, job st
 | Capability | What it solves | How to use |
 | :--- | :--- | :--- |
 | **DAG** | Hard to see script dependencies | Parses Source / Transform / Sink into nodes and edges; on the Sink side, also parses the **CREATE TABLE** statements that would run |
-| **Test connection** | Verify connectivity and object existence without viewing topology | Click **Test connection** in the toolbar: whether the database connects, whether tables exist, and so on |
+| **Test connection** | Verify connectivity and object existence without viewing topology | Click **Test** in the toolbar to see the result for each connection |
 | **Preview** | See what real data looks like before writing Transform / Sink | Reads sample rows from Source with the current script, optionally through Transform; does not write to the configured Sink |
 
 :::tip
-DAG, test connection, and preview use the current script in the editor—you do not need to publish first. A formal run, Savepoint recovery, and enabling scheduling require at least one published version.
+DAG, connection tests, and preview use the current editor script without publishing. Save a new job once before using these tools.
 :::
 
 ### DAG
 
 See what the script does: which upstream table data comes from, how it is transformed, and where it is written downstream. Click an operator to inspect table paths and fields; on Sink nodes, compare the actual CREATE TABLE DDL.
 
-![DAG preview and table structure](/img/screenshots/08-dag.png)
+![Order sync DAG: read from orders and write to orders_copy](/img/screenshots/08-dag.png)
 
 ### Test connection
 
-Does not run the full job. Useful after changing `url`, credentials, or table names: edit the script → **Test connection** → adjust based on the result.
+After changing an address, credentials, or a table name, click **Test**. The **Test Connections** dialog shows the result for each connection without running the full job.
+
+![Connection test passed for both the PostgreSQL source and sink](/img/screenshots/47-workbench-test.png)
 
 ### Preview
 
-After clicking **Preview**, view sample rows from Source and after Transform in the bottom panel. Preview does not write to the formal Sink in the configuration.
+Click **Preview**, confirm the row limit (default: **100**) and timeout (default: **10 minutes**), then click **Start Preview**. View sample rows from the Source or Transform in the **Preview** tab at the bottom. Preview does not write to the original Sink.
 
-Use this to confirm Source samples and post-Transform fields before writing the formal Sink. Preview defaults to about **100** rows; timeout is about **10** minutes.
+![Preview tab showing order rows read from PostgreSQL](/img/screenshots/48-workbench-preview.png)
+
+[Watch the preview steps](/img/screenshots/48-workbench-preview.webp)
 
 ## Save and publish
 
 | Action | Effect |
 | :--- | :--- |
-| **Save** | Updates the draft only |
-| **Publish new version** | Creates a version that can run formally |
+| **Save** | Updates the draft without creating a version. The workbench automatically saves the current draft shortly after you pause editing an existing job. |
+| **Publish** | Confirm in the **Publish Version** dialog to save the current contents as an immutable version for history, scheduling, and CLI submissions. |
 
-Before a **formal run, Savepoint recovery, or enabling scheduling**, publish at least once; saving alone does not remove the restriction (consistent with the UI message "Publish a version first").  
-**DAG / test connection / preview** use the current editor script and do not require publishing first.
+If you navigate away from the workbench within the site with unsaved edits, choose **Stay and keep editing**, **Save and leave**, or **Discard and leave**. Discarding affects only changes that have not been saved.
+
+**Run** in the workbench uses the current editor draft; CLI submissions and built-in schedules use a published version. **Savepoint Recover** in the toolbar uses the current draft and the selected savepoint, and requires at least one published version. **Recover** from a job history row uses the original submitted configuration when available.
 
 ## Variable management
 
@@ -126,7 +131,7 @@ Switch to **Checkpoint** at the bottom to open it. Streaming jobs usually need t
 2. Create or open a job → insert fragments such as `MySQL-CDC` / `Jdbc` from **Curated templates**, or choose a plugin under **Raw default parameter templates**.
 3. Edit parameters with hover docs and enum completion; put passwords in secret variables.  
 4. **Test connection** → **DAG** to verify topology and table creation → **Preview** sample rows (you can **Save** at any time).
-5. **Publish new version** → **Run**; for streaming jobs, view position and lag on the Checkpoint page; use **Recover** / Savepoint stop when needed.
+5. Click **Run** to execute the current draft. Publish it when you want to schedule it. For streaming jobs, view position and lag on the Checkpoint page.
 
 New jobs default to a `FakeSource` → `Console` skeleton so you can practice editing and preview. You can also [install a cluster in one click](../host-cluster/cluster-management) for integration testing. If a connector JAR is missing on the cluster, download and install it from the [Plugin Marketplace](../packages-plugins/plugin-marketplace).
 
