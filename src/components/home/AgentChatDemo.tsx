@@ -698,10 +698,7 @@ export function AgentChatDemo({
             >
               <Icon name="panel" />
             </button>
-            <span
-              className="stx-mimo__header-title"
-              style={{ opacity: headerTitle ? 1 : 0 }}
-            >
+            <span className="stx-mimo__header-title">
               {headerTitle || scenario.chatTitle}
             </span>
             <div className="stx-mimo__header-actions">
@@ -759,7 +756,7 @@ export function AgentChatDemo({
                 <div className="stx-mimo__welcome-mark" aria-hidden>
                   <StxBrandMark height={28} />
                 </div>
-                <h3>{scenario.welcomeTitle}</h3>
+                <p className="stx-mimo__welcome-title">{scenario.welcomeTitle}</p>
                 {scenario.welcomeSub ? <p>{scenario.welcomeSub}</p> : null}
               </div>
             ) : (
@@ -834,7 +831,7 @@ export function AgentChatDemo({
 
                 {showFinish ? (
                   <div className="stx-mimo__finish stx-mimo__reveal">
-                    <h4>{scenario.completedTitle}</h4>
+                    <p className="stx-mimo__finish-title">{scenario.completedTitle}</p>
                     <p>{scenario.completedSummary}</p>
                     <ol className="stx-mimo__findings">
                       {scenario.findings.map((f) => (

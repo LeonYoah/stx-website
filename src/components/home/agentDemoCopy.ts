@@ -75,7 +75,7 @@ const SCENARIOS_ZH: Scenario[] = [
     label: '集群与失败任务',
     chatTitle: '查集群与失败任务',
     projectName: '生产环境示例',
-    welcomeTitle: '交给 AI，解放双手',
+    welcomeTitle: '交给 AI Agent，自动跑运维',
     welcomeSub: '',
     prompt: '帮我看看 6 号集群有没有失败的同步作业，先查状态和日志，不要改动环境。',
     reply: '先查集群和节点，再列出失败作业、读取日志。全程只查询，不执行重启或恢复。',
@@ -102,7 +102,7 @@ const SCENARIOS_ZH: Scenario[] = [
         detail: 'stx sync job logs 1842 --lines 40：按日志线索检查配置与目标表。仅凭一条报错不能断定全部原因。',
       },
     ],
-    completedTitle: '查询完成 · 等待你决定',
+    completedTitle: 'Agent 查询完成 · 等待你决定',
     completedSummary: '已示范通过 CLI 查集群、节点、失败作业和日志；未执行写操作。',
     findings: [
       {number: '01', title: '目标集群', quote: '先确认集群编号和节点状态。'},
@@ -281,7 +281,7 @@ stx upgrade precheck 8 --target-version 2.3.13 --target-install-dir /tmp/seatunn
 const SCENARIOS_EN: Scenario[] = [
   {
     id: 'diagnose', label: 'Clusters and failed jobs', chatTitle: 'Inspect failed jobs', projectName: 'Production example',
-    welcomeTitle: 'Hand it to AI—free your hands',
+    welcomeTitle: 'Hand it to the AI Agent',
     welcomeSub: '',
     prompt: 'Check cluster 6 and its failed sync jobs. Read logs, but do not change anything.',
     reply: 'I will inspect the cluster, nodes, failed jobs, and logs. No restart or recovery.',
@@ -292,7 +292,7 @@ const SCENARIOS_EN: Scenario[] = [
       {title: 'Filter failed jobs', tool: 'stx sync job list --status FAILED', icon: 'sync', queries: ['job 1842 · FAILED', 'verify cluster', 'verify task'], detail: 'Filter failed jobs, then verify which cluster and task own each returned job.'},
       {title: 'Read job logs', tool: 'stx sync job logs 1842 --lines 40', icon: 'logs', queries: ['example: Duplicate key', 'inspect config', 'no auto-recovery'], detail: 'Read 40 lines, then compare the full log and task config. One error line is not a complete diagnosis.'},
     ],
-    completedTitle: 'Inspection complete', completedSummary: 'Read-only example: clusters, nodes, failed jobs, and logs. No write operation was run.',
+    completedTitle: 'Agent inspection complete', completedSummary: 'Read-only example: clusters, nodes, failed jobs, and logs. No write operation was run.',
     findings: [{number: '01', title: 'Target cluster', quote: 'Verify the cluster ID and nodes.'}, {number: '02', title: 'Failed job', quote: 'Filter by FAILED and check ownership.'}, {number: '03', title: 'Next step', quote: 'Review the full log before changing config or recovering a job.'}],
     artifactTitle: 'Investigation notes (example)', artifactMeta: 'stx cluster · stx sync job',
     artifactBody: `# Investigation notes (example)

@@ -70,6 +70,12 @@ export function NewsTicker(): React.JSX.Element {
   }, [locale]);
 
   useEffect(() => {
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
     const timer = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % items.length);
     }, 4000);

@@ -1,0 +1,27 @@
+[
+  {
+    "check": "nav-covers",
+    "target": "button#stx-ask-ai-fab",
+    "reason": "Ask AI 是第三方 kapa 悬浮助手，按设计随页面滚动固定在右下；正文区右侧已留空，遮挡仅限极窄视口。"
+  },
+  {
+    "check": "menu-toggle",
+    "target": "暂停动效",
+    "reason": "该按钮是动效暂停开关而非导航菜单：已用 aria-pressed 表达开关态，aria-expanded 语义不符。"
+  },
+  {
+    "check": "contrast",
+    "target": "stx-mimo__assistant-text",
+    "reason": "对话演示自动播放时截图恰好落在 reveal 渐显动画中帧；静止后正文为 --mimo-ink #1a2a32，对比度约 14:1。"
+  },
+  {
+    "check": "off-viewport",
+    "target": "skipToContent",
+    "reason": "Docusaurus 内置跳转到主内容链接按设计屏外隐藏，键盘聚焦时出现；宽度由框架主题控制。"
+  },
+  {
+    "check": "overlap-text",
+    "target": "stx-mimo__scenario-strip",
+    "reason": "对话演示内部滚动视口元素的布局包围盒相互重叠（overflow hidden 裁切区），实际无可见文本覆盖。"
+  }
+]

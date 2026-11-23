@@ -7,6 +7,7 @@ import {AgentChatDemo} from '../components/home/AgentChatDemo';
 import {TopologySection} from '../components/home/TopologySection';
 import {ProductShowcase} from '../components/home/ProductShowcase';
 import {NewsTicker} from '../components/home/NewsTicker';
+import {ClosingCTA} from '../components/home/ClosingCTA';
 import {useHomeLocale} from '../components/home/useHomeLocale';
 import {PROMO_VIDEO, usePromoVideoUrls} from '../components/home/promoVideo';
 
@@ -53,7 +54,7 @@ export default function Home(): React.JSX.Element {
         type="application/ld+json"
         dangerouslySetInnerHTML={{__html: JSON.stringify(videoJsonLd).replace(/</g, '\\u003c')}}
       />
-      {/* 品牌首屏 → 产品视频 → Agent → 拓扑 → 产品展示 → 公告 */}
+      {/* 品牌首屏 → 产品视频 → Agent → 拓扑 → 产品展示 → 公告 → 收尾 CTA */}
       {/* Brand → product video → Agent → topology → product showcase → ticker */}
       <HeroSection />
       <PromoVideoSection />
@@ -61,6 +62,7 @@ export default function Home(): React.JSX.Element {
       <TopologySection />
       <ProductShowcase />
       <NewsTicker />
+      <ClosingCTA />
     </Layout>
   );
 }

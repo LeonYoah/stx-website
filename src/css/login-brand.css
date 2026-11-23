@@ -18,7 +18,6 @@
   box-sizing: border-box;
   /* 桌面锁一屏高度；小屏在 media 里改为 auto / Lock one viewport on desktop */
   min-height: calc(100dvh - var(--stx-nav-h));
-  height: calc(100dvh - var(--stx-nav-h));
   /* 贴边铺满，去掉卡片外框留白 / Edge-to-edge, no card inset */
   padding: 0;
 }
@@ -26,12 +25,9 @@
 /* 首屏光晕改中性，贴近登录页 / Neutral hero glow closer to login */
 .stx-hero-glow {
   position: absolute;
-  top: -120px;
-  left: 18%;
-  width: 720px;
-  height: 420px;
+  inset: 0;
   background: radial-gradient(
-    circle,
+    min(720px, 72vw) 420px at 43% 0,
     rgba(15, 23, 42, 0.06) 0%,
     transparent 70%
   );
@@ -41,7 +37,7 @@
 
 [data-theme='light'] .stx-hero-glow {
   background: radial-gradient(
-    circle,
+    min(720px, 72vw) 420px at 43% 0,
     rgba(15, 23, 42, 0.05) 0%,
     transparent 72%
   );
@@ -49,7 +45,7 @@
 
 [data-theme='dark'] .stx-hero-glow {
   background: radial-gradient(
-    circle,
+    min(720px, 72vw) 420px at 43% 0,
     rgba(255, 255, 255, 0.06) 0%,
     transparent 70%
   );
@@ -82,7 +78,7 @@
   --mouse-x-norm: 0;
   --mouse-y-norm: 0;
   --stx-stage-fg: #0f172a;
-  --stx-stage-muted: #64748b;
+  --stx-stage-muted: #4a5c66;
   --stx-stage-soft: #334155;
   --stx-stage-line: color-mix(in srgb, var(--stx-glacier-300) 34%, transparent);
   --stx-stage-surface: #f4fafb;
@@ -297,6 +293,7 @@
 }
 
 .stx-bw-visual-bg {
+  overflow: clip;
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -708,13 +705,13 @@ button.stx-pill {
 }
 
 .stx-pill--agent {
-  border-color: color-mix(in srgb, var(--stx-stage-accent) 45%, transparent);
-  background: color-mix(in srgb, var(--stx-stage-accent) 12%, transparent);
-  color: var(--stx-stage-accent);
+  border-color: color-mix(in srgb, var(--stx-glacier-600, #1f6b7a) 55%, transparent);
+  background: color-mix(in srgb, var(--stx-glacier-600, #1f6b7a) 10%, transparent);
+  color: var(--stx-glacier-700, #1f6b7a);
 }
 
 .stx-pill--agent:hover {
-  color: var(--stx-stage-fg);
+  color: var(--stx-glacier-800, #18525e);
   border-color: color-mix(in srgb, var(--stx-stage-accent) 65%, transparent);
   background: color-mix(in srgb, var(--stx-stage-accent) 16%, transparent);
   transform: none;
@@ -1047,14 +1044,14 @@ button.stx-pill {
     --stx-hero-pad-x: 20px;
     min-height: 0;
     height: auto;
-    overflow: visible;
+    overflow: clip;
   }
 
   .stx-stage {
     grid-template-columns: minmax(0, 1fr);
     min-height: 0;
     height: auto;
-    overflow: visible;
+    overflow: clip;
   }
 
   .stx-stage-copy {
@@ -1218,5 +1215,84 @@ button.stx-pill {
   .stx-bw-slide-tunnel {
     transform: none !important;
     translate: -50% 0;
+  }
+}
+
+/* 首屏硬事实行（含版本号与插件数量）/ Hard-fact line with version + count */
+.stx-brand-fact {
+  margin: 0.6rem 0 0;
+  font-size: clamp(0.78rem, 1.6vw, 0.85rem);
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  color: var(--stx-stage-soft);
+}
+
+/* 动效暂停开关：常驻右下角，满足 >5s 循环动画可暂停 / Pause control for long loops */
+.stx-anim-toggle {
+  position: absolute;
+  left: clamp(14px, 2vw, 24px);
+  bottom: clamp(12px, 2vh, 20px);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stx-stage-line);
+  background: color-mix(in srgb, var(--stx-stage-surface) 72%, transparent);
+  color: var(--stx-stage-soft);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.stx-anim-toggle:hover,
+.stx-anim-toggle:focus-visible {
+  border-color: var(--stx-stage-soft);
+  color: var(--stx-stage-fg);
+}
+
+.stx-anim-toggle svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* 暂停态：停掉首屏所有持续循环（隧道、扫描线、光标、光晕漂移）/ Paused state stops all hero loops */
+.stx-brand-panel.stx-motion-paused .stx-bw-slide-1,
+.stx-brand-panel.stx-motion-paused .stx-bw-slide-2,
+.stx-brand-panel.stx-motion-paused .stx-bw-slide-3,
+.stx-brand-panel.stx-motion-paused .stx-bw-scanner,
+.stx-brand-panel.stx-motion-paused .stx-hero-scan-line,
+.stx-brand-panel.stx-motion-paused .stx-type-caret {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stx-bw-slide-1,
+  .stx-bw-slide-2,
+  .stx-bw-slide-3,
+  .stx-bw-scanner,
+  .stx-hero-scan-line {
+    animation: none !important;
+    opacity: 0.15;
+  }
+
+  .stx-anim-toggle {
+    display: none;
+  }
+}
+
+/* 窄屏药丸折行，不再横向裁切 / Pills wrap on narrow screens instead of clipping */
+@media (max-width: 640px) {
+  .stx-pill-row {
+    flex-wrap: wrap;
+    overflow-x: visible;
   }
 }

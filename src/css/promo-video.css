@@ -6,9 +6,9 @@
 .stx-film {
   --stx-film-ink: #142028;
   --stx-film-soft: #4a5d68;
-  --stx-film-muted: #6b7f88;
+  --stx-film-muted: #54676f;
   --stx-film-line: rgba(20, 32, 40, 0.12);
-  --stx-film-accent: var(--stx-glacier-600, #298294);
+  --stx-film-accent: var(--stx-glacier-700, #1f6b7a);
   --stx-film-wash: rgba(41, 130, 148, 0.07);
   position: relative;
   padding: clamp(2.8rem, 6vh, 4.5rem) clamp(1rem, 3.5vw, 2rem)
@@ -311,9 +311,9 @@
   margin: 0;
   padding: 0 16px 0 10px;
   border-radius: 8px;
-  border: 1px solid color-mix(in srgb, var(--stx-stage-fg, #111) 16%, transparent);
-  background: color-mix(in srgb, var(--stx-stage-fg, #111) 4%, transparent);
-  color: var(--stx-stage-fg, #111);
+  border: 1px solid var(--stx-glacier-300, #8ecad6);
+  background: transparent;
+  color: var(--stx-glacier-700, #1f6b7a);
   font: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -323,8 +323,8 @@
 }
 
 .stx-brand-actions .stx-brand-watch:hover {
-  background: color-mix(in srgb, var(--stx-stage-fg, #111) 8%, transparent);
-  border-color: color-mix(in srgb, var(--stx-stage-fg, #111) 28%, transparent);
+  background: rgba(142, 202, 214, 0.12);
+  border-color: var(--stx-glacier-400, #65b5c4);
 }
 
 .stx-brand-watch__icon {
@@ -333,8 +333,8 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  color: #071118;
-  background: linear-gradient(135deg, #8ecad6 0%, #3b9fb2 100%);
+  color: #ffffff;
+  background: var(--stx-glacier-700, #1f6b7a);
 }
 
 .stx-brand-watch__icon svg {
