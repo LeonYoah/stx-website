@@ -1,0 +1,2549 @@
+{
+ "start": "2026-11-23T13:41:13.929Z",
+ "round": 3,
+ "idle": 0,
+ "errors": 0,
+ "status": "open",
+ "history": [
+  {
+   "at": "2026-11-23T13:45:00.745Z",
+   "mode": "manual",
+   "status": "fail",
+   "fails": 69,
+   "round": 1,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T13:52:52.399Z",
+   "mode": "manual",
+   "status": "fail",
+   "fails": 58,
+   "round": 2,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-23T13:58:24.546Z",
+   "mode": "manual",
+   "status": "open",
+   "fails": 56,
+   "round": 3,
+   "reused": false,
+   "stopHookActive": false
+  }
+ ],
+ "max": 3,
+ "marker": {
+  "page": "build/index.html",
+  "url": null,
+  "root": "build",
+  "kind": "software",
+  "category": "SeaTunnel 运维平台",
+  "primary": "在线体验",
+  "rounds": 3,
+  "start": "2026-11-23T13:41:13.929Z",
+  "by": "gate.mjs --start"
+ },
+ "manual": true,
+ "roundKey": "add6b5b9fee4929b:1ae45eb2",
+ "roundFree": false,
+ "idleFree": false,
+ "blockKey": null,
+ "fp": "add6b5b9fee4929b",
+ "page": "build/index.html",
+ "found": {
+  "fails": [
+   {
+    "check": "overlap-text",
+    "where": "section#stx-promo-video \"产品视频 0:45 01 主机与集群 0:06 02 安装包与插件 0:11 0\"",
+    "msg": "lies over the text \"帮我看看 6 号集群有没有失败的同步作业，先查状态和日志，不要改动环境。\" (div.stx-mimo__conversation > div.stx-mimo__user-msg.stx-mimo__reveal)",
+    "fix": "move the box off the text (or the text off the box)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "overlap-text"
+    ],
+    "wheres": [
+     "section#stx-promo-video \"产品视频 0:45 01 主机与集群 0:06 02 安装包与插件 0:11 0\""
+    ]
+   },
+   {
+    "check": "scroll-reveal",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > a.button--outline-glacier \"快速部署\"",
+    "msg": "starts \"-webkit-text-fill-color\" (0.3 s) the moment it is scrolled into view (an IntersectionObserver)",
+    "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "scroll-reveal"
+    ],
+    "wheres": [
+     "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > a.button--outline-glacier \"快速部署\""
+    ]
+   },
+   {
+    "check": "scroll-reveal",
+    "where": "nav.theme-layout-navbar.navbar:nth-of-type(2) > div.navbar__inner > div.theme-layout-navbar-left.navbar__items > a.navbar__item.navbar__link \"文档中心\"",
+    "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver)",
+    "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "scroll-reveal"
+    ],
+    "wheres": [
+     "nav.theme-layout-navbar.navbar:nth-of-type(2) > div.navbar__inner > div.theme-layout-navbar-left.navbar__items > a.navbar__item.navbar__link \"文档中心\""
+    ]
+   },
+   {
+    "check": "scroll-reveal",
+    "where": "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__sub > a.stx-agent-demo__guide-link \"查看 CLI 用法 ↗\"",
+    "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver)",
+    "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "scroll-reveal"
+    ],
+    "wheres": [
+     "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__sub > a.stx-agent-demo__guide-link \"查看 CLI 用法 ↗\""
+    ]
+   },
+   {
+    "check": "scroll-reveal",
+    "where": "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"阅读文档 ➔\"",
+    "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver)",
+    "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "scroll-reveal"
+    ],
+    "wheres": [
+     "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"阅读文档 ➔\""
+    ]
+   },
+   {
+    "check": "button-styles",
+    "where": "(one screen)",
+    "msg": "5 button styles on one screen: soft, fill #1f6b7a (\"在线体验\"); soft, fill #ffffff, outline #8ecad6 (\"快速部署\"); soft, outline #8ecad6 (\"观看视频 0:45\"); pill, outline #1f6b7a (\"AI Agent · CLI + Skill\"); round, fill #ffffff, outline #8ecad6 (\"Ask AI 问答\"); the odd ones out: \"观看视频 0:45\", \"AI Agent · CLI + Skill\", \"Ask AI 问答\"",
+    "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "button-styles"
+    ],
+    "wheres": [
+     "(one screen)"
+    ]
+   },
+   {
+    "check": "button-styles",
+    "where": "(the page)",
+    "msg": "7 button styles on the page: soft, fill #1f6b7a x6 (\"在线体验\"); soft, fill #ffffff, outline #8ecad6 x2 (\"快速部署\"); soft, outline #8ecad6 x2 (\"观看视频 0:45\"); pill, outline #1f6b7a x2 (\"AI Agent · CLI + Skill\"); round, fill #ffffff, outline #8ecad6 x1 (\"Ask AI 问答\"); soft, fill #eef6f8 x4 (\"集群与失败任务\"); soft, outline #1f6b7a x2 (\"快速部署\")",
+    "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "button-styles"
+    ],
+    "wheres": [
+     "(the page)"
+    ]
+   },
+   {
+    "check": "button-styles",
+    "where": "div.stx-mimo > aside.stx-mimo__sidebar > div.stx-mimo__side-scroll > button.stx-mimo__recent:nth-of-type(2) \"集群与失败任务\"",
+    "msg": "one button style (soft, fill #eef6f8) in 2 heights: 28, 38px (\"集群与失败任务\" 38px, \"默认权限\" 28px)",
+    "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "button-styles"
+    ],
+    "wheres": [
+     "div.stx-mimo > aside.stx-mimo__sidebar > div.stx-mimo__side-scroll > button.stx-mimo__recent:nth-of-type(2) \"集群与失败任务\""
+    ]
+   },
+   {
+    "check": "cta",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero",
+    "msg": "the hero has no button (the nav's does not count)",
+    "fix": "add the action: a button in the hero, one on every priced item, one in the closing section",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "cta"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero"
+    ]
+   },
+   {
+    "check": "copy-fact",
+    "where": "aside.stx-brand-panel > div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title \"让 SeaTunnel 运维清晰可见\"",
+    "msg": "the first screen holds no number, price, date, place, platform or genre",
+    "fix": "put one hard fact from the brief on the first screen: a number, a price, a date, the place, the platforms it runs on or a game's genre; take it from the brief or remove the claim",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "copy-fact"
+    ],
+    "wheres": [
+     "aside.stx-brand-panel > div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title \"让 SeaTunnel 运维清晰可见\""
+    ]
+   },
+   {
+    "check": "copy-headings",
+    "where": "div.stx-showcase__cards > article.stx-showcase__card:nth-of-type(5) > div.stx-showcase__copy > h3.stx-showcase__card-title \"作业 DAG 拓扑\"",
+    "msg": "\"作业 DAG 拓扑\" names no product, part, place or section (2 headings like it; at most one brand line per page) (and 1 more like it: \"作业 DAG 拓扑\")",
+    "fix": "name the thing in every heading: the product, a part, the place or a section noun",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "copy-headings"
+    ],
+    "wheres": [
+     "div.stx-showcase__cards > article.stx-showcase__card:nth-of-type(5) > div.stx-showcase__copy > h3.stx-showcase__card-title \"作业 DAG 拓扑\""
+    ]
+   },
+   {
+    "check": "off-grid",
+    "where": "div.flex.items-center:nth-of-type(1) > div.flex.items-center:nth-of-type(1) > span.relative.flex > span.relative.inline-flex",
+    "msg": "left edge at 150px, 20px off the page margin at 130px (62 elements); 1 more in this section off the grid too (span.text-emerald-500.flex at 146px)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "off-grid"
+    ],
+    "wheres": [
+     "div.flex.items-center:nth-of-type(1) > div.flex.items-center:nth-of-type(1) > span.relative.flex > span.relative.inline-flex"
+    ]
+   },
+   {
+    "check": "centre-axis",
+    "where": "section#stx-promo-video > div.stx-film__intro \"产品视频\"",
+    "msg": "centred text 13px right of the middle of its page (733px against 720px)",
+    "fix": "centre the block on its container (margin-inline: auto), or set it on the left grid",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "centre-axis"
+    ],
+    "wheres": [
+     "section#stx-promo-video > div.stx-film__intro \"产品视频\""
+    ]
+   },
+   {
+    "check": "tilt",
+    "where": "div.stx-stage-copy > aside.stx-brand-panel > div.stx-bw-visual-bg > div.stx-bw-grid",
+    "msg": "turned in 3D (and 1 more like it: div.stx-bw-grid)",
+    "fix": "set it straight",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "tilt"
+    ],
+    "wheres": [
+     "div.stx-stage-copy > aside.stx-brand-panel > div.stx-bw-visual-bg > div.stx-bw-grid"
+    ]
+   },
+   {
+    "check": "contrast",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > button.stx-brand-watch \"观看视频 0:45\"",
+    "msg": "body text over a effect reads at 3.7:1 at its worst tenth (needs 4.5:1), on a busy ground (and 2 more like it: \"观看视频 0:45\", \"0:45\")",
+    "fix": "put the text on a calm part of the picture, or on a solid panel",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "contrast"
+    ],
+    "wheres": [
+     "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > button.stx-brand-watch \"观看视频 0:45\""
+    ]
+   },
+   {
+    "check": "contrast",
+    "where": "div.flex.items-center:nth-of-type(1) > div.flex.items-center:nth-of-type(2) > span.flex.items-center:nth-of-type(1) > span.text-emerald-500.font-semibold \"1.2ms\"",
+    "msg": "body text over a effect reads at 2.5:1 at its worst tenth (needs 4.5:1) (and 9 more like it: \"|\", \"引擎: 1/3\", \"|\", \"|\", ...)",
+    "fix": "put the text on a calm part of the picture, or on a solid panel",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "contrast"
+    ],
+    "wheres": [
+     "div.flex.items-center:nth-of-type(1) > div.flex.items-center:nth-of-type(2) > span.flex.items-center:nth-of-type(1) > span.text-emerald-500.font-semibold \"1.2ms\""
+    ]
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1)",
+    "msg": "149px between these sections, +66% against the median 90px of gaps at a change of ground",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-gaps"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1)"
+    ]
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2)",
+    "msg": "149px between these sections, +66% against the median 90px of gaps at a change of ground",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-gaps"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2)"
+    ]
+   },
+   {
+    "check": "moment-none",
+    "where": "(the page)",
+    "msg": "a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)",
+    "fix": "deal one (moments.mjs pick --page software) and mount it in its own section",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "moment-none"
+    ],
+    "wheres": [
+     "(the page)"
+    ]
+   },
+   {
+    "check": "hero-screen",
+    "where": "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(1) \"文档中心在线体验简体中文简体中文English\"",
+    "msg": "the hero ends at 60px on a 900px screen, 840px above the fold: it ends at the fold, 1px either way (SR-1)",
+    "fix": "make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-screen"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(1) \"文档中心在线体验简体中文简体中文English\""
+    ]
+   },
+   {
+    "check": "hero-screen",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\"",
+    "msg": "840px of the next section shows on the first screen (from 60px on a 900px screen): nothing below the hero shows at load (SR-1)",
+    "fix": "end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-screen"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\""
+    ]
+   },
+   {
+    "check": "section-height",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\"",
+    "msg": "the section is 7408px tall (8.2 screens), 5608px over two screens (1800px): every section after the hero is one screen or two, 2px either way (SR-2)",
+    "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-height"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\""
+    ]
+   },
+   {
+    "check": "section-height",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) \"{\"@context\":\"https://schema.org\",\"@type\"\"",
+    "msg": "the section is 7408px tall (8.2 screens), 5608px over two screens (1800px): every section after the hero is one screen or two, 2px either way (SR-2)",
+    "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-height"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) \"{\"@context\":\"https://schema.org\",\"@type\"\""
+    ]
+   },
+   {
+    "check": "section-height",
+    "where": "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(2) \"文档中心在线体验简体中文简体中文English\"",
+    "msg": "the section is 60px tall (0.1 screens), 840px short of one screen (900px): every section after the hero is one screen or two, 2px either way (and 2 more like it: \"Apache SeaTunnel 一站式运维平台\", \"Apache SeaTunnel 一站式运维平台\") (SR-2)",
+    "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-height"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(2) \"文档中心在线体验简体中文简体中文English\""
+    ]
+   },
+   {
+    "check": "section-height",
+    "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\"",
+    "msg": "the section starts at 7468px, 268px below the screen grid (8 x 900px): sections start on whole screens (SR-2)",
+    "fix": "make every section above it exactly one or two screens tall, so this one starts on a whole screen",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-height"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\""
+    ]
+   },
+   {
+    "check": "section-height",
+    "where": "section#stx-promo-video > div.stx-film__stage > ol.stx-film__chapters \"01主机与集群0:0602安装包与插件0:1103作业工作台0:1604Chec\"",
+    "msg": "scroll-snap-type: x on \"01主机与集群0:0602安装包与插件0:1103作业工作台0:\": sections are one or two screens by their height and padding, the scroll is the browser's own (SR-2)",
+    "fix": "take scroll-snap-type off (html, body and every scroller): sections are one or two screens by height and padding, never snapped",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-height"
+    ],
+    "wheres": [
+     "section#stx-promo-video > div.stx-film__stage > ol.stx-film__chapters \"01主机与集群0:0602安装包与插件0:1103作业工作台0:1604Chec\""
+    ]
+   },
+   {
+    "check": "section-air",
+    "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) / div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(2)",
+    "msg": "37px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)",
+    "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-air"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) / div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(2)"
+    ]
+   },
+   {
+    "check": "section-air",
+    "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) > div.stx-footer-inner > div.stx-footer-bottom \"基于 Apache-2.0 协议开源© 2026 STX Project\"",
+    "msg": "a top border across 100% of the container, between the section's content: sections and their parts are told apart by air and ground, not lines (SR-3)",
+    "fix": "take the rule out: sections and their parts are parted by their ground and the air between them",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-air"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) > div.stx-footer-inner > div.stx-footer-bottom \"基于 Apache-2.0 协议开源© 2026 STX Project\""
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\"",
+    "msg": "the screen at scroll 14897px (the top of section 6) shows 409px of section 5 and the heading of section 5 whole and the content of 2 sections, over 24px each beside section 6: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+    "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\""
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(1) > h2 \"文档\"",
+    "msg": "the screen at scroll 7468px (the top of section 3) shows 370px of section 3 and the heading of section 3 whole and the content of 3 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+    "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(1) > h2 \"文档\""
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\"",
+    "msg": "the screen at scroll 7200px (stride 8) shows 208px of section 2 and the content of 3 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+    "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\""
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-stage.stx-stage--brand \"让 SeaTunnel 运维清晰可见Apache SeaTunnel 一站式运维\"",
+    "msg": "a band: a box 100% of the section wide on a ground of its own that holds the heading or the intro: the section's own ground is the band (SR-4)",
+    "fix": "put every block of <main> in a <section>, and give a band its own section instead of a ground inside one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-stage.stx-stage--brand \"让 SeaTunnel 运维清晰可见Apache SeaTunnel 一站式运维\""
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-showcase \"产品能力主机、集群、任务与诊断同在一处在 Web UI 中查看首页大盘、管理集群\"",
+    "msg": "a band: a box 100% of the section wide on a ground of its own that holds the heading or the intro: the section's own ground is the band (SR-4)",
+    "fix": "put every block of <main> in a <section>, and give a band its own section instead of a ground inside one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-showcase \"产品能力主机、集群、任务与诊断同在一处在 Web UI 中查看首页大盘、管理集群\""
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta \"现在就把 SeaTunnel 运维交给 STX一条命令完成安装，兼容 Apach\"",
+    "msg": "a band: a box 100% of the section wide on a ground of its own that holds only text: the section's own ground is the band (and 3 more like it: \"让 SeaTunnel 运维清晰可见Apache\", \"产品能力主机、集群、任务与诊断同在一处在 Web\", \"现在就把 SeaTunnel 运维交给 STX一\") (SR-4)",
+    "fix": "put every block of <main> in a <section>, and give a band its own section instead of a ground inside one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta \"现在就把 SeaTunnel 运维交给 STX一条命令完成安装，兼容 Apach\""
+    ]
+   },
+   {
+    "check": "one-heading",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\"",
+    "msg": "the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)",
+    "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-heading"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\""
+    ]
+   },
+   {
+    "check": "one-heading",
+    "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(2) > h2 \"项目\"",
+    "msg": "the section holds 3 h2 headings: one per section, first in its .wrap (SR-5)",
+    "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-heading"
+    ],
+    "wheres": [
+     "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(2) > h2 \"项目\""
+    ]
+   },
+   {
+    "check": "one-heading",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\"",
+    "msg": "the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)",
+    "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-heading"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\""
+    ]
+   },
+   {
+    "check": "one-heading",
+    "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(1) > h2 \"文档\"",
+    "msg": "headings of two sections show whole on one screen at 19 of 298 scroll positions (6.4%; at scroll 6700, 6750, 6800, 6850px), here with \"现在就把 SeaTunnel 运维交给 STX\": at most 3% on a desktop (SR-5)",
+    "fix": "make the sections one screen tall so their headings sit a screen apart and two never share one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-heading"
+    ],
+    "wheres": [
+     "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(1) > h2 \"文档\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\"",
+    "msg": "the content of section 3 runs 130px from the left and 130px from the right (read from its outermost blocks: no .wrap): the page's container starts at 56px; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+    "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\"",
+    "msg": "the content of section 6 runs 130px from the left and 130px from the right (read from its outermost blocks: no .wrap): the page's container starts at 56px; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (and 4 more like it: \"文档中心在线体验简体中文简体中文English\", \"文档中心在线体验简体中文简体中文English\", \"{\"@context\":\"https://sch\") (SR-6)",
+    "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div:nth-of-type(1) \"跳到主要内容文档中心在线体验简体中文简体中文English{\"@context\"\"",
+    "msg": "a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)",
+    "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) \"跳到主要内容文档中心在线体验简体中文简体中文English{\"@context\"\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "button#stx-ask-ai-fab \"Ask AI 问答\"",
+    "msg": "a <button> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (and 6 more like it: \"文档中心在线体验简体中文简体中文English\", \"{\"@context\":\"https://sch\", \"Apache SeaTunnel 一站式运维平台\") (SR-6)",
+    "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "button#stx-ask-ai-fab \"Ask AI 问答\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-hero-glow",
+    "msg": "a box runs 0-1440px, outside the container lines of section 2 at 56-1382px: full width is for background layers and grounds only (and 16 more like it: div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-hero-grid-fade, \"让 SeaTunnel 运维清晰可见Apache\", \"产品视频0:4501主机与集群0:0602安装包\") (SR-6)",
+    "fix": "keep it inside the container lines (.wrap): full width is for background layers and grounds only",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-hero-glow"
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(3) > h2 \"资源\"",
+    "msg": "the h2 starts 990px right of the container's left: every h1 and h2 starts on it, 2px either way (and 24 more like it: \"项目\", x 680, x 661) (SR-6)",
+    "fix": "start the text on the container's left, or on the one split line every split shares",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(3) > h2 \"资源\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title > span.stx-brand-title-main \"让 SeaTunnel 运维清晰可见\"",
+    "msg": "\"让 SeaTunnel 运维清晰可见\" is set centred across 756px, over half the 1327px container: text that wide is set left (and 2 more like it: \"让 SeaTunnel 运维清晰可见\", \"STX CLI + Skill · 交互演示\") (SR-6)",
+    "fix": "set the text left (text-align: start)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title > span.stx-brand-title-main \"让 SeaTunnel 运维清晰可见\""
+    ]
+   },
+   {
+    "check": "row-lines",
+    "where": "section#stx-agent-section > div.stx-mimo \"新建任务插件 / Skill产物中心项目生产环境示例最近集群与失败任务创建同步任\"",
+    "msg": "a row of 2 items: its first item starts at 130px, the container's left line at 56px; its last item ends at 1310px, the container's right line at 1382px (2px either way) (SR-7)",
+    "fix": "start the row's first item on the container's left line and end its last on the right line, every item one height",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "row-lines"
+    ],
+    "wheres": [
+     "section#stx-agent-section > div.stx-mimo \"新建任务插件 / Skill产物中心项目生产环境示例最近集群与失败任务创建同步任\""
+    ]
+   },
+   {
+    "check": "nav-covers",
+    "where": "button#stx-ask-ai-fab \"Ask AI 问答\"",
+    "msg": "sits on top of the text \"STX CLI + SKILL · 交互演示\" while the page scrolls: part of the line shows beside it",
+    "fix": "make the fixed nav one opaque band across the whole screen, or let it scroll away with the page",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "nav-covers"
+    ],
+    "wheres": [
+     "button#stx-ask-ai-fab \"Ask AI 问答\""
+    ]
+   },
+   {
+    "check": "overlap-text",
+    "where": "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__eyebrow \"STX CLI + SKILL · 交互演示\"",
+    "msg": "lies over the text \"stx sync job list --status FAILED\" (span.stx-mimo__phase-title > small)",
+    "fix": "move the box off the text (or the text off the box)",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "overlap-text"
+    ],
+    "wheres": [
+     "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__eyebrow \"STX CLI + SKILL · 交互演示\""
+    ]
+   },
+   {
+    "check": "overlap-text",
+    "where": "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__sub > a.stx-agent-demo__guide-link \"查看 CLI 用法 ↗\"",
+    "msg": "lies over the text \"读取作业日志\" (span.stx-mimo__phase-title > strong)",
+    "fix": "move the box off the text (or the text off the box)",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "overlap-text"
+    ],
+    "wheres": [
+     "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__sub > a.stx-agent-demo__guide-link \"查看 CLI 用法 ↗\""
+    ]
+   },
+   {
+    "check": "overlap-text",
+    "where": "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(1) \"集群与失败任务\"",
+    "msg": "lies over the text \"已示范通过 CLI 查集群、节点、失败作业和日志；未执行写操作。\" (div.stx-mimo__finish.stx-mimo__reveal > p:nth-of-type(2))",
+    "fix": "move the box off the text (or the text off the box)",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "overlap-text"
+    ],
+    "wheres": [
+     "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(1) \"集群与失败任务\""
+    ]
+   },
+   {
+    "check": "scroll-reveal",
+    "where": "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"查看说明 ➔\"",
+    "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver)",
+    "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "scroll-reveal"
+    ],
+    "wheres": [
+     "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"查看说明 ➔\""
+    ]
+   },
+   {
+    "check": "off-grid",
+    "where": "div.stx-stage.stx-stage--brand > div.stx-stage-copy > aside.stx-brand-panel > button.stx-anim-toggle \"暂停动效\"",
+    "msg": "left edge at 32px, 16px off the page margin at 16px (108 elements, like div.stx-film__player)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "off-grid"
+    ],
+    "wheres": [
+     "div.stx-stage.stx-stage--brand > div.stx-stage-copy > aside.stx-brand-panel > button.stx-anim-toggle \"暂停动效\""
+    ]
+   },
+   {
+    "check": "off-grid",
+    "where": "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(1) \"集群与失败任务\"",
+    "msg": "left edge at 24px, 8px off the page margin at 16px (108 elements); 2 more in this section off the grid too (div.stx-mimo__composer at 24px, span.stx-mimo__header-title at 26px)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "off-grid"
+    ],
+    "wheres": [
+     "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(1) \"集群与失败任务\""
+    ]
+   },
+   {
+    "check": "off-grid",
+    "where": "div.stx-footer-main > div.stx-footer-brand > a > img.stx-footer-logo.themedComponent_tkPz:nth-of-type(1) \"img: STX\"",
+    "msg": "left edge at 24px, 8px off the page margin at 16px (108 elements); 10 more in this section off the grid too (p at 24px, h2 at 24px, a:nth-of-type(1) at 24px, a:nth-of-type(2) at 24px, ...)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "off-grid"
+    ],
+    "wheres": [
+     "div.stx-footer-main > div.stx-footer-brand > a > img.stx-footer-logo.themedComponent_tkPz:nth-of-type(1) \"img: STX\""
+    ]
+   },
+   {
+    "check": "off-grid",
+    "where": "div.stx-mimo > div.stx-mimo__main > header.stx-mimo__header > span.stx-mimo__header-title \"查集群与失败任务\"",
+    "msg": "left edge at 26px, 10px off the page margin at 16px (108 elements, like div.stx-film__player); 9 more in this section off the grid too (p.stx-mimo__assistant-text at 26px, p.stx-mimo__finish-title at 26px, button.stx-mimo__scenario-chip:nth-of-type(1) at 24px, button.stx-mimo__artifact at 26px, ...)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "off-grid"
+    ],
+    "wheres": [
+     "div.stx-mimo > div.stx-mimo__main > header.stx-mimo__header > span.stx-mimo__header-title \"查集群与失败任务\""
+    ]
+   },
+   {
+    "check": "off-grid",
+    "where": "div.stx-footer-main > div.stx-footer-brand > a > img.stx-footer-logo.themedComponent_tkPz \"img: STX\"",
+    "msg": "left edge at 24px, 8px off the page margin at 16px (108 elements, like a.stx-news-ticker__action); 12 more in this section off the grid too (p at 24px, h2 at 24px, a:nth-of-type(1) at 24px, a:nth-of-type(2) at 24px, ...)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "off-grid"
+    ],
+    "wheres": [
+     "div.stx-footer-main > div.stx-footer-brand > a > img.stx-footer-logo.themedComponent_tkPz \"img: STX\""
+    ]
+   },
+   {
+    "check": "contrast",
+    "where": "div.stx-mimo__viewport > div.stx-mimo__conversation > div.stx-mimo__assistant.stx-mimo__reveal > p.stx-mimo__assistant-text \"先查集群和节点，再列出失败作业、读取日志。全程只查询，不执行重启或恢复。\"",
+    "msg": "body text over a picture reads at 1.4:1 at its worst tenth (needs 4.5:1), on a busy ground",
+    "fix": "put the text on a calm part of the picture, or on a solid panel",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "contrast"
+    ],
+    "wheres": [
+     "div.stx-mimo__viewport > div.stx-mimo__conversation > div.stx-mimo__assistant.stx-mimo__reveal > p.stx-mimo__assistant-text \"先查集群和节点，再列出失败作业、读取日志。全程只查询，不执行重启或恢复。\""
+    ]
+   },
+   {
+    "check": "menu-toggle",
+    "where": "div.stx-stage.stx-stage--brand:nth-of-type(3) > div.stx-stage-copy > aside.stx-brand-panel > button.stx-anim-toggle \"暂停动效\"",
+    "msg": "the menu button (\"暂停动效\") has no aria-expanded: a screen reader cannot tell the menu is open or shut",
+    "fix": "use the starter's button: <button class=\"nav__toggle\" type=\"button\" aria-expanded=\"false\" aria-label=\"Menu\">; system.js flips it",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "menu-toggle"
+    ],
+    "wheres": [
+     "div.stx-stage.stx-stage--brand:nth-of-type(3) > div.stx-stage-copy > aside.stx-brand-panel > button.stx-anim-toggle \"暂停动效\""
+    ]
+   },
+   {
+    "check": "hero-fill",
+    "where": "section#stx-promo-video \"产品视频 0:45 01 主机与集群 0:06 02 安装包与插件 0:11 0\"",
+    "msg": "the next section shows on the first screen: it starts at 917px on a 1024px screen (the hero ends at 845px)",
+    "fix": "let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load",
+    "widths": [
+     768
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-fill"
+    ],
+    "wheres": [
+     "section#stx-promo-video \"产品视频 0:45 01 主机与集群 0:06 02 安装包与插件 0:11 0\""
+    ]
+   },
+   {
+    "check": "off-viewport",
+    "where": "div#__docusaurus > div > a.skipToContent_ZV5d \"跳到主要内容\"",
+    "msg": "at 320px wide it runs 48px past the screen's right edge (cut there: the page clips what runs past it)",
+    "fix": "keep it inside the screen at this width: let it shrink, wrap or stack",
+    "widths": [
+     320
+    ],
+    "from": "consistency",
+    "ids": [
+     "off-viewport"
+    ],
+    "wheres": [
+     "div#__docusaurus > div > a.skipToContent_ZV5d \"跳到主要内容\""
+    ]
+   },
+   {
+    "check": "container",
+    "where": "page",
+    "msg": "no .wrap",
+    "fix": "put the content in one .wrap",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "container"
+    ],
+    "wheres": [
+     "page"
+    ]
+   }
+  ],
+  "warns": [
+   {
+    "check": "assets",
+    "where": "(the page)",
+    "msg": "the data file https://proxy.kapa.ai/ did not load (404)",
+    "fix": "fix the path, or remove the reference",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "div.stx-news-ticker > div.stx-news-ticker__inner > div.stx-news-ticker__main > span.stx-news-ticker__text \"STX 内置监控与首页大盘：指标采集、趋势图和告警评估在 STX 内完成\"",
+    "msg": "its first line sits 13px under the top edge of div.stx-news-ticker, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"阅读文档 ➔\"",
+    "msg": "its first line sits 13px under the top edge of div.stx-news-ticker, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "button-picture",
+    "where": "button#stx-ask-ai-fab \"Ask AI 问答\"",
+    "msg": "a picture sits inside the button \"Ask AI 问答\"",
+    "fix": "take the picture out of the button: a label, at most an icon",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "cta",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-showcase \"主机、集群、任务与诊断同在一处\"",
+    "msg": "a section over 1.5 screens long with no link or button in it",
+    "fix": "add the action: a button in the hero, one on every priced item, one in the closing section",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "cta",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-showcase \"主机、集群、任务与诊断同在一处\"",
+    "msg": "a section over 1.5 screens long with no link or button in it",
+    "fix": "add the action: a button in the hero, one on every priced item, one in the closing section",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-headline",
+    "where": "aside.stx-brand-panel > div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title \"让 SeaTunnel 运维清晰可见\"",
+    "msg": "the h1 has 1 word (2 to 8 read at a glance)",
+    "fix": "put the category noun in the h1 (and who it is for, or where), in 2 to 8 words",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-buttons",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > button.stx-brand-watch \"观看视频 0:45\"",
+    "msg": "\"观看视频 0:45\" does not start with a verb (book, buy, try, start, get, see...) (and 1 more like it: \"AI Agent · CLI + Skill\")",
+    "fix": "label buttons with a verb and what the visitor gets (\"Book a room\", \"Start free trial\")",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero / section#stx-promo-video",
+    "msg": "76px between these sections, -37% against the median 121px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > header.stx-hero / section#stx-promo-video",
+    "msg": "76px between these sections, -37% against the median 121px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) / div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > header.stx-hero",
+    "msg": "uneven space at the edge of a band: 87px outside its edge, 11px inside it (the space on either side of a change of ground reads as one gap only when the two match)",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "nav-family",
+    "where": "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(1)",
+    "msg": "the nav's links come in 3 sizes (14, 16, 13px)",
+    "fix": "keep one nav on every screen: the same bar, fill, links and type",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "label-centre",
+    "where": "div.stx-mimo > aside.stx-mimo__sidebar > div.stx-mimo__side-scroll > button.stx-mimo__recent:nth-of-type(2) \"集群与失败任务\"",
+    "msg": "its label sits 105px off-centre (10px of room at the left, 115px at the right) (and 1 more like it: \"集群与失败任务\")",
+    "fix": "centre the label in its button, or fill the empty side with an icon",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "orphan",
+    "where": "section#stx-promo-video > div.stx-film__stage > ol.stx-film__chapters > li:nth-of-type(1) \"01 主机与集群 0:06\"",
+    "msg": "its last line holds only \"0:06\" (and 13 more like it: \"02 安装包与插件 0:11\", \"03 作业工作台 0:16\", \"04 Checkpoint 可视化 0:21\", \"05 告警与诊断 0:26\", ...)",
+    "fix": "rebalance the text (text-wrap: pretty, or a shorter line) so the last line holds more than one short word",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "photo-repeat",
+    "where": "div.stx-film__stage > div.stx-film__player > button.stx-film__cover > img.stx-film__poster \"stx-promo-45s-poster.webp\"",
+    "msg": "the photograph stx-promo-45s-poster.webp is shown 2 times on the page: a picture the visitor has already seen",
+    "fix": "show each photograph once: a different picture of what this section names, or none",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "photo-repeat",
+    "where": "article.stx-showcase__card:nth-of-type(1) > div.stx-showcase__media > figure.stx-showcase__frame > img.stx-showcase__shot \"01-dashboard.png\"",
+    "msg": "the photograph 01-dashboard.png is shown 2 times on the page: a picture the visitor has already seen",
+    "fix": "show each photograph once: a different picture of what this section names, or none",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "photo-repeat",
+    "where": "article.stx-showcase__card:nth-of-type(2) > div.stx-showcase__media > figure.stx-showcase__frame > img.stx-showcase__shot \"40-cluster-install-config.png\"",
+    "msg": "the photograph 40-cluster-install-config.png is shown 2 times on the page: a picture the visitor has already seen",
+    "fix": "show each photograph once: a different picture of what this section names, or none",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "button-contrast",
+    "where": "div.stx-mimo > aside.stx-mimo__sidebar > div.stx-mimo__side-scroll > button.stx-mimo__recent:nth-of-type(2) \"集群与失败任务\"",
+    "msg": "the button \"集群与失败任务\" (#eef6f8) stands only 1.03:1 off the ground around it: it reads as part of the ground, or as switched off",
+    "fix": "give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "button-contrast",
+    "where": "div.stx-mimo__composer > div.stx-mimo__composer-bar > div.stx-mimo__composer-left > button.stx-mimo__chip.stx-mimo__chip--label \"默认权限\"",
+    "msg": "the button \"默认权限\" (#eef6f8) stands only 1.09:1 off the ground around it: it reads as part of the ground, or as switched off",
+    "fix": "give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "action-count",
+    "where": "div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > div.stx-close-cta__actions > a.stx-close-cta__ghost",
+    "msg": "the main action \"在线体验\" is on 12 buttons and links: the nav, the hero and the closing call carry it; elsewhere a section has its own action",
+    "fix": "the main action in the nav, the hero and the closing call; give the other sections their own action",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "one-screen",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-topo-section \"STX Control Plane (Master Leader) 1.2ms \"",
+    "msg": "5 sections are shorter than the screen, so the next one's heading or picture shows with them: \"STX Control Plane (Master Leader) 1.2ms \" is 663px of the 900px under the nav, and \"主机、集群、任务与诊断同在一处\" shows below it (\"让 SeaTunnel 运维清晰可见\", \"产品视频 0:45 01 主机与集群 0\", \"STX CLI + SKILL · 交互\")",
+    "fix": "give each section the screen (min-height: 100svh less the nav, its content centred), or join two short ones into one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "visual-caption",
+    "where": "div.text-card-foreground.relative > div.p-6.px-4 > div.flex.items-center > span.text-emerald-500.flex \"引擎: 1/3\"",
+    "msg": "a muted 11px line of 1 row sits 10px under the drawing (svg): it reads as a caption: \"引擎: 1/3\"; no caption or description under any image, render or visual (house rule)",
+    "fix": "take the line away: no caption or description under, over or on any image, render or visual; a licence credit goes in one footer line",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "skip-link",
+    "where": "div:nth-of-type(1) > div:nth-of-type(1) > a.skipToContent_ZV5d \"跳到主要内容\"",
+    "msg": "the first Tab stop is \"跳到主要内容\", not a skip link: a keyboard user tabs through the whole nav on every visit",
+    "fix": "add the starter's skip link as the header's first child: <a class=\"skip-link\" href=\"#top\">Skip to content</a>",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "share-meta",
+    "where": "head",
+    "msg": "the head lacks theme-color: a shared link shows no picture or title of its own",
+    "fix": "copy the head block of starter.html: og tags, twitter:card, the icon and theme-color (references/system.md, Head)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "nav.theme-layout-navbar.navbar:nth-of-type(1) > div.navbar__inner > div.theme-layout-navbar-left.navbar__items > button.navbar__toggle.clean-btn",
+    "msg": "a 30x30px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "nav.theme-layout-navbar.navbar:nth-of-type(1) > div.navbar__inner > div.theme-layout-navbar-left.navbar__items > a.navbar__brand",
+    "msg": "a 70x32px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "nav.theme-layout-navbar.navbar:nth-of-type(1) > div.navbar__inner > div.theme-layout-navbar-right.navbar__items > a.navbar__item.navbar__link \"在线体验\"",
+    "msg": "a 97x32px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > a.button--glacier \"在线体验\"",
+    "msg": "a 314x42px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > a.button--outline-glacier \"快速部署\"",
+    "msg": "a 314x42px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > button.stx-brand-watch \"观看视频 0:45\"",
+    "msg": "a 314x42px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > a.stx-gh-star \"Star\"",
+    "msg": "a 314x42px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-install-command-bar.stx-brand-install > button.stx-cmd-copy-btn \"复制\"",
+    "msg": "a 47x25px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-pill-row > button.stx-pill.stx-pill--agent \"AI Agent · CLI + Skill\"",
+    "msg": "a 199x38px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "tap-size",
+    "where": "div.stx-footer-inner > div.stx-footer-main > div.stx-footer-brand > a",
+    "msg": "a 84x43px tap target: under the 44px a phone needs",
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box",
+    "widths": [
+     390,
+     320
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "fold-cut",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-pill-row > button.stx-pill.stx-pill--agent \"AI Agent · CLI + Skill\"",
+    "msg": "the hero's button \"AI Agent · CLI + Skill\" is cut by the bottom of the first screen (16px of its 38px below the fold)",
+    "fix": "size the hero so the heading ends above the fold, or starts below it",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "heading-scale",
+    "where": "div.stx-showcase__cards > article.stx-showcase__card:nth-of-type(1) > div.stx-showcase__copy > h3.stx-showcase__card-title \"首页大盘\"",
+    "msg": "the h3s (18.4px) are only 1.13x smaller than the h2s (20.8px): one level a clear step (1.3x or more) below the other",
+    "fix": "size headings by level: the h1 largest, one size per level, each level below the one above",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "off-grid",
+    "where": "div.stx-stage.stx-stage--brand > div.stx-stage-copy > aside.stx-brand-panel > div.stx-bw-spotlight",
+    "msg": "left edge at 18px, 2px off the page margin at 16px (108 elements)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "off-grid",
+    "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(2) > a:nth-of-type(2) \"问题反馈\"",
+    "msg": "left edge at 24px, 8px off the page margin at 16px (108 elements, none of them near it); 8 more in this section off the grid too (a:nth-of-type(3) at 24px, a:nth-of-type(4) at 24px, h2 at 24px, a:nth-of-type(1) at 24px, ...)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "off-grid",
+    "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(2) > a:nth-of-type(4) \"开源协议\"",
+    "msg": "left edge at 24px, 8px off the page margin at 16px (108 elements, none of them near it); 6 more in this section off the grid too (h2 at 24px, a:nth-of-type(1) at 24px, a:nth-of-type(2) at 24px, a:nth-of-type(3) at 24px, ...)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "busy-ground",
+    "where": "div.stx-brand-content > div.stx-brand-core > div.stx-pill-row > span.stx-pill:nth-of-type(3) \"插件市场\"",
+    "msg": "text over a busy part of a effect (its luminance varies by 0.20 under the words) (and 3 more like it: \"STX CLI + SKILL · 交互演示\", \"Active\", \"虚拟机 / 主机\")",
+    "fix": "move the text to a calm part of the picture, or put it on a panel",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-topo-section / div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-showcase",
+    "msg": "148px between these sections, +36% against the median 109px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-topo-section / div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-showcase",
+    "msg": "148px between these sections, +36% against the median 109px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1)",
+    "msg": "uneven space at the edge of a band: 44px outside its edge, 76px inside it (the space on either side of a change of ground reads as one gap only when the two match)",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2)",
+    "msg": "uneven space at the edge of a band: 44px outside its edge, 76px inside it (the space on either side of a change of ground reads as one gap only when the two match)",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "orphan",
+    "where": "aside.stx-brand-panel > div.stx-brand-content > div.stx-brand-core > p.stx-brand-fact \"兼容 Apache SeaTunnel 2.3.x+ · 100+ Connec\"",
+    "msg": "its last line holds only \"插件\" (and 15 more like it: \"01 主机与集群 0:06\", \"02 安装包与插件 0:11\", \"03 作业工作台 0:16\", \"04 Checkpoint 可视化 0:21\", ...)",
+    "fix": "rebalance the text (text-wrap: pretty, or a shorter line) so the last line holds more than one short word",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "button-contrast",
+    "where": "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(2) \"创建同步任务\"",
+    "msg": "the button \"创建同步任务\" (#eef6f8) stands only 1.09:1 off the ground around it: it reads as part of the ground, or as switched off",
+    "fix": "give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "button-contrast",
+    "where": "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(3) \"升级前预检\"",
+    "msg": "the button \"升级前预检\" (#eef6f8) stands only 1.09:1 off the ground around it: it reads as part of the ground, or as switched off",
+    "fix": "give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-numbered",
+    "msg": "7 step numbers",
+    "fix": "number only steps that happen in order (references/copy-tells.md)",
+    "widths": [],
+    "from": "copy",
+    "where": "(the copy)",
+    "exact": false
+   }
+  ],
+  "crashed": [],
+  "seconds": {
+   "consistency": 194,
+   "layout": 20
+  }
+ },
+ "open": [
+  {
+   "check": "overlap-text",
+   "where": "section#stx-promo-video \"产品视频 0:45 01 主机与集群 0:06 02 安装包与插件 0:11 0\"",
+   "msg": "lies over the text \"帮我看看 6 号集群有没有失败的同步作业，先查状态和日志，不要改动环境。\" (div.stx-mimo__conversation > div.stx-mimo__user-msg.stx-mimo__reveal)",
+   "fix": "move the box off the text (or the text off the box)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "overlap-text"
+   ],
+   "wheres": [
+    "section#stx-promo-video \"产品视频 0:45 01 主机与集群 0:06 02 安装包与插件 0:11 0\""
+   ]
+  },
+  {
+   "check": "scroll-reveal",
+   "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > a.button--outline-glacier \"快速部署\"",
+   "msg": "starts \"-webkit-text-fill-color\" (0.3 s) the moment it is scrolled into view (an IntersectionObserver)",
+   "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "scroll-reveal"
+   ],
+   "wheres": [
+    "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > a.button--outline-glacier \"快速部署\""
+   ]
+  },
+  {
+   "check": "scroll-reveal",
+   "where": "nav.theme-layout-navbar.navbar:nth-of-type(2) > div.navbar__inner > div.theme-layout-navbar-left.navbar__items > a.navbar__item.navbar__link \"文档中心\"",
+   "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver)",
+   "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "scroll-reveal"
+   ],
+   "wheres": [
+    "nav.theme-layout-navbar.navbar:nth-of-type(2) > div.navbar__inner > div.theme-layout-navbar-left.navbar__items > a.navbar__item.navbar__link \"文档中心\""
+   ]
+  },
+  {
+   "check": "scroll-reveal",
+   "where": "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__sub > a.stx-agent-demo__guide-link \"查看 CLI 用法 ↗\"",
+   "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver)",
+   "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "scroll-reveal"
+   ],
+   "wheres": [
+    "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__sub > a.stx-agent-demo__guide-link \"查看 CLI 用法 ↗\""
+   ]
+  },
+  {
+   "check": "scroll-reveal",
+   "where": "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"阅读文档 ➔\"",
+   "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver)",
+   "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "scroll-reveal"
+   ],
+   "wheres": [
+    "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"阅读文档 ➔\""
+   ]
+  },
+  {
+   "check": "button-styles",
+   "where": "(one screen)",
+   "msg": "5 button styles on one screen: soft, fill #1f6b7a (\"在线体验\"); soft, fill #ffffff, outline #8ecad6 (\"快速部署\"); soft, outline #8ecad6 (\"观看视频 0:45\"); pill, outline #1f6b7a (\"AI Agent · CLI + Skill\"); round, fill #ffffff, outline #8ecad6 (\"Ask AI 问答\"); the odd ones out: \"观看视频 0:45\", \"AI Agent · CLI + Skill\", \"Ask AI 问答\"",
+   "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "button-styles"
+   ],
+   "wheres": [
+    "(one screen)"
+   ]
+  },
+  {
+   "check": "button-styles",
+   "where": "(the page)",
+   "msg": "7 button styles on the page: soft, fill #1f6b7a x6 (\"在线体验\"); soft, fill #ffffff, outline #8ecad6 x2 (\"快速部署\"); soft, outline #8ecad6 x2 (\"观看视频 0:45\"); pill, outline #1f6b7a x2 (\"AI Agent · CLI + Skill\"); round, fill #ffffff, outline #8ecad6 x1 (\"Ask AI 问答\"); soft, fill #eef6f8 x4 (\"集群与失败任务\"); soft, outline #1f6b7a x2 (\"快速部署\")",
+   "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "button-styles"
+   ],
+   "wheres": [
+    "(the page)"
+   ]
+  },
+  {
+   "check": "button-styles",
+   "where": "div.stx-mimo > aside.stx-mimo__sidebar > div.stx-mimo__side-scroll > button.stx-mimo__recent:nth-of-type(2) \"集群与失败任务\"",
+   "msg": "one button style (soft, fill #eef6f8) in 2 heights: 28, 38px (\"集群与失败任务\" 38px, \"默认权限\" 28px)",
+   "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "button-styles"
+   ],
+   "wheres": [
+    "div.stx-mimo > aside.stx-mimo__sidebar > div.stx-mimo__side-scroll > button.stx-mimo__recent:nth-of-type(2) \"集群与失败任务\""
+   ]
+  },
+  {
+   "check": "cta",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero",
+   "msg": "the hero has no button (the nav's does not count)",
+   "fix": "add the action: a button in the hero, one on every priced item, one in the closing section",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "cta"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero"
+   ]
+  },
+  {
+   "check": "copy-fact",
+   "where": "aside.stx-brand-panel > div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title \"让 SeaTunnel 运维清晰可见\"",
+   "msg": "the first screen holds no number, price, date, place, platform or genre",
+   "fix": "put one hard fact from the brief on the first screen: a number, a price, a date, the place, the platforms it runs on or a game's genre; take it from the brief or remove the claim",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "copy-fact"
+   ],
+   "wheres": [
+    "aside.stx-brand-panel > div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title \"让 SeaTunnel 运维清晰可见\""
+   ]
+  },
+  {
+   "check": "copy-headings",
+   "where": "div.stx-showcase__cards > article.stx-showcase__card:nth-of-type(5) > div.stx-showcase__copy > h3.stx-showcase__card-title \"作业 DAG 拓扑\"",
+   "msg": "\"作业 DAG 拓扑\" names no product, part, place or section (2 headings like it; at most one brand line per page) (and 1 more like it: \"作业 DAG 拓扑\")",
+   "fix": "name the thing in every heading: the product, a part, the place or a section noun",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "copy-headings"
+   ],
+   "wheres": [
+    "div.stx-showcase__cards > article.stx-showcase__card:nth-of-type(5) > div.stx-showcase__copy > h3.stx-showcase__card-title \"作业 DAG 拓扑\""
+   ]
+  },
+  {
+   "check": "off-grid",
+   "where": "div.flex.items-center:nth-of-type(1) > div.flex.items-center:nth-of-type(1) > span.relative.flex > span.relative.inline-flex",
+   "msg": "left edge at 150px, 20px off the page margin at 130px (62 elements); 1 more in this section off the grid too (span.text-emerald-500.flex at 146px)",
+   "fix": "move it onto the page margin, or the column edge its section uses",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "off-grid"
+   ],
+   "wheres": [
+    "div.flex.items-center:nth-of-type(1) > div.flex.items-center:nth-of-type(1) > span.relative.flex > span.relative.inline-flex"
+   ]
+  },
+  {
+   "check": "centre-axis",
+   "where": "section#stx-promo-video > div.stx-film__intro \"产品视频\"",
+   "msg": "centred text 13px right of the middle of its page (733px against 720px)",
+   "fix": "centre the block on its container (margin-inline: auto), or set it on the left grid",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "centre-axis"
+   ],
+   "wheres": [
+    "section#stx-promo-video > div.stx-film__intro \"产品视频\""
+   ]
+  },
+  {
+   "check": "tilt",
+   "where": "div.stx-stage-copy > aside.stx-brand-panel > div.stx-bw-visual-bg > div.stx-bw-grid",
+   "msg": "turned in 3D (and 1 more like it: div.stx-bw-grid)",
+   "fix": "set it straight",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "tilt"
+   ],
+   "wheres": [
+    "div.stx-stage-copy > aside.stx-brand-panel > div.stx-bw-visual-bg > div.stx-bw-grid"
+   ]
+  },
+  {
+   "check": "contrast",
+   "where": "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > button.stx-brand-watch \"观看视频 0:45\"",
+   "msg": "body text over a effect reads at 3.7:1 at its worst tenth (needs 4.5:1), on a busy ground (and 2 more like it: \"观看视频 0:45\", \"0:45\")",
+   "fix": "put the text on a calm part of the picture, or on a solid panel",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "contrast"
+   ],
+   "wheres": [
+    "div.stx-brand-content > div.stx-brand-core > div.stx-brand-actions > button.stx-brand-watch \"观看视频 0:45\""
+   ]
+  },
+  {
+   "check": "contrast",
+   "where": "div.flex.items-center:nth-of-type(1) > div.flex.items-center:nth-of-type(2) > span.flex.items-center:nth-of-type(1) > span.text-emerald-500.font-semibold \"1.2ms\"",
+   "msg": "body text over a effect reads at 2.5:1 at its worst tenth (needs 4.5:1) (and 9 more like it: \"|\", \"引擎: 1/3\", \"|\", \"|\", ...)",
+   "fix": "put the text on a calm part of the picture, or on a solid panel",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "contrast"
+   ],
+   "wheres": [
+    "div.flex.items-center:nth-of-type(1) > div.flex.items-center:nth-of-type(2) > span.flex.items-center:nth-of-type(1) > span.text-emerald-500.font-semibold \"1.2ms\""
+   ]
+  },
+  {
+   "check": "section-gaps",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1)",
+   "msg": "149px between these sections, +66% against the median 90px of gaps at a change of ground",
+   "fix": "use one gap between sections (all within 25% of each other)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-gaps"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1)"
+   ]
+  },
+  {
+   "check": "section-gaps",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2)",
+   "msg": "149px between these sections, +66% against the median 90px of gaps at a change of ground",
+   "fix": "use one gap between sections (all within 25% of each other)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-gaps"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta / div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2)"
+   ]
+  },
+  {
+   "check": "moment-none",
+   "where": "(the page)",
+   "msg": "a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)",
+   "fix": "deal one (moments.mjs pick --page software) and mount it in its own section",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "moment-none"
+   ],
+   "wheres": [
+    "(the page)"
+   ]
+  },
+  {
+   "check": "hero-screen",
+   "where": "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(1) \"文档中心在线体验简体中文简体中文English\"",
+   "msg": "the hero ends at 60px on a 900px screen, 840px above the fold: it ends at the fold, 1px either way (SR-1)",
+   "fix": "make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-screen"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(1) \"文档中心在线体验简体中文简体中文English\""
+   ]
+  },
+  {
+   "check": "hero-screen",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\"",
+   "msg": "840px of the next section shows on the first screen (from 60px on a 900px screen): nothing below the hero shows at load (SR-1)",
+   "fix": "end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-screen"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\""
+   ]
+  },
+  {
+   "check": "section-height",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\"",
+   "msg": "the section is 7408px tall (8.2 screens), 5608px over two screens (1800px): every section after the hero is one screen or two, 2px either way (SR-2)",
+   "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-height"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\""
+   ]
+  },
+  {
+   "check": "section-height",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) \"{\"@context\":\"https://schema.org\",\"@type\"\"",
+   "msg": "the section is 7408px tall (8.2 screens), 5608px over two screens (1800px): every section after the hero is one screen or two, 2px either way (SR-2)",
+   "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-height"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) \"{\"@context\":\"https://schema.org\",\"@type\"\""
+   ]
+  },
+  {
+   "check": "section-height",
+   "where": "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(2) \"文档中心在线体验简体中文简体中文English\"",
+   "msg": "the section is 60px tall (0.1 screens), 840px short of one screen (900px): every section after the hero is one screen or two, 2px either way (and 2 more like it: \"Apache SeaTunnel 一站式运维平台\", \"Apache SeaTunnel 一站式运维平台\") (SR-2)",
+   "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-height"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(2) \"文档中心在线体验简体中文简体中文English\""
+   ]
+  },
+  {
+   "check": "section-height",
+   "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\"",
+   "msg": "the section starts at 7468px, 268px below the screen grid (8 x 900px): sections start on whole screens (SR-2)",
+   "fix": "make every section above it exactly one or two screens tall, so this one starts on a whole screen",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-height"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\""
+   ]
+  },
+  {
+   "check": "section-height",
+   "where": "section#stx-promo-video > div.stx-film__stage > ol.stx-film__chapters \"01主机与集群0:0602安装包与插件0:1103作业工作台0:1604Chec\"",
+   "msg": "scroll-snap-type: x on \"01主机与集群0:0602安装包与插件0:1103作业工作台0:\": sections are one or two screens by their height and padding, the scroll is the browser's own (SR-2)",
+   "fix": "take scroll-snap-type off (html, body and every scroller): sections are one or two screens by height and padding, never snapped",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-height"
+   ],
+   "wheres": [
+    "section#stx-promo-video > div.stx-film__stage > ol.stx-film__chapters \"01主机与集群0:0602安装包与插件0:1103作业工作台0:1604Chec\""
+   ]
+  },
+  {
+   "check": "section-air",
+   "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) / div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(2)",
+   "msg": "37px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)",
+   "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-air"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) / div:nth-of-type(1) > nav.theme-layout-navbar.navbar:nth-of-type(2)"
+   ]
+  },
+  {
+   "check": "section-air",
+   "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) > div.stx-footer-inner > div.stx-footer-bottom \"基于 Apache-2.0 协议开源© 2026 STX Project\"",
+   "msg": "a top border across 100% of the container, between the section's content: sections and their parts are told apart by air and ground, not lines (SR-3)",
+   "fix": "take the rule out: sections and their parts are parted by their ground and the air between them",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-air"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) > div.stx-footer-inner > div.stx-footer-bottom \"基于 Apache-2.0 协议开源© 2026 STX Project\""
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\"",
+   "msg": "the screen at scroll 14897px (the top of section 6) shows 409px of section 5 and the heading of section 5 whole and the content of 2 sections, over 24px each beside section 6: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+   "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\""
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(1) > h2 \"文档\"",
+   "msg": "the screen at scroll 7468px (the top of section 3) shows 370px of section 3 and the heading of section 3 whole and the content of 3 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+   "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(1) > h2 \"文档\""
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\"",
+   "msg": "the screen at scroll 7200px (stride 8) shows 208px of section 2 and the content of 3 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+   "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) \"{\"@context\":\"https://schema.org\",\"@type\"\""
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-stage.stx-stage--brand \"让 SeaTunnel 运维清晰可见Apache SeaTunnel 一站式运维\"",
+   "msg": "a band: a box 100% of the section wide on a ground of its own that holds the heading or the intro: the section's own ground is the band (SR-4)",
+   "fix": "put every block of <main> in a <section>, and give a band its own section instead of a ground inside one",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-stage.stx-stage--brand \"让 SeaTunnel 运维清晰可见Apache SeaTunnel 一站式运维\""
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-showcase \"产品能力主机、集群、任务与诊断同在一处在 Web UI 中查看首页大盘、管理集群\"",
+   "msg": "a band: a box 100% of the section wide on a ground of its own that holds the heading or the intro: the section's own ground is the band (SR-4)",
+   "fix": "put every block of <main> in a <section>, and give a band its own section instead of a ground inside one",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-showcase \"产品能力主机、集群、任务与诊断同在一处在 Web UI 中查看首页大盘、管理集群\""
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta \"现在就把 SeaTunnel 运维交给 STX一条命令完成安装，兼容 Apach\"",
+   "msg": "a band: a box 100% of the section wide on a ground of its own that holds only text: the section's own ground is the band (and 3 more like it: \"让 SeaTunnel 运维清晰可见Apache\", \"产品能力主机、集群、任务与诊断同在一处在 Web\", \"现在就把 SeaTunnel 运维交给 STX一\") (SR-4)",
+   "fix": "put every block of <main> in a <section>, and give a band its own section instead of a ground inside one",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta \"现在就把 SeaTunnel 运维交给 STX一条命令完成安装，兼容 Apach\""
+   ]
+  },
+  {
+   "check": "one-heading",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\"",
+   "msg": "the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)",
+   "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-heading"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\""
+   ]
+  },
+  {
+   "check": "one-heading",
+   "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(2) > h2 \"项目\"",
+   "msg": "the section holds 3 h2 headings: one per section, first in its .wrap (SR-5)",
+   "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-heading"
+   ],
+   "wheres": [
+    "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(2) > h2 \"项目\""
+   ]
+  },
+  {
+   "check": "one-heading",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\"",
+   "msg": "the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)",
+   "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-heading"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(4) > section.stx-close-cta > h2.stx-close-cta__title \"现在就把 SeaTunnel 运维交给 STX\""
+   ]
+  },
+  {
+   "check": "one-heading",
+   "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(1) > h2 \"文档\"",
+   "msg": "headings of two sections show whole on one screen at 19 of 298 scroll positions (6.4%; at scroll 6700, 6750, 6800, 6850px), here with \"现在就把 SeaTunnel 运维交给 STX\": at most 3% on a desktop (SR-5)",
+   "fix": "make the sections one screen tall so their headings sit a screen apart and two never share one",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-heading"
+   ],
+   "wheres": [
+    "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(1) > h2 \"文档\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\"",
+   "msg": "the content of section 3 runs 130px from the left and 130px from the right (read from its outermost blocks: no .wrap): the page's container starts at 56px; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+   "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(1) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\"",
+   "msg": "the content of section 6 runs 130px from the left and 130px from the right (read from its outermost blocks: no .wrap): the page's container starts at 56px; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (and 4 more like it: \"文档中心在线体验简体中文简体中文English\", \"文档中心在线体验简体中文简体中文English\", \"{\"@context\":\"https://sch\") (SR-6)",
+   "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > footer.stx-site-footer:nth-of-type(2) \"Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div:nth-of-type(1) \"跳到主要内容文档中心在线体验简体中文简体中文English{\"@context\"\"",
+   "msg": "a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)",
+   "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) \"跳到主要内容文档中心在线体验简体中文简体中文English{\"@context\"\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "button#stx-ask-ai-fab \"Ask AI 问答\"",
+   "msg": "a <button> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (and 6 more like it: \"文档中心在线体验简体中文简体中文English\", \"{\"@context\":\"https://sch\", \"Apache SeaTunnel 一站式运维平台\") (SR-6)",
+   "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "button#stx-ask-ai-fab \"Ask AI 问答\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-hero-glow",
+   "msg": "a box runs 0-1440px, outside the container lines of section 2 at 56-1382px: full width is for background layers and grounds only (and 16 more like it: div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-hero-grid-fade, \"让 SeaTunnel 运维清晰可见Apache\", \"产品视频0:4501主机与集群0:0602安装包\") (SR-6)",
+   "fix": "keep it inside the container lines (.wrap): full width is for background layers and grounds only",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div:nth-of-type(1) > div.theme-layout-main.main-wrapper:nth-of-type(2) > header.stx-hero > div.stx-hero-glow"
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(3) > h2 \"资源\"",
+   "msg": "the h2 starts 990px right of the container's left: every h1 and h2 starts on it, 2px either way (and 24 more like it: \"项目\", x 680, x 661) (SR-6)",
+   "fix": "start the text on the container's left, or on the one split line every split shares",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div.stx-footer-inner > div.stx-footer-main > nav.stx-footer-group:nth-of-type(3) > h2 \"资源\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title > span.stx-brand-title-main \"让 SeaTunnel 运维清晰可见\"",
+   "msg": "\"让 SeaTunnel 运维清晰可见\" is set centred across 756px, over half the 1327px container: text that wide is set left (and 2 more like it: \"让 SeaTunnel 运维清晰可见\", \"STX CLI + Skill · 交互演示\") (SR-6)",
+   "fix": "set the text left (text-align: start)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div.stx-brand-content > div.stx-brand-core > h1.stx-brand-title > span.stx-brand-title-main \"让 SeaTunnel 运维清晰可见\""
+   ]
+  },
+  {
+   "check": "row-lines",
+   "where": "section#stx-agent-section > div.stx-mimo \"新建任务插件 / Skill产物中心项目生产环境示例最近集群与失败任务创建同步任\"",
+   "msg": "a row of 2 items: its first item starts at 130px, the container's left line at 56px; its last item ends at 1310px, the container's right line at 1382px (2px either way) (SR-7)",
+   "fix": "start the row's first item on the container's left line and end its last on the right line, every item one height",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "row-lines"
+   ],
+   "wheres": [
+    "section#stx-agent-section > div.stx-mimo \"新建任务插件 / Skill产物中心项目生产环境示例最近集群与失败任务创建同步任\""
+   ]
+  },
+  {
+   "check": "overlap-text",
+   "where": "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__eyebrow \"STX CLI + SKILL · 交互演示\"",
+   "msg": "lies over the text \"stx sync job list --status FAILED\" (span.stx-mimo__phase-title > small)",
+   "fix": "move the box off the text (or the text off the box)",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "overlap-text"
+   ],
+   "wheres": [
+    "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__eyebrow \"STX CLI + SKILL · 交互演示\""
+   ]
+  },
+  {
+   "check": "overlap-text",
+   "where": "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__sub > a.stx-agent-demo__guide-link \"查看 CLI 用法 ↗\"",
+   "msg": "lies over the text \"读取作业日志\" (span.stx-mimo__phase-title > strong)",
+   "fix": "move the box off the text (or the text off the box)",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "overlap-text"
+   ],
+   "wheres": [
+    "section#stx-agent-section > div.stx-agent-demo__intro > p.stx-agent-demo__sub > a.stx-agent-demo__guide-link \"查看 CLI 用法 ↗\""
+   ]
+  },
+  {
+   "check": "scroll-reveal",
+   "where": "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"查看说明 ➔\"",
+   "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver)",
+   "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "scroll-reveal"
+   ],
+   "wheres": [
+    "div.theme-layout-main.main-wrapper:nth-of-type(4) > div.stx-news-ticker > div.stx-news-ticker__inner > a.stx-news-ticker__action \"查看说明 ➔\""
+   ]
+  },
+  {
+   "check": "off-grid",
+   "where": "div.stx-stage.stx-stage--brand > div.stx-stage-copy > aside.stx-brand-panel > button.stx-anim-toggle \"暂停动效\"",
+   "msg": "left edge at 32px, 16px off the page margin at 16px (108 elements, like div.stx-film__player)",
+   "fix": "move it onto the page margin, or the column edge its section uses",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "off-grid"
+   ],
+   "wheres": [
+    "div.stx-stage.stx-stage--brand > div.stx-stage-copy > aside.stx-brand-panel > button.stx-anim-toggle \"暂停动效\""
+   ]
+  },
+  {
+   "check": "off-grid",
+   "where": "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(1) \"集群与失败任务\"",
+   "msg": "left edge at 24px, 8px off the page margin at 16px (108 elements); 2 more in this section off the grid too (div.stx-mimo__composer at 24px, span.stx-mimo__header-title at 26px)",
+   "fix": "move it onto the page margin, or the column edge its section uses",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "off-grid"
+   ],
+   "wheres": [
+    "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(1) \"集群与失败任务\""
+   ]
+  },
+  {
+   "check": "off-grid",
+   "where": "div.stx-footer-main > div.stx-footer-brand > a > img.stx-footer-logo.themedComponent_tkPz:nth-of-type(1) \"img: STX\"",
+   "msg": "left edge at 24px, 8px off the page margin at 16px (108 elements); 10 more in this section off the grid too (p at 24px, h2 at 24px, a:nth-of-type(1) at 24px, a:nth-of-type(2) at 24px, ...)",
+   "fix": "move it onto the page margin, or the column edge its section uses",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "off-grid"
+   ],
+   "wheres": [
+    "div.stx-footer-main > div.stx-footer-brand > a > img.stx-footer-logo.themedComponent_tkPz:nth-of-type(1) \"img: STX\""
+   ]
+  },
+  {
+   "check": "off-grid",
+   "where": "div.stx-mimo > div.stx-mimo__main > header.stx-mimo__header > span.stx-mimo__header-title \"查集群与失败任务\"",
+   "msg": "left edge at 26px, 10px off the page margin at 16px (108 elements, like div.stx-film__player); 9 more in this section off the grid too (p.stx-mimo__assistant-text at 26px, p.stx-mimo__finish-title at 26px, button.stx-mimo__scenario-chip:nth-of-type(1) at 24px, button.stx-mimo__artifact at 26px, ...)",
+   "fix": "move it onto the page margin, or the column edge its section uses",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "off-grid"
+   ],
+   "wheres": [
+    "div.stx-mimo > div.stx-mimo__main > header.stx-mimo__header > span.stx-mimo__header-title \"查集群与失败任务\""
+   ]
+  },
+  {
+   "check": "off-grid",
+   "where": "div.stx-footer-main > div.stx-footer-brand > a > img.stx-footer-logo.themedComponent_tkPz \"img: STX\"",
+   "msg": "left edge at 24px, 8px off the page margin at 16px (108 elements, like a.stx-news-ticker__action); 12 more in this section off the grid too (p at 24px, h2 at 24px, a:nth-of-type(1) at 24px, a:nth-of-type(2) at 24px, ...)",
+   "fix": "move it onto the page margin, or the column edge its section uses",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "off-grid"
+   ],
+   "wheres": [
+    "div.stx-footer-main > div.stx-footer-brand > a > img.stx-footer-logo.themedComponent_tkPz \"img: STX\""
+   ]
+  },
+  {
+   "check": "hero-fill",
+   "where": "section#stx-promo-video \"产品视频 0:45 01 主机与集群 0:06 02 安装包与插件 0:11 0\"",
+   "msg": "the next section shows on the first screen: it starts at 917px on a 1024px screen (the hero ends at 845px)",
+   "fix": "let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load",
+   "widths": [
+    768
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-fill"
+   ],
+   "wheres": [
+    "section#stx-promo-video \"产品视频 0:45 01 主机与集群 0:06 02 安装包与插件 0:11 0\""
+   ]
+  },
+  {
+   "check": "container",
+   "where": "page",
+   "msg": "no .wrap",
+   "fix": "put the content in one .wrap",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "container"
+   ],
+   "wheres": [
+    "page"
+   ]
+  }
+ ],
+ "waived": [
+  {
+   "check": "nav-covers",
+   "where": "button#stx-ask-ai-fab \"Ask AI 问答\"",
+   "msg": "sits on top of the text \"STX CLI + SKILL · 交互演示\" while the page scrolls: part of the line shows beside it",
+   "fix": "make the fixed nav one opaque band across the whole screen, or let it scroll away with the page",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "nav-covers"
+   ],
+   "wheres": [
+    "button#stx-ask-ai-fab \"Ask AI 问答\""
+   ],
+   "reason": "Ask AI 是第三方 kapa 悬浮助手，按设计随页面滚动固定在右下；正文区右侧已留空，遮挡仅限极窄视口。"
+  },
+  {
+   "check": "overlap-text",
+   "where": "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(1) \"集群与失败任务\"",
+   "msg": "lies over the text \"已示范通过 CLI 查集群、节点、失败作业和日志；未执行写操作。\" (div.stx-mimo__finish.stx-mimo__reveal > p:nth-of-type(2))",
+   "fix": "move the box off the text (or the text off the box)",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "overlap-text"
+   ],
+   "wheres": [
+    "div.stx-mimo > div.stx-mimo__main > div.stx-mimo__scenario-strip > button.stx-mimo__scenario-chip:nth-of-type(1) \"集群与失败任务\""
+   ],
+   "reason": "对话演示内部滚动视口元素的布局包围盒相互重叠（overflow hidden 裁切区），实际无可见文本覆盖。"
+  },
+  {
+   "check": "contrast",
+   "where": "div.stx-mimo__viewport > div.stx-mimo__conversation > div.stx-mimo__assistant.stx-mimo__reveal > p.stx-mimo__assistant-text \"先查集群和节点，再列出失败作业、读取日志。全程只查询，不执行重启或恢复。\"",
+   "msg": "body text over a picture reads at 1.4:1 at its worst tenth (needs 4.5:1), on a busy ground",
+   "fix": "put the text on a calm part of the picture, or on a solid panel",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "contrast"
+   ],
+   "wheres": [
+    "div.stx-mimo__viewport > div.stx-mimo__conversation > div.stx-mimo__assistant.stx-mimo__reveal > p.stx-mimo__assistant-text \"先查集群和节点，再列出失败作业、读取日志。全程只查询，不执行重启或恢复。\""
+   ],
+   "reason": "对话演示自动播放时截图恰好落在 reveal 渐显动画中帧；静止后正文为 --mimo-ink #1a2a32，对比度约 14:1。"
+  },
+  {
+   "check": "menu-toggle",
+   "where": "div.stx-stage.stx-stage--brand:nth-of-type(3) > div.stx-stage-copy > aside.stx-brand-panel > button.stx-anim-toggle \"暂停动效\"",
+   "msg": "the menu button (\"暂停动效\") has no aria-expanded: a screen reader cannot tell the menu is open or shut",
+   "fix": "use the starter's button: <button class=\"nav__toggle\" type=\"button\" aria-expanded=\"false\" aria-label=\"Menu\">; system.js flips it",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "menu-toggle"
+   ],
+   "wheres": [
+    "div.stx-stage.stx-stage--brand:nth-of-type(3) > div.stx-stage-copy > aside.stx-brand-panel > button.stx-anim-toggle \"暂停动效\""
+   ],
+   "reason": "该按钮是动效暂停开关而非导航菜单：已用 aria-pressed 表达开关态，aria-expanded 语义不符。"
+  },
+  {
+   "check": "off-viewport",
+   "where": "div#__docusaurus > div > a.skipToContent_ZV5d \"跳到主要内容\"",
+   "msg": "at 320px wide it runs 48px past the screen's right edge (cut there: the page clips what runs past it)",
+   "fix": "keep it inside the screen at this width: let it shrink, wrap or stack",
+   "widths": [
+    320
+   ],
+   "from": "consistency",
+   "ids": [
+    "off-viewport"
+   ],
+   "wheres": [
+    "div#__docusaurus > div > a.skipToContent_ZV5d \"跳到主要内容\""
+   ],
+   "reason": "Docusaurus 内置跳转到主内容链接按设计屏外隐藏，键盘聚焦时出现；宽度由框架主题控制。"
+  }
+ ],
+ "warnCount": 48,
+ "at": "2026-11-23T13:58:24.547Z",
+ "openTold": true
+}

@@ -1,0 +1,11 @@
+{
+ "page": "build/index.html",
+ "url": null,
+ "root": "build",
+ "kind": "software",
+ "category": "SeaTunnel 运维平台",
+ "primary": "在线体验",
+ "rounds": 3,
+ "start": "2026-11-23T13:41:13.929Z",
+ "by": "gate.mjs --start"
+}
