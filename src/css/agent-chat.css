@@ -5,13 +5,13 @@
 
 .stx-agent-demo {
   --mimo-ink: #1a2a32;
-  --mimo-muted: #6b7f88;
+  --mimo-muted: #54676f;
   --mimo-soft: #4a5f68;
   --mimo-paper: #ffffff;
   --mimo-sidebar: #f4fafb;
   --mimo-line: #e6eef1;
   --mimo-wash: #eef6f8;
-  --mimo-accent: var(--stx-glacier-600, #298294);
+  --mimo-accent: var(--stx-glacier-700, #1f6b7a);
   --mimo-accent-soft: var(--stx-glacier-100, #e1f3f7);
   --mimo-phase-bg: #fbfcfd;
   --mimo-user-bg: #eef5f7;
@@ -457,7 +457,7 @@
   height: 28px;
 }
 
-.stx-mimo__welcome h3 {
+.stx-mimo__welcome .stx-mimo__welcome-title {
   margin: 0;
   font-size: 1.15rem;
   font-weight: 700;
@@ -680,7 +680,7 @@
 
 .stx-mimo__phase-state {
   font-size: 0.72rem;
-  color: var(--stx-glacier-600, #298294);
+  color: var(--stx-glacier-700, #1f6b7a);
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
@@ -789,7 +789,7 @@
   animation-delay: 0.4s;
 }
 
-.stx-mimo__finish h4 {
+.stx-mimo__finish .stx-mimo__finish-title {
   margin: 12px 0 8px;
   font-size: 1rem;
   font-weight: 700;
@@ -1127,7 +1127,7 @@
     width: calc(100% - 24px);
   }
 
-  .stx-mimo__welcome h3 {
+  .stx-mimo__welcome .stx-mimo__welcome-title {
     font-size: 1.05rem;
   }
 
@@ -1249,9 +1249,9 @@
 .stx-showcase {
   --stx-show-ink: #142028;
   --stx-show-soft: #4a5d68;
-  --stx-show-muted: #6b7f88;
+  --stx-show-muted: #54676f;
   --stx-show-line: rgba(20, 32, 40, 0.12);
-  --stx-show-accent: var(--stx-glacier-600, #298294);
+  --stx-show-accent: var(--stx-glacier-700, #1f6b7a);
   position: relative;
   padding: clamp(3.2rem, 7vh, 5.5rem) clamp(1rem, 3.5vw, 2rem)
     clamp(3.6rem, 8vh, 6rem);
@@ -1387,19 +1387,17 @@
 }
 
 .stx-showcase__points li {
-  display: grid;
-  grid-template-columns: 12px minmax(0, 1fr);
-  gap: 0.75rem;
-  align-items: start;
+  position: relative;
 }
 
 .stx-showcase__bullet {
+  position: absolute;
+  left: -1.15rem;
+  top: 0.45em;
   width: 5px;
   height: 5px;
-  margin-top: 0.55em;
   border-radius: 50%;
   background: var(--stx-show-accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--stx-show-accent) 16%, transparent);
 }
 
 .stx-showcase__point-text {
@@ -1439,22 +1437,6 @@
   aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: top center;
-}
-
-.stx-showcase__caption {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  margin: 0;
-  padding: 5px 11px;
-  border-radius: 999px;
-  background: rgba(10, 16, 24, 0.7);
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 0.68rem;
-  font-weight: 550;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
 }
 
 @media (max-width: 996px) {
@@ -1498,7 +1480,7 @@
 }
 
 .stx-news-ticker__inner {
-  max-width: 1200px;
+  max-width: 1180px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -1578,5 +1560,17 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* —— 移动端 ≥44px 点击目标（对话演示内控件）/ >=44px tap targets inside the demo —— */
+@media (max-width: 640px) {
+  .stx-mimo__scenario-chip,
+  .stx-mimo__chip,
+  .stx-mimo__send,
+  .stx-mimo__icon-btn,
+  .stx-mimo__recent {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

@@ -24,17 +24,17 @@
   --stx-glacier-300: #8ecad6; /* 基准冰川青 / Base Glacier Cyan */
   --stx-glacier-400: #65b5c4;
   --stx-glacier-500: #3b9fb2;
-  --stx-glacier-600: #298294; /* 亮色模式主要交互色 / Primary interactive color for light mode */
+  --stx-glacier-600: #1f6b7a; /* 亮色模式主要交互色（4.5:1+ 对比度）/ Primary interactive color for light mode (4.5:1+ contrast) */
   --stx-glacier-700: #1f6b7a; /* 亮色正文链接高可读性颜色 / Readable link color on white */
   --stx-glacier-800: #18525e;
   --stx-glacier-900: #0e2f37;
 
   /* Docusaurus 核心主题变量（亮色模式） */
   /* Docusaurus core theme variables (Light Mode) */
-  --ifm-color-primary: #298294;
-  --ifm-color-primary-dark: #247585;
-  --ifm-color-primary-darker: #206775;
-  --ifm-color-primary-darkest: #174b56;
+  --ifm-color-primary: #1f6b7a;
+  --ifm-color-primary-dark: #1b5f6d;
+  --ifm-color-primary-darker: #185661;
+  --ifm-color-primary-darkest: #123f47;
   --ifm-color-primary-light: #339db3;
   --ifm-color-primary-lighter: #3ba8bd;
   --ifm-color-primary-lightest: #8ecad6;
@@ -127,13 +127,13 @@ body {
    ========================================================================== */
 .button--glacier,
 a.button--glacier {
-  background: linear-gradient(135deg, #8ecad6 0%, #3b9fb2 100%) !important;
-  color: #071118 !important;
+  background: var(--stx-glacier-700) !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   border: none !important;
   border-radius: 8px !important;
   padding: 10px 22px !important;
-  box-shadow: 0 4px 14px rgba(142, 202, 214, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(31, 107, 122, 0.3) !important;
   transition: all 0.25s ease-in-out;
   display: inline-flex;
   align-items: center;
@@ -143,9 +143,10 @@ a.button--glacier {
 
 .button--glacier:hover,
 a.button--glacier:hover {
+  background: var(--stx-glacier-800) !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(142, 202, 214, 0.55) !important;
-  color: #071118 !important;
+  box-shadow: 0 6px 20px rgba(31, 107, 122, 0.42) !important;
+  color: #ffffff !important;
   text-decoration: none !important;
 }
 
@@ -153,7 +154,7 @@ a.button--glacier:hover {
 a.button--outline-glacier {
   border: 1px solid var(--stx-glacier-300) !important;
   color: var(--ifm-color-primary) !important;
-  background: transparent !important;
+  background: var(--ifm-card-background-color, #fff) !important;
   font-weight: 600 !important;
   border-radius: 8px !important;
   padding: 10px 22px !important;
@@ -396,7 +397,7 @@ article table td {
 }
 
 .stx-cmd-prefix {
-  color: var(--stx-glacier-400);
+  color: var(--stx-glacier-600);
   font-weight: 700;
   user-select: none;
 }
@@ -407,9 +408,10 @@ article table td {
   border: none !important;
   padding: 0 !important;
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  line-height: 1.55;
   font-size: 0.83rem;
 }
 
@@ -676,7 +678,7 @@ html[lang^='en'].docs-wrapper .stx-sidebar-section [lang='en'] {display: inline}
 
 /* 官网顶栏只放站点级入口；文档搜索只在文档路由出现。 */
 .navbar {box-shadow: none; border-bottom: 1px solid var(--ifm-toc-border-color)}
-.navbar__inner {position: relative; width: 100%; max-width: 1536px; margin-inline: auto; padding-inline: clamp(.35rem, 1.3vw, 1.3rem)}
+.navbar__inner {position: relative; width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: clamp(.35rem, 1.3vw, 1.3rem)}
 .navbar__items > .navbar__link:not(.header-demo-link) {font-size: .86rem; font-weight: 540; letter-spacing: -.01em; padding: .47rem .75rem; border-radius: 5px; transition: color .2s, background-color .2s}
 .navbar__items > .navbar__link:not(.header-demo-link):hover {background: var(--stx-sidebar-active-bg)}
 .navbar .header-demo-link,
@@ -761,7 +763,7 @@ html[class*='docs-doc-id-'] .navbar__link--active {background: transparent; colo
 }
 [data-theme='dark'] .stx-site-footer {--stx-footer-muted: #aeb5ba}
 html[class*='docs-doc-id-'] .stx-site-footer {background: var(--stx-doc-bg); border-color: var(--stx-doc-border)}
-.stx-footer-inner {width: min(100%, 1400px); margin-inline: auto; padding: 4.2rem clamp(1.5rem, 4vw, 4.5rem) 1.6rem}
+.stx-footer-inner {width: min(100% - 3rem, 1180px); margin-inline: auto; padding: 4.2rem 0 1.6rem}
 .stx-footer-main {display: grid; grid-template-columns: minmax(16rem, 1.5fr) repeat(3, minmax(7.5rem, .72fr)); gap: clamp(2rem, 5vw, 6rem); padding-bottom: 3.8rem}
 .stx-footer-brand {max-width: 28rem}
 .stx-footer-brand > a {display: inline-flex; align-items: center; height: 2.7rem}
@@ -788,3 +790,102 @@ html[class*='docs-doc-id-'] .stx-footer-bottom {border-color: var(--stx-doc-bord
 }
 @media (max-width: 430px) {.stx-footer-main {grid-template-columns: 1fr; gap: 2rem}.stx-footer-brand {grid-column: auto}.stx-footer-bottom {flex-direction: column; align-items: flex-start}}
 @media (prefers-reduced-motion: reduce) {.stx-site-footer * {transition: none !important}}
+
+/* —— 可访问性：移动端 ≥44px 点击目标 / A11y: >=44px tap targets on mobile —— */
+.stx-footer-social a {width: 44px; height: 44px}
+@media (max-width: 640px) {
+  .stx-footer-group a {min-height: 44px; display: inline-flex; align-items: center}
+  .stx-footer-group {gap: .35rem}
+  .stx-footer-bottom a {min-height: 44px; display: inline-flex; align-items: center}
+  .stx-news-ticker__action {min-height: 44px; display: inline-flex; align-items: center}
+  .stx-topo-section button, .stx-topo-section a {min-height: 44px; min-width: 44px}
+}
+
+/* —— 拓扑卡片次级文本对比度 / Topo card muted text contrast —— */
+html[data-theme='light'] .stx-topo-section .text-muted-foreground {
+  color: #55606a;
+}
+
+/* —— 收尾 CTA：最后一屏给出主行动按钮 / Closing CTA band before the footer —— */
+.stx-close-cta {
+  padding: clamp(3.5rem, 9vh, 6.5rem) clamp(1.5rem, 4vw, 4.5rem);
+  text-align: center;
+  background: #0e1417;
+  color: #f2f6f8;
+}
+[data-theme='light'] .stx-close-cta {
+  background: linear-gradient(180deg, #f3f8f9 0%, #e8f1f3 100%);
+  color: #142028;
+}
+.stx-close-cta__title {
+  margin: 0 auto 0.75rem;
+  max-width: 34rem;
+  font-size: clamp(1.5rem, 3.4vw, 2.15rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.stx-close-cta__sub {
+  margin: 0 auto 1.9rem;
+  max-width: 30rem;
+  font-size: clamp(0.9rem, 1.6vw, 1rem);
+  line-height: 1.65;
+  color: rgba(242, 246, 248, 0.66);
+}
+[data-theme='light'] .stx-close-cta__sub {color: #4a5d68}
+.stx-close-cta__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+.stx-close-cta .button--glacier {text-decoration: none}
+.stx-close-cta__ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem 1.15rem;
+  border-radius: 8px;
+  border: 1px solid rgba(142, 202, 214, 0.55);
+  color: #b7e3eb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.stx-close-cta__ghost:hover {
+  border-color: #8ecad6;
+  background: rgba(142, 202, 214, 0.1);
+  color: #d5eef3;
+  text-decoration: none;
+}
+[data-theme='light'] .stx-close-cta__ghost {
+  border-color: var(--stx-glacier-600);
+  color: var(--stx-glacier-700);
+}
+[data-theme='light'] .stx-close-cta__ghost:hover {
+  border-color: var(--stx-glacier-700);
+  background: rgba(31, 107, 122, 0.08);
+  color: var(--stx-glacier-800);
+}
+
+/* —— 收口修复 / audit tail fixes —— */
+[class*="skipToContent"] {max-width: calc(100vw - 24px)}
+
+/* 小屏标题层级：h2 小于 h1 / keep h2 below h1 on phones */
+@media (max-width: 640px) {
+  .stx-showcase__title,
+  .stx-close-cta h2,
+  .stx-close-cta__title,
+  .stx-agent-demo__title,
+  .stx-film__intro h2 {font-size: 1.3rem}
+  .stx-showcase__card-title {font-size: 1.15rem}
+}
+
+/* 行内「查看 CLI 用法」链接：手机上也是 44px 目标 / inline guide link gets a 44px target */
+.stx-agent-demo__guide-link {display: inline-flex; align-items: center; min-height: 44px}
+
+/* 窄屏隐藏悬挂圆点，避免越出屏幕左缘 / hide hung bullets on phones */
+@media (max-width: 640px) {
+  .stx-showcase__bullet {display: none}
+}
