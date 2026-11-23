@@ -5,6 +5,7 @@ import {useHomeLocale, type HomeLocale} from './useHomeLocale';
 type ShowcaseCard = {
   id: string;
   image: string;
+  poster?: string;
   index: string;
   title: string;
   lead: string;
@@ -16,7 +17,6 @@ type ShowcaseCopy = {
   eyebrow: string;
   title: string;
   sub: string;
-  mediaNote: string;
   cards: ShowcaseCard[];
 };
 
@@ -25,7 +25,6 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
     eyebrow: '产品能力',
     title: '主机、集群、任务与诊断同在一处',
     sub: '在 Web UI 中查看首页大盘、管理集群与作业、处理告警并发起诊断，运维操作集中完成。',
-    mediaNote: '界面预览',
     cards: [
       {
         id: 'dashboard',
@@ -69,6 +68,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       {
         id: 'test-connection',
         image: '/img/screenshots/38-test-connection.gif',
+        poster: '/img/screenshots/posters/38-test-connection.jpg',
         index: '04',
         title: '测试连接',
         lead: '改完地址与表名，先探活再跑作业。',
@@ -83,18 +83,19 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
         id: 'dag',
         image: '/img/screenshots/08-dag.png',
         index: '05',
-        title: 'DAG 预览',
+        title: '作业 DAG 拓扑',
         lead: '配置落成图，上下游一眼能对上。',
         points: [
           '从 HOCON 解析出执行拓扑',
           'Source 与 Sink 的表路径同屏可见',
           '点开算子即可看上下游与表结构',
         ],
-        mediaAlt: 'STX DAG 预览',
+        mediaAlt: 'STX 作业 DAG 拓扑',
       },
       {
         id: 'observe',
         image: '/img/screenshots/36-observe-realtime.gif',
+        poster: '/img/screenshots/posters/36-observe-realtime.jpg',
         index: '06',
         title: '实时可观测',
         lead: '运行水位实时可见，异常有据可查。',
@@ -108,6 +109,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       {
         id: 'alert',
         image: '/img/screenshots/37-job-alert.gif',
+        poster: '/img/screenshots/posters/37-job-alert.jpg',
         index: '07',
         title: '作业告警',
         lead: '告警进入 AlertHub，处理路径清晰。',
@@ -124,7 +126,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
     eyebrow: 'Capabilities',
     title: 'Hosts, clusters, jobs, and diagnosis in one place',
     sub: 'See status in the Web UI, then install, start/stop, debug, or troubleshoot as needed.',
-    mediaNote: 'UI preview',
+
     cards: [
       {
         id: 'dashboard',
@@ -168,6 +170,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       {
         id: 'test-connection',
         image: '/img/screenshots/38-test-connection.gif',
+        poster: '/img/screenshots/posters/38-test-connection.jpg',
         index: '04',
         title: 'Test connection',
         lead: 'Validate connectivity before running the job.',
@@ -182,7 +185,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
         id: 'dag',
         image: '/img/screenshots/08-dag.png',
         index: '05',
-        title: 'DAG preview',
+        title: 'DAG topology preview',
         lead: 'Config becomes a graph; upstream and downstream line up.',
         points: [
           'Execution topology parsed from HOCON',
@@ -194,6 +197,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       {
         id: 'observe',
         image: '/img/screenshots/36-observe-realtime.gif',
+        poster: '/img/screenshots/posters/36-observe-realtime.jpg',
         index: '06',
         title: 'Realtime observability',
         lead: 'See runtime levels live, then follow the evidence.',
@@ -207,6 +211,7 @@ const COPY: Record<HomeLocale, ShowcaseCopy> = {
       {
         id: 'alert',
         image: '/img/screenshots/37-job-alert.gif',
+        poster: '/img/screenshots/posters/37-job-alert.jpg',
         index: '07',
         title: 'Job alerts',
         lead: 'Alerts land in AlertHub with a clear handling path.',
@@ -249,7 +254,6 @@ export function ProductShowcase(): React.JSX.Element {
             key={card.id}
             card={card}
             reverse={index % 2 === 1}
-            mediaNote={copy.mediaNote}
           />
         ))}
       </div>
@@ -260,13 +264,13 @@ export function ProductShowcase(): React.JSX.Element {
 function ShowcaseCard({
   card,
   reverse,
-  mediaNote,
 }: {
   card: ShowcaseCard;
   reverse: boolean;
-  mediaNote: string;
 }): React.JSX.Element {
   const src = useBaseUrl(card.image);
+  const posterSrc = useBaseUrl(card.poster ?? card.image);
+  const isGif = card.image.endsWith('.gif');
 
   return (
     <article
@@ -289,17 +293,32 @@ function ShowcaseCard({
       </div>
 
       <div className="stx-showcase__media">
-        <figure className="stx-showcase__frame">
+        <figure
+          className="stx-showcase__frame"
+          aria-label={card.mediaAlt}
+          onMouseEnter={(e) => {
+            if (!isGif) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const img = e.currentTarget.querySelector('img');
+            if (img && img.dataset.gif) img.src = img.dataset.gif;
+          }}
+          onMouseLeave={(e) => {
+            if (!isGif) return;
+            const img = e.currentTarget.querySelector('img');
+            if (img && img.dataset.poster) img.src = img.dataset.poster;
+          }}
+        >
           <img
             className="stx-showcase__shot"
-            src={src}
+            src={isGif ? posterSrc : src}
+            data-gif={isGif ? src : undefined}
+            data-poster={isGif ? posterSrc : undefined}
             alt={card.mediaAlt}
             width={1440}
             height={900}
             loading="lazy"
             decoding="async"
           />
-          <figcaption className="stx-showcase__caption">{mediaNote}</figcaption>
         </figure>
       </div>
     </article>

@@ -63,9 +63,9 @@ function ensureStyles(): void {
       gap: 0.5rem;
       padding: 0.625rem 0.75rem;
       border-radius: 1rem;
-      border: 1px solid color-mix(in srgb, var(--ifm-color-emphasis-300) 70%, transparent);
+      border: 1px solid var(--stx-glacier-300, #8ecad6);
       background: color-mix(in srgb, var(--ifm-background-surface-color) 88%, transparent);
-      color: var(--ifm-font-color-base);
+      color: var(--stx-glacier-700, var(--ifm-color-primary));
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -76,8 +76,8 @@ function ensureStyles(): void {
     }
 
     #${FAB_ID}:hover {
-      background: color-mix(in srgb, var(--ifm-hover-overlay) 100%, var(--ifm-background-surface-color));
-      border-color: var(--ifm-color-emphasis-400);
+      background: color-mix(in srgb, var(--stx-glacier-300, #8ecad6) 14%, var(--ifm-background-surface-color));
+      border-color: var(--stx-glacier-400, #65b5c4);
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
     }
 
@@ -116,7 +116,8 @@ function ensureStyles(): void {
     }
 
     [data-theme='dark'] #${FAB_ID} {
-      border-color: color-mix(in srgb, var(--ifm-color-emphasis-300) 50%, transparent);
+      border-color: color-mix(in srgb, var(--stx-glacier-300, #8ecad6) 45%, transparent);
+      color: var(--stx-glacier-200, #c5e8ef);
       background: color-mix(in srgb, var(--ifm-background-surface-color) 92%, transparent);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
     }

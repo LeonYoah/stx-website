@@ -85,6 +85,7 @@ function useTypewriter(
     deleteSpeed?: number;
     hold?: number;
     nextHold?: number;
+    paused?: boolean;
   } = {},
 ) {
   const {
@@ -92,13 +93,14 @@ function useTypewriter(
     deleteSpeed = 56,
     hold = 1000,
     nextHold = 180,
+    paused = false,
   } = options;
   const [wordIndex, setWordIndex] = useState(0);
   const [display, setDisplay] = useState('');
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    if (!words.length) return;
+    if (!words.length || paused) return;
     if (
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -277,6 +279,7 @@ const COPY: Record<
   {
     title: string;
     sub: string;
+    fact: string;
     chipsLabel: string;
     capabilityPrefix: string;
     chipLabels: Record<string, string>;
@@ -294,6 +297,7 @@ const COPY: Record<
   zh: {
     title: '让 SeaTunnel 运维清晰可见',
     sub: 'Apache SeaTunnel 一站式运维平台，原生 AI Agent 入口（CLI + Skill）。',
+    fact: '兼容 Apache SeaTunnel 2.3.x+ · 100+ Connector 插件',
     chipsLabel: '产品能力',
     capabilityPrefix: '能力：',
     chipLabels: {
@@ -326,6 +330,7 @@ const COPY: Record<
   en: {
     title: 'Make SeaTunnel ops clearly visible',
     sub: 'All-in-one ops for Apache SeaTunnel, with native AI Agent (CLI + Skill).',
+    fact: 'Compatible with Apache SeaTunnel 2.3.x+ · 100+ connector plugins',
     chipsLabel: 'Capabilities',
     capabilityPrefix: 'Capability:',
     chipLabels: {
@@ -376,10 +381,18 @@ export function HeroBrandPanel(): React.JSX.Element {
   const panelRef = useRef<HTMLElement>(null);
   useInteractivePanel(panelRef);
 
+  const [motionPaused, setMotionPaused] = useState(false);
   const capabilityWords = useMemo(() => [...copy.capabilities], [copy.capabilities]);
-  const typed = useTypewriter(capabilityWords);
+  const typed = useTypewriter(capabilityWords, {paused: motionPaused});
 
   const [copied, setCopied] = useState(false);
+  const toggleMotion = () => {
+    setMotionPaused((prev) => {
+      const next = !prev;
+      panelRef.current?.classList.toggle('stx-motion-paused', next);
+      return next;
+    });
+  };
   const handleCopyCommand = () => {
     void navigator.clipboard.writeText(copy.installCmd);
     setCopied(true);
@@ -444,6 +457,7 @@ export function HeroBrandPanel(): React.JSX.Element {
             <span className="stx-brand-title-main">{copy.title}</span>
           </h1>
           <p className="stx-brand-sub">{copy.sub}</p>
+          <p className="stx-brand-fact">{copy.fact}</p>
           <div className="stx-brand-actions">
             <Link
               className="button--glacier"
@@ -522,6 +536,28 @@ export function HeroBrandPanel(): React.JSX.Element {
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        className="stx-anim-toggle"
+        aria-pressed={motionPaused}
+        onClick={toggleMotion}
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          {motionPaused ? (
+            <path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.4-6.5a1 1 0 0 0 0-1.7L9.52 4.65A1 1 0 0 0 8 5.5z" />
+          ) : (
+            <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" />
+          )}
+        </svg>
+        {locale === 'en'
+          ? motionPaused
+            ? 'Play motion'
+            : 'Pause motion'
+          : motionPaused
+            ? '播放动效'
+            : '暂停动效'}
+      </button>
     </aside>
   );
 }
