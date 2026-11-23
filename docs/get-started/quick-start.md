@@ -18,7 +18,7 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash
 ```
 
-不加 `-y` 时会交互询问端口、对外 IP、数据库和管理员密码，直接回车即使用默认值。检查运行状态：
+不加 `-y` 时会交互询问安装目录（默认 `/opt/stx`）、端口、对外 IP、数据库和管理员密码，直接回车即使用默认值。安装目录需填绝对路径，例如 `/data/stx`；已通过 `--install-dir` 指定时不再询问。下文命令中的 `/opt/stx` 请换成实际安装目录。检查运行状态：
 
 ```bash
 /opt/stx/bin/status.sh
@@ -134,7 +134,7 @@ curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/late
 | 参数 | 作用 |
 | :--- | :--- |
 | `-y` | 非交互安装，使用默认值或已传参数 |
-| `--install-dir /opt/stx` | 安装目录，默认 `/opt/stx` |
+| `--install-dir /opt/stx` | 安装目录，默认 `/opt/stx`；指定后交互安装不再询问安装目录 |
 | `--admin-password xxx` | admin 初始密码 |
 | `--frontend-port` / `--http-port` / `--grpc-port` | Web UI / HTTP API / gRPC 端口，默认 `17880` / `17800` / `17890` |
 | `--external-ip 10.0.0.10` | 对外访问 IP 或域名 |
