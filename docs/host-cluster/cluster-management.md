@@ -56,7 +56,7 @@ Web UI 的[安装包管理](../packages-plugins/package-management)中需要有�
 
 5. 按需选择 **扩展插件**，点 **开始部署**。在 **执行部署** 查看进度和各节点结果；部署成功后，在集群列表确认状态为 **运行中**。
 
-预检按目标 SeaTunnel 版本判断 JDK。例如，SeaTunnel 2.3.13 推荐 JDK 8 或 11；SeaTunnel 3.1.0 至少需要 JDK 11，推荐 JDK 11 或 17。升级时按目标版本检查。
+预检按目标 SeaTunnel 版本判断 JDK。例如，SeaTunnel 2.3.13 推荐 JDK 8 或 11；SeaTunnel 3.1.0 至少需要 JDK 11，推荐 JDK 11 或 17。JDK 24 及以上无法启动 SeaTunnel，预检会直接判定失败，请改用 JDK 8 / 11 / 17 / 21。升级时按目标版本检查。
 
 ## 版本升级
 

@@ -18,7 +18,7 @@ curl -fsSL https://github.com/LeonYoah/stx/releases/latest/download/install-onli
 curl -fsSL https://v4.gh-proxy.org/https://github.com/LeonYoah/stx/releases/latest/download/install-online.sh | sudo bash
 ```
 
-Without `-y`, the script prompts for ports, external IP, database, and admin password—press Enter to accept defaults. Check status:
+Without `-y`, the script prompts for the install directory (default `/opt/stx`), ports, external IP, database, and admin password—press Enter to accept defaults. The install directory must be an absolute path, such as `/data/stx`; the prompt is skipped when `--install-dir` is passed. If you install elsewhere, replace `/opt/stx` in the commands below with your install directory. Check status:
 
 ```bash
 /opt/stx/bin/status.sh
@@ -134,7 +134,7 @@ Append flags after `sudo bash -s --` or `sudo ./install.sh`, e.g. `... | sudo ba
 | Flag | Effect |
 | :--- | :--- |
 | `-y` | Non-interactive; use defaults and passed flags |
-| `--install-dir /opt/stx` | Install directory, default `/opt/stx` |
+| `--install-dir /opt/stx` | Install directory, default `/opt/stx`; when set, interactive installs skip the install directory prompt |
 | `--admin-password xxx` | Initial admin password |
 | `--frontend-port` / `--http-port` / `--grpc-port` | Web UI / HTTP API / gRPC ports, default `17880` / `17800` / `17890` |
 | `--external-ip 10.0.0.10` | Advertised IP or hostname |
